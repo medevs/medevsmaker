@@ -1,12 +1,13 @@
 import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
-import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
 import { StatHighlight } from "../../shared/scenes/StatHighlight";
 import { VisualMetaphor } from "../../shared/scenes/VisualMetaphor";
+import { TimelineScene } from "../../shared/scenes/TimelineScene";
 import { KeyTakeaway } from "../../shared/scenes/KeyTakeaway";
 import { FONTS, COLORS, FPS, T } from "../styles";
 
@@ -35,13 +36,12 @@ export const Section2: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 9: Concept Explain */}
-      <TransitionSeries.Sequence durationInFrames={7 * FPS}>
-        <ConceptExplain
-          heading="Names to Numbers"
-          body="You type google.com, but computers only understand numbers. DNS converts that friendly name into an IP address like 142.250.80.46."
-          analogy="It's like looking up a contact name in your phone — you know the name, DNS knows the number."
+      {/* Scene 9: VisualMetaphor — humor beat: phone book analogy */}
+      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
+        <VisualMetaphor
           icon="📖"
+          heading="Names to Numbers"
+          analogy="You type google.com but computers only speak numbers. DNS is your browser frantically flipping through a phone book at light speed."
           colors={{
             bg: COLORS.bg,
             text: COLORS.text,
@@ -49,16 +49,16 @@ export const Section2: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
-          headingEntrance="fadeLeft"
+          iconEffect="pop"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-right" })}
+        timing={linearTiming({ durationInFrames: 20 })}
       />
 
-      {/* Scene 10: Diagram Flow — glow on nodes */}
+      {/* Scene 10: Diagram Flow — DNS resolution chain */}
       <TransitionSeries.Sequence durationInFrames={10 * FPS}>
         <DiagramFlow
           title="How DNS Resolution Works"
@@ -86,13 +86,13 @@ export const Section2: React.FC = () => {
         timing={linearTiming({ durationInFrames: 18 })}
       />
 
-      {/* Scene 11: Stat Highlight — glow emphasis */}
+      {/* Scene 11: Stat Highlight — glow emphasis, pattern interrupt */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <StatHighlight
           stat={1.1}
           suffix=" trillion"
           label="DNS queries per day"
-          context="Every link click, every API call, every image load starts with a DNS lookup"
+          context="Every click, every API call, every image — starts with a DNS lookup"
           colors={{
             bg: COLORS.bg,
             text: COLORS.text,
@@ -109,20 +109,25 @@ export const Section2: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 12: Visual Metaphor — bounce */}
-      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
-        <VisualMetaphor
-          icon="📱"
-          heading="Cached For Speed"
-          analogy="Your browser remembers recent lookups so it doesn't ask DNS every single time. Like saving a frequent contact as a favorite."
+      {/* Scene 12: Timeline — DNS caching layers */}
+      <TransitionSeries.Sequence durationInFrames={10 * FPS}>
+        <TimelineScene
+          heading="DNS Caching Layers"
+          nodes={[
+            { label: "Browser", description: "Checks local cache first" },
+            { label: "OS", description: "System-level DNS cache" },
+            { label: "Router", description: "Your home network cache" },
+            { label: "ISP", description: "Your provider's resolver" },
+            { label: "Root", description: "Last resort — full lookup" },
+          ]}
           colors={{
             bg: COLORS.bg,
             text: COLORS.text,
-            accent: COLORS.green,
+            accent: COLORS.amber,
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
-          iconEffect="bounce"
+          layout="horizontal"
         />
       </TransitionSeries.Sequence>
 
@@ -134,7 +139,7 @@ export const Section2: React.FC = () => {
       {/* Scene 13: Key Takeaway */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <KeyTakeaway
-          takeaway="DNS translates human-readable domain names into machine-readable IP addresses. Without it, you'd need to memorize numbers."
+          takeaway="DNS translates domain names into IP addresses. Multiple cache layers make it blazing fast — most lookups never reach the root."
           colors={{ bg: COLORS.bg, text: COLORS.text }}
           fontFamily={FONTS.heading}
         />

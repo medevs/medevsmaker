@@ -1,10 +1,11 @@
 import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
-import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { ComparisonSplit } from "../../shared/scenes/ComparisonSplit";
+import { BeforeAfter } from "../../shared/scenes/BeforeAfter";
 import { WarningCallout } from "../../shared/scenes/WarningCallout";
 import { VisualMetaphor } from "../../shared/scenes/VisualMetaphor";
 import { KeyTakeaway } from "../../shared/scenes/KeyTakeaway";
@@ -35,21 +36,37 @@ export const Section4: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 21: Concept Explain — fadeLeft heading */}
-      <TransitionSeries.Sequence durationInFrames={7 * FPS}>
-        <ConceptExplain
-          heading="Persistent Storage"
-          body="The server processes requests but doesn't remember anything between them. The database stores all the permanent data — users, posts, orders."
-          analogy="If the server is the kitchen, the database is the pantry. The kitchen pulls ingredients from the pantry for every dish."
-          icon="💾"
+      {/* Scene 21: BeforeAfter — with vs without database (visual) */}
+      <TransitionSeries.Sequence durationInFrames={10 * FPS}>
+        <BeforeAfter
+          heading="With vs Without a Database"
+          before={{
+            title: "No Database",
+            items: [
+              "Data lost on restart",
+              "No user accounts",
+              "Everything temporary",
+              "Basically a calculator",
+            ],
+          }}
+          after={{
+            title: "With Database",
+            items: [
+              "Data persists forever",
+              "Users, posts, orders saved",
+              "Survives crashes",
+              "Actual useful app",
+            ],
+          }}
           colors={{
             bg: COLORS.bg,
             text: COLORS.text,
-            accent: COLORS.green,
+            beforeColor: COLORS.red,
+            afterColor: COLORS.green,
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
-          headingEntrance="fadeLeft"
+          reveal="wipe"
         />
       </TransitionSeries.Sequence>
 
@@ -58,7 +75,7 @@ export const Section4: React.FC = () => {
         timing={linearTiming({ durationInFrames: 18 })}
       />
 
-      {/* Scene 22: Comparison Split — overshoot entrance */}
+      {/* Scene 22: Comparison Split — SQL vs NoSQL (visual) */}
       <TransitionSeries.Sequence durationInFrames={8 * FPS}>
         <ComparisonSplit
           heading="SQL vs NoSQL"
@@ -93,28 +110,12 @@ export const Section4: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 23: Warning Callout */}
-      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
-        <WarningCallout
-          heading="Never Trust the Client"
-          body="Always validate data on the server before writing to the database. Client-side validation can be bypassed — server-side cannot."
-          severity="danger"
-          colors={{ bg: COLORS.bg, text: COLORS.text }}
-          fontFamily={FONTS.heading}
-        />
-      </TransitionSeries.Sequence>
-
-      <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
-      />
-
-      {/* Scene 24: Visual Metaphor — bounce */}
+      {/* Scene 23: Visual Metaphor — humor beat */}
       <TransitionSeries.Sequence durationInFrames={6 * FPS}>
         <VisualMetaphor
           icon="🗄️"
           heading="Your App's Memory"
-          analogy="Without a database, every time the server restarts, all data disappears. The database is the long-term memory your app depends on."
+          analogy="Without a database, your app has amnesia. Every restart it forgets everything. Your users cry. Your boss sends a Slack."
           colors={{
             bg: COLORS.bg,
             text: COLORS.text,
@@ -122,7 +123,23 @@ export const Section4: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
-          iconEffect="bounce"
+          iconEffect="pop"
+        />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={slide({ direction: "from-right" })}
+        timing={linearTiming({ durationInFrames: 20 })}
+      />
+
+      {/* Scene 24: Warning Callout — pattern interrupt */}
+      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
+        <WarningCallout
+          heading="Never Trust the Client"
+          body="Always validate data on the server before writing to the database. Client-side validation can be bypassed in 5 seconds flat."
+          severity="danger"
+          colors={{ bg: COLORS.bg, text: COLORS.text }}
+          fontFamily={FONTS.heading}
         />
       </TransitionSeries.Sequence>
 

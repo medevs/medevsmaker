@@ -2,11 +2,12 @@ import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
+import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
-import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
 import { CodeDisplay } from "../../shared/scenes/CodeDisplay";
-import { BulletRevealScene } from "../../shared/scenes/BulletRevealScene";
+import { VisualMetaphor } from "../../shared/scenes/VisualMetaphor";
+import { DataChart } from "../../shared/scenes/DataChart";
 import { KeyTakeaway } from "../../shared/scenes/KeyTakeaway";
 import { FONTS, COLORS, FPS, T } from "../styles";
 
@@ -35,29 +36,7 @@ export const Section3: React.FC = () => {
         timing={linearTiming({ durationInFrames: 20 })}
       />
 
-      {/* Scene 15: Concept Explain */}
-      <TransitionSeries.Sequence durationInFrames={7 * FPS}>
-        <ConceptExplain
-          heading="Servers Are Just Computers"
-          body="A server is a computer that's always on, always connected, and waiting for requests. When one arrives, it processes it and sends back a response."
-          analogy="It's the kitchen in our restaurant — always ready to cook whatever's ordered."
-          icon="🖥️"
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-        />
-      </TransitionSeries.Sequence>
-
-      <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
-      />
-
-      {/* Scene 16: Diagram Flow */}
+      {/* Scene 15: Diagram — request-response cycle (visual-heavy) */}
       <TransitionSeries.Sequence durationInFrames={10 * FPS}>
         <DiagramFlow
           title="The Request-Response Cycle"
@@ -83,7 +62,29 @@ export const Section3: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 17: Code Display */}
+      {/* Scene 16: Visual Metaphor — humor beat */}
+      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
+        <VisualMetaphor
+          icon="🍳"
+          heading="The Kitchen Analogy"
+          analogy="The server is a short-order cook. Request comes in, cook processes it, plates the response. No request? Cook just waits. Servers are patient."
+          colors={{
+            bg: COLORS.bg,
+            text: COLORS.text,
+            accent: COLORS.indigo,
+            muted: COLORS.muted,
+          }}
+          fontFamily={FONTS.heading}
+          iconEffect="bounce"
+        />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={wipe({ direction: "from-left" })}
+        timing={linearTiming({ durationInFrames: 18 })}
+      />
+
+      {/* Scene 17: Code Display — HTTP response */}
       <TransitionSeries.Sequence durationInFrames={12 * FPS}>
         <CodeDisplay
           title="A Simple HTTP Response"
@@ -113,21 +114,23 @@ Content-Type: text/html
         timing={linearTiming({ durationInFrames: 20 })}
       />
 
-      {/* Scene 18: Bullet Reveal */}
-      <TransitionSeries.Sequence durationInFrames={7 * FPS}>
-        <BulletRevealScene
+      {/* Scene 18: DataChart — HTTP status codes (visual, replaces BulletReveal) */}
+      <TransitionSeries.Sequence durationInFrames={10 * FPS}>
+        <DataChart
           heading="HTTP Status Codes"
-          items={[
-            "200 — OK, here's your page",
-            "301 — It moved, follow this link",
-            "404 — Page not found",
-            "500 — Server broke, not your fault",
+          bars={[
+            { label: "200 OK", value: 85, color: COLORS.green },
+            { label: "301 Moved", value: 8, color: COLORS.amber },
+            { label: "404 Missing", value: 5, color: COLORS.red },
+            { label: "500 Broken", value: 2, color: COLORS.red },
           ]}
-          bulletStyle="number"
+          maxValue={100}
+          suffix="%"
           colors={{
             bg: COLORS.bg,
             text: COLORS.text,
-            accent: COLORS.amber,
+            accent: COLORS.cyan,
+            muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
         />
@@ -141,7 +144,7 @@ Content-Type: text/html
       {/* Scene 19: Key Takeaway */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <KeyTakeaway
-          takeaway="The server receives requests, processes them, and sends back responses. Every website you visit follows this exact pattern."
+          takeaway="The server receives requests, processes them, and sends back responses with status codes. Every website follows this exact pattern."
           colors={{ bg: COLORS.bg, text: COLORS.text }}
           fontFamily={FONTS.heading}
         />

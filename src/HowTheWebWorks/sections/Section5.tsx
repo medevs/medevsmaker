@@ -2,9 +2,11 @@ import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
+import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
 import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
-import { BulletRevealScene } from "../../shared/scenes/BulletRevealScene";
+import { StatHighlight } from "../../shared/scenes/StatHighlight";
+import { VisualMetaphor } from "../../shared/scenes/VisualMetaphor";
 import { SummaryRecap } from "../../shared/scenes/SummaryRecap";
 import { EndScreen } from "../../shared/scenes/EndScreen";
 import { FONTS, COLORS, FPS, T } from "../styles";
@@ -25,7 +27,7 @@ export const Section5: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
-          entrance="slideLeft"
+          entrance="fadeUp"
         />
       </TransitionSeries.Sequence>
 
@@ -34,7 +36,7 @@ export const Section5: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 27: Full Lifecycle Diagram */}
+      {/* Scene 27: Full Lifecycle Diagram (visual) */}
       <TransitionSeries.Sequence durationInFrames={12 * FPS}>
         <DiagramFlow
           title="The Complete Request Lifecycle"
@@ -58,28 +60,25 @@ export const Section5: React.FC = () => {
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={slide({ direction: "from-bottom" })}
-        timing={linearTiming({ durationInFrames: 20 })}
+        presentation={wipe({ direction: "from-left" })}
+        timing={linearTiming({ durationInFrames: 18 })}
       />
 
-      {/* Scene 28: Bullet Reveal */}
-      <TransitionSeries.Sequence durationInFrames={8 * FPS}>
-        <BulletRevealScene
-          heading="What You Now Understand"
-          items={[
-            "Your browser is always the client",
-            "DNS turns names into numbers",
-            "Servers process every request",
-            "Databases store the real data",
-            "It all happens in milliseconds",
-          ]}
-          bulletStyle="check"
+      {/* Scene 28: Stat — pattern interrupt, speed payoff */}
+      <TransitionSeries.Sequence durationInFrames={5 * FPS}>
+        <StatHighlight
+          stat={100}
+          suffix="ms"
+          label="Average full page load"
+          context="Five hops, three lookups, one database query — all under a blink"
           colors={{
             bg: COLORS.bg,
             text: COLORS.text,
-            accent: COLORS.green,
+            accent: COLORS.violet,
+            muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          emphasis="gradient"
         />
       </TransitionSeries.Sequence>
 
@@ -88,7 +87,29 @@ export const Section5: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 29: Summary Recap — scale entrance */}
+      {/* Scene 29: Visual Metaphor — humor beat, final payoff */}
+      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
+        <VisualMetaphor
+          icon="⚡"
+          heading="Invisible Complexity"
+          analogy="All of this happens before you even see the page. Your browser runs a relay race across the planet while you impatiently stare at a loading spinner."
+          colors={{
+            bg: COLORS.bg,
+            text: COLORS.text,
+            accent: COLORS.violet,
+            muted: COLORS.muted,
+          }}
+          fontFamily={FONTS.heading}
+          iconEffect="bounce"
+        />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={slide({ direction: "from-bottom" })}
+        timing={linearTiming({ durationInFrames: 20 })}
+      />
+
+      {/* Scene 30: Summary Recap */}
       <TransitionSeries.Sequence durationInFrames={10 * FPS}>
         <SummaryRecap
           heading="Quick Recap"
@@ -115,7 +136,7 @@ export const Section5: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 30: End Screen (replaces basic Outro) */}
+      {/* Scene 31: End Screen */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <EndScreen
           channel="medevsmaker"

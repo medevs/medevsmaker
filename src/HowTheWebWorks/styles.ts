@@ -36,31 +36,31 @@ export const T = 15; // default transition frames (fade)
 // ─── Section Duration Calculations ──────────────────────────────
 // Formula: sum(scene durations in seconds) * FPS - sum(transition frame durations)
 
-// Section 1: Hook(5) + Title(8) + SectionTitle(3) + Concept(8) + Steps(8) + Metaphor(6) + Takeaway(5) = 43s
-// 6 transitions: fade(15) + slide(20) + fade(15) + fade(15) + slide(20) + fade(15) = 100
-// 43*30 - 100 = 1190
-export const SECTION_1_FRAMES = 1190;
+// Section 1: Hook(5) + Title(8) + SectionTitle(3) + Diagram(10) + Metaphor(6) + Steps(8) + Takeaway(5) = 45s
+// 6 transitions: fade(15) + slide(20) + fade(15) + slide(20) + fade(15) + fade(15) = 100
+// 45*30 - 100 = 1250
+export const SECTION_1_FRAMES = 1250;
 
-// Section 2: SectionTitle(3) + Concept(7) + Diagram(10) + Stat(5) + Metaphor(6) + Takeaway(5) = 36s
-// 5 transitions: fade(15) + fade(15) + wipe(18) + fade(15) + fade(15) = 78
-// 36*30 - 78 = 1002
-export const SECTION_2_FRAMES = 1002;
+// Section 2: SectionTitle(3) + Metaphor(6) + Diagram(10) + Stat(5) + Timeline(10) + Takeaway(5) = 39s
+// 5 transitions: fade(15) + slide(20) + wipe(18) + fade(15) + fade(15) = 83
+// 39*30 - 83 = 1087
+export const SECTION_2_FRAMES = 1087;
 
-// Section 3: SectionTitle(3) + Concept(7) + Diagram(10) + Code(12) + Bullets(7) + Takeaway(5) = 44s
-// 5 transitions: slide(20) + fade(15) + fade(15) + slide(20) + fade(15) = 85
-// 44*30 - 85 = 1235
-export const SECTION_3_FRAMES = 1235;
+// Section 3: SectionTitle(3) + Diagram(10) + Metaphor(6) + Code(12) + DataChart(10) + Takeaway(5) = 46s
+// 5 transitions: slide(20) + fade(15) + wipe(18) + slide(20) + fade(15) = 88
+// 46*30 - 88 = 1292
+export const SECTION_3_FRAMES = 1292;
 
-// Section 4: SectionTitle(3) + Concept(7) + Comparison(8) + Warning(6) + Metaphor(6) + Takeaway(5) = 35s
-// 5 transitions: fade(15) + wipe(18) + fade(15) + fade(15) + fade(15) = 78
-// 35*30 - 78 = 972
-export const SECTION_4_FRAMES = 972;
+// Section 4: SectionTitle(3) + BeforeAfter(10) + Comparison(8) + Metaphor(6) + Warning(6) + Takeaway(5) = 38s
+// 5 transitions: fade(15) + wipe(18) + fade(15) + slide(20) + fade(15) = 83
+// 38*30 - 83 = 1057
+export const SECTION_4_FRAMES = 1057;
 
-// Section 5: SectionTitle(3) + Diagram(12) + Bullets(8) + Summary(10) + EndScreen(5) = 38s
-// 4 transitions: fade(15) + slide(20) + fade(15) + fade(15) = 65
-// 38*30 - 65 = 1075
-export const SECTION_5_FRAMES = 1075;
+// Section 5: SectionTitle(3) + Diagram(12) + Stat(5) + Metaphor(6) + Summary(10) + EndScreen(5) = 41s
+// 5 transitions: fade(15) + wipe(18) + fade(15) + slide(20) + fade(15) = 83
+// 41*30 - 83 = 1147
+export const SECTION_5_FRAMES = 1147;
 
-// Total = 1190 + 1002 + 1235 + 972 + 1075 = 5474 frames = ~182.5s
-export const TOTAL_FRAMES = 5474;
+// Total = 1250 + 1087 + 1292 + 1057 + 1147 = 5833 frames = ~194.4s (~3:14)
+export const TOTAL_FRAMES = 5833;
 export const TOTAL_SECTIONS = 5;
