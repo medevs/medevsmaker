@@ -170,6 +170,7 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
           <div
             style={{
               flex: 1,
+              display: "flex",
               clipPath: `inset(0 ${100 - wipePercent}% 0 0)`,
             }}
           >
@@ -223,6 +224,7 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
         <div
           style={{
             flex: 1,
+            display: "flex",
             opacity: afterProgress,
             transform: `translateX(${afterX}px)`,
           }}

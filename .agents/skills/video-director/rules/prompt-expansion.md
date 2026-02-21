@@ -161,7 +161,7 @@ Plan 2-3 different transition types per video to avoid monotony:
 
 ### Entrance Variety
 Assign entrance props to scenes for visual variety:
-- HookQuestion: `typewriter` for dramatic reveals, `blur` for mysterious openings
+- HookQuestion: `fadeUp` for smooth reveals, `blur` for mysterious openings, `scale` for punchy hooks
 - TitleIntro: `scaleRotate` for dynamic titles, `splitReveal` for dramatic reveals
 - SectionTitle: alternate between `fadeUp`, `slideLeft`, `scaleBlur`
 - ConceptExplain: use `fadeLeft` or `typewriter` occasionally
@@ -314,3 +314,6 @@ Before finalizing the brief, verify:
 - [ ] (Educational) Hook creates curiosity gap in under 3 seconds
 - [ ] (Educational) Pattern interrupt every 25-35 seconds
 - [ ] (Educational) EndScreen used instead of basic Outro
+- [ ] HookQuestion uses scale, blur, or fadeUp entrance (not typewriter)
+- [ ] TimelineScene horizontal has ≤5 nodes with short labels (≤2 words)
+- [ ] Two-panel scenes (BeforeAfter, ComparisonSplit) have balanced item counts per side (±1)

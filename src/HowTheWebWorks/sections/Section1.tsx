@@ -21,7 +21,7 @@ export const Section1: React.FC = () => {
           subtext="Spoiler: it's not magic, but it's close"
           colors={{ bg: COLORS.bg, text: COLORS.text, accent: COLORS.cyan }}
           fontFamily={FONTS.heading}
-          entrance="typewriter"
+          entrance="fadeUp"
         />
       </TransitionSeries.Sequence>
 

@@ -306,7 +306,10 @@ npx remotion render src/index.ts <CompositionId> out/video.mp4
 - Vary transitions: import from `src/shared/transitions.ts` (fade, slideLeft, slideRight, slideUp, wipeRight, clockWipe, springFade)
 - Use visual polish props on components: `glow`, `gradient`, `entrance`, `emphasis`, `iconEffect`
 - New spring configs: `springBouncy` (damping: 8), `springHeavy` (damping: 15, stiffness: 80, mass: 2), `springGentle` (damping: 30, stiffness: 120)
-- Use entrance variety on scenes: HookQuestion(`typewriter`/`blur`), TitleIntro(`scaleRotate`/`splitReveal`), SectionTitle(`slideLeft`/`scaleBlur`), etc.
+- Use entrance variety on scenes: HookQuestion(`fadeUp`/`scale`/`blur`), TitleIntro(`scaleRotate`/`splitReveal`), SectionTitle(`slideLeft`/`scaleBlur`), etc.
+- HookQuestion entrance: use `scale`, `blur`, or `fadeUp` — never `typewriter` (too slow for hooks)
+- Two-panel scenes (BeforeAfter, ComparisonSplit): balance item counts per side (±1 max)
+- TimelineScene horizontal: max 5 nodes, labels ≤2 words. Use vertical for 6+
 
 ## Reference Files
 

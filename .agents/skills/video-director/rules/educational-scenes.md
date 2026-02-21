@@ -32,7 +32,7 @@ STRUCTURAL (don't count toward ratio):
 **Duration**: 4-5s (120-150 frames at 30fps)
 **Layout**: Centered hero
 **Animation**: Spring scale-in (0.9→1) + opacity fade
-**Props**: `question`, `subtext?`, `entrance?: 'scale' | 'blur' | 'typewriter'`
+**Props**: `question`, `subtext?`, `entrance?: 'scale' | 'blur' | 'fadeUp'`
 
 **When to use**: Every video's first scene. Ask a question the viewer thinks they know the answer to.
 
@@ -349,8 +349,9 @@ subtext: "It's more complex than you think"
 **When to use**: Historical progressions, evolution of technology, step sequences over time.
 
 **Content constraints**:
-- Max 6 nodes
-- Each label max 3 words
+- Horizontal layout: max 5 nodes, labels max 2 words. For 6+ nodes use vertical layout
+- Vertical layout: max 6 nodes
+- Each label max 3 words (vertical) / 2 words (horizontal)
 - Each description max 10 words
 
 ---
@@ -385,3 +386,4 @@ subtext: "It's more complex than you think"
 9. **No 2+ text-heavy scenes in a row** — always insert a visual scene between them
 10. **DiagramFlow preference**: When explaining a process, always prefer DiagramFlow over ConceptExplain
 11. **Replace pattern**: ConceptExplain with body > 20 words should be split into: short ConceptExplain (heading + 1 line) followed by DiagramFlow or VisualMetaphor
+12. **Two-panel balance**: BeforeAfter and ComparisonSplit must have balanced item counts per side (±1 item max) for visual symmetry

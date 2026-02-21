@@ -2,10 +2,10 @@
 
 ## Custom Skills
 
-### /video — AI Video Director
+### /video-director — AI Video Director
 Slash command that converts a simple idea into a complete Remotion video.
 
-**Usage**: `/video <idea>`
+**Usage**: `/video-director <idea>`
 
 **Supported video types**: educational, promo, tutorial, explainer, social-clip, announcement, demo
 
