@@ -6,11 +6,14 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { entrances } from "../animations";
 
 type BulletItem = {
   text: string;
   icon?: string;
 };
+
+type BulletEntrance = "left" | "right" | "up" | "fade";
 
 type BulletRevealProps = {
   items: BulletItem[];
@@ -20,6 +23,7 @@ type BulletRevealProps = {
   fontSize?: number;
   fontFamily?: string;
   style?: "dot" | "check" | "arrow" | "number";
+  entrance?: BulletEntrance;
 };
 
 const BULLET_CHARS: Record<string, string> = {
@@ -37,6 +41,7 @@ export const BulletReveal: React.FC<BulletRevealProps> = ({
   fontSize = 32,
   fontFamily = "Inter",
   style = "dot",
+  entrance = "left",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -50,12 +55,26 @@ export const BulletReveal: React.FC<BulletRevealProps> = ({
           fps,
           config: SCENE_DEFAULTS.springSmooth,
         });
-        const opacity = interpolate(progress, [0, 1], [0, 1], {
+        const clampedProgress = interpolate(progress, [0, 1], [0, 1], {
           extrapolateRight: "clamp",
         });
-        const x = interpolate(progress, [0, 1], [-30, 0], {
-          extrapolateRight: "clamp",
-        });
+
+        let entranceStyle: { opacity: number; transform: string };
+        switch (entrance) {
+          case "right":
+            entranceStyle = entrances.fadeRight(clampedProgress);
+            break;
+          case "up":
+            entranceStyle = entrances.fadeUp(clampedProgress);
+            break;
+          case "fade":
+            entranceStyle = { opacity: clampedProgress, transform: "none" };
+            break;
+          case "left":
+          default:
+            entranceStyle = entrances.fadeLeft(clampedProgress);
+            break;
+        }
 
         const bullet =
           style === "number"
@@ -66,8 +85,8 @@ export const BulletReveal: React.FC<BulletRevealProps> = ({
           <div
             key={i}
             style={{
-              opacity,
-              transform: `translateX(${x}px)`,
+              opacity: entranceStyle.opacity,
+              transform: entranceStyle.transform,
               display: "flex",
               alignItems: "center",
               gap: 16,

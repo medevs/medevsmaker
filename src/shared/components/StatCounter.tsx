@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
 
 type StatCounterProps = {
   target: number;
@@ -17,6 +17,8 @@ type StatCounterProps = {
   fontSize?: number;
   labelFontSize?: number;
   fontFamily?: string;
+  glow?: boolean;
+  gradientText?: boolean;
 };
 
 export const StatCounter: React.FC<StatCounterProps> = ({
@@ -29,6 +31,8 @@ export const StatCounter: React.FC<StatCounterProps> = ({
   fontSize = 120,
   labelFontSize = 28,
   fontFamily = "Inter",
+  glow = false,
+  gradientText = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -66,6 +70,28 @@ export const StatCounter: React.FC<StatCounterProps> = ({
     extrapolateRight: "clamp",
   });
 
+  const numberStyle: React.CSSProperties = {
+    fontFamily,
+    fontSize,
+    fontWeight: 800,
+    transform: `scale(${scale})`,
+    lineHeight: 1,
+  };
+
+  if (gradientText) {
+    numberStyle.background = GRADIENTS.textGradient(color, BRAND.violet);
+    numberStyle.backgroundClip = "text";
+    numberStyle.WebkitBackgroundClip = "text";
+    numberStyle.color = "transparent";
+    numberStyle.WebkitTextFillColor = "transparent";
+  } else {
+    numberStyle.color = color;
+  }
+
+  if (glow) {
+    numberStyle.textShadow = SHADOWS.glow(color);
+  }
+
   return (
     <div
       style={{
@@ -75,16 +101,7 @@ export const StatCounter: React.FC<StatCounterProps> = ({
         gap: 8,
       }}
     >
-      <div
-        style={{
-          fontFamily,
-          fontSize,
-          fontWeight: 800,
-          color,
-          transform: `scale(${scale})`,
-          lineHeight: 1,
-        }}
-      >
+      <div style={numberStyle}>
         {prefix}
         {displayNumber.toLocaleString()}
         {suffix}

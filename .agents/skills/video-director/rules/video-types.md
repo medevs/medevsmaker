@@ -24,8 +24,8 @@ Long-form conceptual teaching content: "How X Works", "Understanding Y", "Fundam
 | Duration Range | 180-600s (3-10 min) |
 | FPS | 30 |
 | Resolution | 1920x1080 |
-| Background | Subtle gradient (bg → bgLight) |
-| Transitions | fade, 15 frames |
+| Background | Subtle gradient (bg → bgLight) with particle overlay |
+| Transitions | Mixed: fade(15), slide(20), wipe(18) — vary per section |
 | Pacing | medium |
 | CTA | no (outro has subscribe CTA) |
 | Typography | Heading: Inter / 800, Body: Inter / 400, Code: JetBrains Mono / 400 |
@@ -75,8 +75,17 @@ Outro (4-6s)
 ### Audience
 See [audience-profile.md](audience-profile.md) for full audience definition and tone rules.
 
+### Visual Polish
+- Use `<Watermark>` in index.tsx for persistent branding
+- Use `<Background overlay="particles">` for visual depth
+- Use `EndScreen` instead of `Outro` for polished end cards with gradient text and glow CTA
+- Vary entrance props across scenes: typewriter hooks, scaleRotate titles, slideLeft section titles
+- Use `glow` and `gradient` props on DiagramBox, AccentBox, StatCounter for emphasis
+- Mix transition types across sections (don't use only fade)
+- New scenes available: ColdOpen, BeforeAfter, TimelineScene, DataChart
+
 ### Scene Catalog
-See [educational-scenes.md](educational-scenes.md) for all 15 reusable scene types with props, durations, and usage rules.
+See [educational-scenes.md](educational-scenes.md) for all 20 reusable scene types with props, durations, and usage rules.
 
 ### Architecture
 See [long-form-architecture.md](long-form-architecture.md) for the section-based file structure and code patterns.

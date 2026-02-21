@@ -1,6 +1,7 @@
 import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
 import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
@@ -25,6 +26,7 @@ export const Section2: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          entrance="scaleBlur"
         />
       </TransitionSeries.Sequence>
 
@@ -47,6 +49,7 @@ export const Section2: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          headingEntrance="fadeLeft"
         />
       </TransitionSeries.Sequence>
 
@@ -55,7 +58,7 @@ export const Section2: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 10: Diagram Flow */}
+      {/* Scene 10: Diagram Flow — glow on nodes */}
       <TransitionSeries.Sequence durationInFrames={10 * FPS}>
         <DiagramFlow
           title="How DNS Resolution Works"
@@ -79,11 +82,11 @@ export const Section2: React.FC = () => {
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={wipe({ direction: "from-left" })}
+        timing={linearTiming({ durationInFrames: 18 })}
       />
 
-      {/* Scene 11: Stat Highlight */}
+      {/* Scene 11: Stat Highlight — glow emphasis */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <StatHighlight
           stat={1.1}
@@ -97,6 +100,7 @@ export const Section2: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          emphasis="glow"
         />
       </TransitionSeries.Sequence>
 
@@ -105,7 +109,7 @@ export const Section2: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 12: Visual Metaphor */}
+      {/* Scene 12: Visual Metaphor — bounce */}
       <TransitionSeries.Sequence durationInFrames={6 * FPS}>
         <VisualMetaphor
           icon="📱"
@@ -118,6 +122,7 @@ export const Section2: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          iconEffect="bounce"
         />
       </TransitionSeries.Sequence>
 

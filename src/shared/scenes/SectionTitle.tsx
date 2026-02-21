@@ -8,6 +8,9 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { SectionBadge } from "../components/SectionBadge";
+import { entrances } from "../animations";
+
+type SectionTitleEntrance = "fadeUp" | "slideLeft" | "scaleBlur";
 
 type SectionTitleProps = {
   sectionNumber: number;
@@ -16,6 +19,7 @@ type SectionTitleProps = {
   totalSections?: number;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
+  entrance?: SectionTitleEntrance;
 };
 
 export const SectionTitle: React.FC<SectionTitleProps> = ({
@@ -29,6 +33,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
     muted: BRAND.textMuted,
   },
   fontFamily = "Inter",
+  entrance = "fadeUp",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -38,12 +43,32 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
     fps,
     config: SCENE_DEFAULTS.springSmooth,
   });
-  const titleOpacity = interpolate(titleP, [0, 1], [0, 1], {
+  const clampedP = interpolate(titleP, [0, 1], [0, 1], {
     extrapolateRight: "clamp",
   });
-  const titleY = interpolate(titleP, [0, 1], [30, 0], {
-    extrapolateRight: "clamp",
-  });
+
+  let titleStyle: React.CSSProperties;
+
+  if (entrance === "slideLeft") {
+    const s = entrances.fadeLeft(clampedP);
+    titleStyle = { opacity: s.opacity, transform: s.transform };
+  } else if (entrance === "scaleBlur") {
+    const s = entrances.blurFade(clampedP);
+    titleStyle = {
+      opacity: s.opacity,
+      transform: s.transform,
+      filter: s.filter,
+    };
+  } else {
+    // Default "fadeUp" — original behavior
+    const titleY = interpolate(titleP, [0, 1], [30, 0], {
+      extrapolateRight: "clamp",
+    });
+    titleStyle = {
+      opacity: clampedP,
+      transform: `translateY(${titleY}px)`,
+    };
+  }
 
   const subP = spring({
     frame: frame - 18,
@@ -68,8 +93,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
       <SectionBadge number={sectionNumber} color={colors.accent} fontFamily={fontFamily} />
       <div
         style={{
-          opacity: titleOpacity,
-          transform: `translateY(${titleY}px)`,
+          ...titleStyle,
           fontFamily,
           fontSize: 56,
           fontWeight: 800,

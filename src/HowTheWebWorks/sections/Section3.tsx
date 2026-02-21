@@ -1,6 +1,7 @@
 import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { slide } from "@remotion/transitions/slide";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
 import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
@@ -25,12 +26,13 @@ export const Section3: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          entrance="slideLeft"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-right" })}
+        timing={linearTiming({ durationInFrames: 20 })}
       />
 
       {/* Scene 15: Concept Explain */}
@@ -107,8 +109,8 @@ Content-Type: text/html
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-left" })}
+        timing={linearTiming({ durationInFrames: 20 })}
       />
 
       {/* Scene 18: Bullet Reveal */}

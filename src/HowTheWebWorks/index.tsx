@@ -2,6 +2,7 @@ import React from "react";
 import { AbsoluteFill, Series } from "remotion";
 import { Background } from "../shared/components/Background";
 import { ProgressBar } from "../shared/components/ProgressBar";
+import { Watermark } from "../shared/components/Watermark";
 import { Section1 } from "./sections/Section1";
 import { Section2 } from "./sections/Section2";
 import { Section3 } from "./sections/Section3";
@@ -21,7 +22,11 @@ import {
 export const HowTheWebWorks: React.FC = () => {
   return (
     <AbsoluteFill>
-      <Background colors={[COLORS.bg, COLORS.bgLight]} />
+      <Background
+        colors={[COLORS.bg, COLORS.bgLight]}
+        overlay="particles"
+        particles={{ count: 25, speed: 0.3, opacity: 0.1 }}
+      />
       <Series>
         <Series.Sequence durationInFrames={SECTION_1_FRAMES}>
           <Section1 />
@@ -69,6 +74,7 @@ export const HowTheWebWorks: React.FC = () => {
           />
         </Series.Sequence>
       </Series>
+      <Watermark fontFamily={FONTS.heading} delay={30} />
     </AbsoluteFill>
   );
 };

@@ -6,13 +6,17 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, GRADIENTS } from "../styles";
+import { entrances } from "../animations";
+
+type TitleEntrance = "fadeUp" | "scaleRotate" | "splitReveal";
 
 type TitleIntroProps = {
   title: string;
   objectives: string[];
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
+  entrance?: TitleEntrance;
 };
 
 export const TitleIntro: React.FC<TitleIntroProps> = ({
@@ -25,13 +29,38 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
     muted: BRAND.textMuted,
   },
   fontFamily = "Inter",
+  entrance = "fadeUp",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
   const titleP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
-  const titleOpacity = interpolate(titleP, [0, 1], [0, 1]);
-  const titleY = interpolate(titleP, [0, 1], [40, 0]);
+  const clampedP = interpolate(titleP, [0, 1], [0, 1], {
+    extrapolateRight: "clamp",
+  });
+
+  let titleStyle: React.CSSProperties;
+
+  if (entrance === "scaleRotate") {
+    const s = entrances.scaleRotate(clampedP);
+    titleStyle = { opacity: s.opacity, transform: s.transform };
+  } else if (entrance === "splitReveal") {
+    // Title splits from center with clip-path
+    const revealWidth = interpolate(clampedP, [0, 1], [0, 100], {
+      extrapolateRight: "clamp",
+    });
+    titleStyle = {
+      opacity: 1,
+      clipPath: `inset(0 ${100 - revealWidth}% 0 0)`,
+    };
+  } else {
+    // Default "fadeUp" — original behavior
+    const titleY = interpolate(titleP, [0, 1], [40, 0]);
+    titleStyle = {
+      opacity: clampedP,
+      transform: `translateY(${titleY}px)`,
+    };
+  }
 
   const lineP = spring({
     frame: frame - 12,
@@ -54,8 +83,7 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
     >
       <div
         style={{
-          opacity: titleOpacity,
-          transform: `translateY(${titleY}px)`,
+          ...titleStyle,
           fontFamily,
           fontSize: 64,
           fontWeight: 800,

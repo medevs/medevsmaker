@@ -5,7 +5,8 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { glowPulse } from "../animations";
 
 type AccentBoxVariant = "info" | "warning" | "success" | "danger";
 
@@ -16,6 +17,8 @@ type AccentBoxProps = {
   delay?: number;
   fontSize?: number;
   fontFamily?: string;
+  glow?: boolean;
+  gradient?: boolean;
 };
 
 const VARIANT_COLORS: Record<AccentBoxVariant, string> = {
@@ -39,6 +42,8 @@ export const AccentBox: React.FC<AccentBoxProps> = ({
   delay = 0,
   fontSize = 28,
   fontFamily = "Inter",
+  glow = false,
+  gradient = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -58,12 +63,19 @@ export const AccentBox: React.FC<AccentBoxProps> = ({
     extrapolateRight: "clamp",
   });
 
+  const boxShadow = glow
+    ? glowPulse(frame, color, 90)
+    : SHADOWS.sm;
+
   return (
     <div
       style={{
         opacity,
         transform: `scale(${scale})`,
-        backgroundColor: `${color}10`,
+        backgroundColor: gradient ? undefined : `${color}10`,
+        background: gradient
+          ? GRADIENTS.cardGradient(color)
+          : undefined,
         borderLeft: `4px solid ${color}`,
         borderRadius: 12,
         padding: "24px 32px",
@@ -72,6 +84,7 @@ export const AccentBox: React.FC<AccentBoxProps> = ({
         gap: 8,
         width: "100%",
         boxSizing: "border-box",
+        boxShadow,
       }}
     >
       {title && (

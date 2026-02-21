@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
 
 type ProgressBarProps = {
   totalSections: number;
@@ -14,6 +14,7 @@ type ProgressBarProps = {
   activeColor?: string;
   inactiveColor?: string;
   fontFamily?: string;
+  variant?: "bar" | "pill";
 };
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -23,6 +24,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   activeColor = BRAND.indigo,
   inactiveColor = BRAND.border,
   fontFamily = "Inter",
+  variant = "bar",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -36,6 +38,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     extrapolateRight: "clamp",
   });
 
+  const isPill = variant === "pill";
+
   return (
     <div
       style={{
@@ -46,7 +50,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         opacity,
         display: "flex",
         alignItems: "center",
-        gap: 12,
+        gap: isPill ? 8 : 12,
       }}
     >
       {Array.from({ length: totalSections }, (_, i) => {
@@ -66,16 +70,21 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           <div
             key={i}
             style={{
-              flex: 1,
-              height: 6,
-              borderRadius: 3,
+              flex: isPill ? undefined : 1,
+              width: isPill ? (isCurrent ? 40 : 12) : undefined,
+              height: isPill ? 12 : 6,
+              borderRadius: isPill ? 6 : 3,
               backgroundColor: isActive ? activeColor : inactiveColor,
               transform: `scaleX(${scale})`,
               transformOrigin: "left center",
               position: "relative",
+              transition: isPill ? "width 0.3s" : undefined,
+              boxShadow: isActive && isCurrent
+                ? SHADOWS.glow(activeColor)
+                : undefined,
             }}
           >
-            {isCurrent && (
+            {isCurrent && !isPill && (
               <div
                 style={{
                   position: "absolute",

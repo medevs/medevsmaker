@@ -141,9 +141,11 @@ Architecture details: [rules/long-form-architecture.md](rules/long-form-architec
 
 Educational videos use shared building-block components from `src/shared/`:
 
-**Components** (`src/shared/components/`): CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar
+**Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern
 
-**Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, WarningCallout, StepSequence
+**Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart
+
+**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances, pulse, glowPulse), transitions.ts (TRANSITIONS presets), styles.ts (SHADOWS, GRADIENTS, spring configs)
 
 Import these instead of re-implementing. See [rules/educational-scenes.md](rules/educational-scenes.md) for full prop documentation.
 
@@ -285,13 +287,20 @@ npx remotion render src/index.ts <CompositionId> out/video.mp4
 - Educational videos: max 60 scenes, max 7 sections
 - Educational videos: use shared scene components — don't re-implement
 - Educational videos: every concept needs an analogy
+- Use `<Watermark>` in index.tsx for persistent branding overlay
+- Use `<Background overlay="particles">` for visual depth
+- Use `EndScreen` instead of basic `Outro` for polished end cards
+- Vary transitions: import from `src/shared/transitions.ts` (fade, slideLeft, slideRight, slideUp, wipeRight, clockWipe, springFade)
+- Use visual polish props on components: `glow`, `gradient`, `entrance`, `emphasis`, `iconEffect`
+- New spring configs: `springBouncy` (damping: 8), `springHeavy` (damping: 15, stiffness: 80, mass: 2), `springGentle` (damping: 30, stiffness: 120)
+- Use entrance variety on scenes: HookQuestion(`typewriter`/`blur`), TitleIntro(`scaleRotate`/`splitReveal`), SectionTitle(`slideLeft`/`scaleBlur`), etc.
 
 ## Reference Files
 
 - [rules/prompt-expansion.md](rules/prompt-expansion.md) — Phase 1 expansion engine
 - [rules/video-types.md](rules/video-types.md) — All 7 video types with defaults, scenes, rules, palettes
 - [rules/audience-profile.md](rules/audience-profile.md) — Target audience and tone rules
-- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene type catalog (15 types)
+- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene type catalog (20 types)
 - [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for educational videos
 - [rules/assets/promo-example.tsx](rules/assets/promo-example.tsx) — Complete promo reference implementation
 - [rules/assets/tutorial-example.tsx](rules/assets/tutorial-example.tsx) — Complete tutorial reference implementation

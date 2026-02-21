@@ -7,12 +7,16 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { entrances } from "../animations";
+
+type ItemEntrance = "left" | "scale" | "fade";
 
 type SummaryRecapProps = {
   heading?: string;
   items: string[];
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
+  itemEntrance?: ItemEntrance;
 };
 
 export const SummaryRecap: React.FC<SummaryRecapProps> = ({
@@ -25,6 +29,7 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
     muted: BRAND.textMuted,
   },
   fontFamily = "Inter",
+  itemEntrance = "left",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -62,19 +67,32 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
           fps,
           config: SCENE_DEFAULTS.springSmooth,
         });
-        const itemOpacity = interpolate(itemP, [0, 1], [0, 1], {
+        const clampedP = interpolate(itemP, [0, 1], [0, 1], {
           extrapolateRight: "clamp",
         });
-        const itemX = interpolate(itemP, [0, 1], [-30, 0], {
-          extrapolateRight: "clamp",
-        });
+
+        let itemStyle: React.CSSProperties;
+        if (itemEntrance === "scale") {
+          const s = entrances.scaleUp(clampedP);
+          itemStyle = { opacity: s.opacity, transform: s.transform };
+        } else if (itemEntrance === "fade") {
+          itemStyle = { opacity: clampedP };
+        } else {
+          // Default "left" — original behavior
+          const itemX = interpolate(itemP, [0, 1], [-30, 0], {
+            extrapolateRight: "clamp",
+          });
+          itemStyle = {
+            opacity: clampedP,
+            transform: `translateX(${itemX}px)`,
+          };
+        }
 
         return (
           <div
             key={i}
             style={{
-              opacity: itemOpacity,
-              transform: `translateX(${itemX}px)`,
+              ...itemStyle,
               display: "flex",
               alignItems: "center",
               gap: 16,

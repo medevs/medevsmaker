@@ -6,7 +6,8 @@ import {
   interpolate,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/JetBrainsMono";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { glowPulse } from "../animations";
 
 const { fontFamily: codeFont } = loadFont("normal", {
   weights: ["400"],
@@ -20,6 +21,7 @@ type CodeBlockProps = {
   typewriter?: boolean;
   highlightLines?: number[];
   showLineNumbers?: boolean;
+  glowBorder?: boolean;
 };
 
 export const CodeBlock: React.FC<CodeBlockProps> = ({
@@ -29,6 +31,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   typewriter = true,
   highlightLines = [],
   showLineNumbers = false,
+  glowBorder = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -70,6 +73,10 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
     return line.slice(0, visible);
   });
 
+  const boxShadow = glowBorder
+    ? glowPulse(frame, BRAND.indigo, 90)
+    : SHADOWS.md;
+
   return (
     <div
       style={{
@@ -81,6 +88,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
         border: `1px solid ${BRAND.border}`,
         width: "100%",
         boxSizing: "border-box",
+        boxShadow,
       }}
     >
       {visibleLines.map((line, i) => {

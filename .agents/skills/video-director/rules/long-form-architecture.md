@@ -34,6 +34,7 @@ Uses `<Series>` to chain sections sequentially. Each section is a self-contained
 import { AbsoluteFill, Series } from "remotion";
 import { Background } from "../shared/components/Background";
 import { ProgressBar } from "../shared/components/ProgressBar";
+import { Watermark } from "../shared/components/Watermark";
 import { Section1 } from "./sections/Section1";
 import { Section2 } from "./sections/Section2";
 // ...
@@ -43,7 +44,7 @@ const TOTAL_SECTIONS = 4;
 export const VideoName: React.FC = () => {
   return (
     <AbsoluteFill>
-      <Background colors={["#0f0f1a", "#1a1a2e"]} />
+      <Background colors={["#0f0f1a", "#1a1a2e"]} overlay="particles" particles={{ count: 25, speed: 0.3, opacity: 0.1 }} />
       <Series>
         <Series.Sequence durationInFrames={SECTION_1_FRAMES}>
           <Section1 />
@@ -55,6 +56,7 @@ export const VideoName: React.FC = () => {
         </Series.Sequence>
         {/* ... more sections */}
       </Series>
+      <Watermark delay={30} />
     </AbsoluteFill>
   );
 };
@@ -67,26 +69,27 @@ Each section uses `<TransitionSeries>` internally for its scenes:
 ```tsx
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { slide } from "@remotion/transitions/slide";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
 import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { KeyTakeaway } from "../../shared/scenes/KeyTakeaway";
 
-const T = 15; // transition frames
+const T = 15; // default fade transition frames
 
 export const Section1: React.FC = () => {
   return (
     <TransitionSeries>
       <TransitionSeries.Sequence durationInFrames={3 * 30}>
-        <SectionTitle sectionNumber={1} title="The Client" />
+        <SectionTitle sectionNumber={1} title="The Client" entrance="slideLeft" />
       </TransitionSeries.Sequence>
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-right" })}
+        timing={linearTiming({ durationInFrames: 20 })}
       />
       <TransitionSeries.Sequence durationInFrames={7 * 30}>
-        <ConceptExplain heading="Your Browser" body="..." analogy="..." />
+        <ConceptExplain heading="Your Browser" body="..." analogy="..." headingEntrance="fadeLeft" />
       </TransitionSeries.Sequence>
-      {/* ... more scenes */}
+      {/* ... more scenes — mix fade, slide, wipe transitions */}
       <TransitionSeries.Transition
         presentation={fade()}
         timing={linearTiming({ durationInFrames: T })}
@@ -103,8 +106,10 @@ export const Section1: React.FC = () => {
 
 ### Per-section formula
 ```
-sectionFrames = sum(scene durations in frames) - (numTransitions * transitionFrames)
+sectionFrames = sum(scene durations in frames) - sum(each transition's durationInFrames)
 ```
+
+**Note**: When using mixed transitions (fade=15, slide=20, wipe=18), sum each transition's actual duration — don't assume all transitions are the same length.
 
 ### Total video formula
 ```

@@ -15,6 +15,7 @@ type DiagramArrowProps = {
   strokeWidth?: number;
   label?: string;
   fontFamily?: string;
+  glow?: boolean;
 };
 
 export const DiagramArrow: React.FC<DiagramArrowProps> = ({
@@ -25,6 +26,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
   strokeWidth = 3,
   label,
   fontFamily = "Inter",
+  glow = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -68,6 +70,8 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
     extrapolateRight: "clamp",
   });
 
+  const filterId = `arrow-glow-${from.x}-${from.y}-${to.x}-${to.y}`;
+
   return (
     <svg
       style={{
@@ -79,6 +83,17 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
         pointerEvents: "none",
       }}
     >
+      {glow && (
+        <defs>
+          <filter id={filterId}>
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+      )}
       {/* Line */}
       <line
         x1={from.x}
@@ -89,6 +104,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
         strokeWidth={strokeWidth}
         strokeDasharray={length}
         strokeDashoffset={length * (1 - drawProgress)}
+        filter={glow ? `url(#${filterId})` : undefined}
       />
       {/* Arrow head */}
       {drawProgress > 0.1 && (
@@ -96,6 +112,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
           points={`${endX},${endY} ${arrowL.x},${arrowL.y} ${arrowR.x},${arrowR.y}`}
           fill={color}
           opacity={drawProgress}
+          filter={glow ? `url(#${filterId})` : undefined}
         />
       )}
       {/* Label */}

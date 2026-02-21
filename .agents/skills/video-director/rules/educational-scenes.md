@@ -17,7 +17,7 @@ All scene types available for educational videos. Each scene is a reusable React
 **Duration**: 4-5s (120-150 frames at 30fps)
 **Layout**: Centered hero
 **Animation**: Spring scale-in (0.9→1) + opacity fade
-**Props**: `question`, `subtext?`
+**Props**: `question`, `subtext?`, `entrance?: 'scale' | 'blur' | 'typewriter'`
 
 **When to use**: Every video's first scene. Ask a question the viewer thinks they know the answer to.
 
@@ -40,7 +40,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Centered with underline divider
 **Animation**: Title fade-up → underline expand → objectives stagger-in
-**Props**: `title`, `objectives[]`
+**Props**: `title`, `objectives[]`, `entrance?: 'fadeUp' | 'scaleRotate' | 'splitReveal'`
 
 **When to use**: Immediately after the hook. Sets expectations.
 
@@ -57,7 +57,7 @@ subtext: "It's more complex than you think"
 **Duration**: 3-4s (90-120 frames)
 **Layout**: Centered with section badge
 **Animation**: Badge pop-in → title fade-up → subtitle fade
-**Props**: `sectionNumber`, `title`, `subtitle?`
+**Props**: `sectionNumber`, `title`, `subtitle?`, `entrance?: 'fadeUp' | 'slideLeft' | 'scaleBlur'`
 
 **When to use**: Start of every section (3-7 per video).
 
@@ -73,7 +73,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Left-aligned with padding
 **Animation**: Head fade-up → body fade-up (12f delay) → analogy fade (25f delay)
-**Props**: `heading`, `body`, `analogy?`, `icon?`
+**Props**: `heading`, `body`, `analogy?`, `icon?`, `headingEntrance?: 'fadeUp' | 'fadeLeft' | 'typewriter'`
 
 **When to use**: The workhorse scene for explaining any concept.
 
@@ -126,7 +126,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-10s (180-300 frames)
 **Layout**: Heading top, two equal columns with VS divider
 **Animation**: Heading fade → left slide-in-from-left → right slide-in-from-right → items stagger
-**Props**: `heading`, `left: {title, items[], color}`, `right: {title, items[], color}`
+**Props**: `heading`, `left: {title, items[], color}`, `right: {title, items[], color}`, `entranceStyle?: 'slide' | 'spring' | 'overshoot'`
 
 **When to use**: Good vs bad, before/after, old vs new, two approaches.
 
@@ -143,7 +143,7 @@ subtext: "It's more complex than you think"
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered hero
 **Animation**: Number counts from 0 → target with spring scale → label fade-up → context fade
-**Props**: `stat`, `suffix?`, `prefix?`, `label`, `context?`
+**Props**: `stat`, `suffix?`, `prefix?`, `label`, `context?`, `emphasis?: 'default' | 'glow' | 'gradient'`
 
 **When to use**: Key statistics, percentages, performance numbers.
 
@@ -178,7 +178,7 @@ subtext: "It's more complex than you think"
 **Duration**: 5-8s (150-240 frames)
 **Layout**: Centered — icon on top, heading middle, analogy below
 **Animation**: Icon pop-in (snappy spring) → heading fade-up → analogy fade
-**Props**: `icon`, `heading`, `analogy`
+**Props**: `icon`, `heading`, `analogy`, `iconEffect?: 'pop' | 'rotate' | 'bounce'`
 
 **When to use**: Breaking complex concepts with relatable analogies. Use after dense scenes.
 
@@ -212,7 +212,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, numbered list stacked
 **Animation**: Heading fade-up → items stagger-in with number badges
-**Props**: `heading?`, `items[]`
+**Props**: `heading?`, `items[]`, `itemEntrance?: 'left' | 'scale' | 'fade'`
 
 **When to use**: Near the end of the video, before the outro.
 
@@ -271,6 +271,89 @@ subtext: "It's more complex than you think"
 - Each step title max 5 words
 - Each step description max 12 words (optional)
 - Duration scales: 2s per step minimum
+
+---
+
+## 16. EndScreen
+
+**Purpose**: Polished end card with gradient text, animated CTA, and optional social links. Replaces basic Outro.
+**Duration**: 4-6s (120-180 frames)
+**Layout**: Centered — channel name + underline + CTA button + tagline + social links
+**Animation**: Channel name bouncy spring → underline expand → CTA fade-up with glow pulse → tagline fade → social links stagger
+**Props**: `channel?`, `cta?`, `tagline?`, `socialLinks?: {label, handle}[]`, `showParticles?`
+
+**When to use**: As a premium replacement for Outro. Use for polished end cards with branding.
+
+**Content constraints**:
+- CTA max 4 words
+- Tagline max 6 words
+- Max 3 social links
+
+---
+
+## 17. ColdOpen
+
+**Purpose**: Dramatic opening with bold statement, glow/gradient effects, and particle background.
+**Duration**: 4-6s (120-180 frames)
+**Layout**: Centered hero
+**Animation**: Heavy spring entrance with glow pulse or gradient text
+**Props**: `statement`, `subtext?`, `entrance?: 'glow' | 'gradient' | 'typewriter'`, `showParticles?`
+
+**When to use**: Alternative to HookQuestion for dramatic, statement-driven openings.
+
+**Content constraints**:
+- Statement max 8 words
+- Subtext max 12 words
+
+---
+
+## 18. BeforeAfter
+
+**Purpose**: Before/after comparison with animated wipe or split reveal.
+**Duration**: 8-12s (240-360 frames)
+**Layout**: Heading top, two panels side by side
+**Animation**: Before panel slides in → after panel wipe-reveals or slides in
+**Props**: `heading`, `before: {title, items[]}`, `after: {title, items[]}`, `reveal?: 'wipe' | 'split'`
+
+**When to use**: Showing improvements, transformations, old vs new approaches.
+
+**Content constraints**:
+- Heading max 6 words
+- Each panel: title max 3 words, max 4 items, each max 8 words
+
+---
+
+## 19. TimelineScene
+
+**Purpose**: Horizontal or vertical timeline with progressively drawn line and node pop-ins.
+**Duration**: 8-12s (240-360 frames)
+**Layout**: Heading top, timeline centered
+**Animation**: Nodes pop-in staggered with connecting lines drawing between them
+**Props**: `heading`, `nodes: {label, description?}[]`, `layout?: 'horizontal' | 'vertical'`
+
+**When to use**: Historical progressions, evolution of technology, step sequences over time.
+
+**Content constraints**:
+- Max 6 nodes
+- Each label max 3 words
+- Each description max 10 words
+
+---
+
+## 20. DataChart
+
+**Purpose**: Animated bar chart with staggered spring-animated bars and value labels.
+**Duration**: 8-12s (240-360 frames)
+**Layout**: Heading top, bars stacked vertically
+**Animation**: Heading fade → bars grow with spring + value counter
+**Props**: `heading`, `bars: {label, value, color?}[]`, `maxValue?`, `suffix?`
+
+**When to use**: Statistics, performance comparisons, survey results, market data.
+
+**Content constraints**:
+- Max 6 bars
+- Each label max 3 words
+- Suffix: "%", "x", "ms", "K", etc.
 
 ---
 

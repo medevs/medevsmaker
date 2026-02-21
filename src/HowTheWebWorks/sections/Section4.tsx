@@ -1,6 +1,7 @@
 import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
 import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { ComparisonSplit } from "../../shared/scenes/ComparisonSplit";
@@ -25,6 +26,7 @@ export const Section4: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          entrance="scaleBlur"
         />
       </TransitionSeries.Sequence>
 
@@ -33,7 +35,7 @@ export const Section4: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 21: Concept Explain */}
+      {/* Scene 21: Concept Explain — fadeLeft heading */}
       <TransitionSeries.Sequence durationInFrames={7 * FPS}>
         <ConceptExplain
           heading="Persistent Storage"
@@ -47,15 +49,16 @@ export const Section4: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          headingEntrance="fadeLeft"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={wipe({ direction: "from-left" })}
+        timing={linearTiming({ durationInFrames: 18 })}
       />
 
-      {/* Scene 22: Comparison Split */}
+      {/* Scene 22: Comparison Split — overshoot entrance */}
       <TransitionSeries.Sequence durationInFrames={8 * FPS}>
         <ComparisonSplit
           heading="SQL vs NoSQL"
@@ -81,6 +84,7 @@ export const Section4: React.FC = () => {
           }}
           colors={{ bg: COLORS.bg, text: COLORS.text, muted: COLORS.muted }}
           fontFamily={FONTS.heading}
+          entranceStyle="overshoot"
         />
       </TransitionSeries.Sequence>
 
@@ -105,7 +109,7 @@ export const Section4: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 24: Visual Metaphor */}
+      {/* Scene 24: Visual Metaphor — bounce */}
       <TransitionSeries.Sequence durationInFrames={6 * FPS}>
         <VisualMetaphor
           icon="🗄️"
@@ -118,6 +122,7 @@ export const Section4: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          iconEffect="bounce"
         />
       </TransitionSeries.Sequence>
 

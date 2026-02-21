@@ -1,5 +1,7 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
+import { SHADOWS, GRADIENTS } from "../styles";
+import { entrances, type EntranceName } from "../animations";
 
 interface AnimatedTextProps {
   text: string;
@@ -9,6 +11,9 @@ interface AnimatedTextProps {
   fontWeight?: number;
   fontFamily?: string;
   style?: React.CSSProperties;
+  entrance?: EntranceName;
+  glow?: boolean;
+  gradientColors?: [string, string];
 }
 
 export const AnimatedText: React.FC<AnimatedTextProps> = ({
@@ -19,6 +24,9 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
   fontWeight = 700,
   fontFamily = "Inter",
   style = {},
+  entrance = "fadeUp",
+  glow = false,
+  gradientColors,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -29,23 +37,40 @@ export const AnimatedText: React.FC<AnimatedTextProps> = ({
     config: { damping: 200 },
   });
 
-  const opacity = interpolate(progress, [0, 1], [0, 1], {
+  const clampedProgress = interpolate(progress, [0, 1], [0, 1], {
     extrapolateRight: "clamp",
   });
 
-  const translateY = interpolate(progress, [0, 1], [30, 0], {
-    extrapolateRight: "clamp",
-  });
+  const entranceStyle = entrances[entrance](clampedProgress);
+
+  const textStyle: React.CSSProperties = {
+    fontSize,
+    fontWeight,
+    fontFamily,
+    ...entranceStyle,
+  };
+
+  if (gradientColors) {
+    textStyle.background = GRADIENTS.textGradient(
+      gradientColors[0],
+      gradientColors[1]
+    );
+    textStyle.backgroundClip = "text";
+    textStyle.WebkitBackgroundClip = "text";
+    textStyle.color = "transparent";
+    textStyle.WebkitTextFillColor = "transparent";
+  } else {
+    textStyle.color = color;
+  }
+
+  if (glow) {
+    textStyle.textShadow = SHADOWS.glow(gradientColors?.[0] ?? color);
+  }
 
   return (
     <div
       style={{
-        fontSize,
-        color,
-        fontWeight,
-        fontFamily,
-        opacity,
-        transform: `translateY(${translateY}px)`,
+        ...textStyle,
         ...style,
       }}
     >

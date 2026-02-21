@@ -9,6 +9,8 @@ import {
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { StatCounter } from "../components/StatCounter";
 
+type StatEmphasis = "default" | "glow" | "gradient";
+
 type StatHighlightProps = {
   stat: number;
   suffix?: string;
@@ -17,6 +19,7 @@ type StatHighlightProps = {
   context?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
+  emphasis?: StatEmphasis;
 };
 
 export const StatHighlight: React.FC<StatHighlightProps> = ({
@@ -32,6 +35,7 @@ export const StatHighlight: React.FC<StatHighlightProps> = ({
     muted: BRAND.textMuted,
   },
   fontFamily = "Inter",
+  emphasis = "default",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -63,6 +67,8 @@ export const StatHighlight: React.FC<StatHighlightProps> = ({
         label={label}
         color={colors.accent}
         fontFamily={fontFamily}
+        glow={emphasis === "glow"}
+        gradientText={emphasis === "gradient"}
       />
       {context && (
         <div

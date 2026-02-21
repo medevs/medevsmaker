@@ -1,11 +1,12 @@
 import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { slide } from "@remotion/transitions/slide";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
 import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
 import { BulletRevealScene } from "../../shared/scenes/BulletRevealScene";
 import { SummaryRecap } from "../../shared/scenes/SummaryRecap";
-import { Outro } from "../../shared/scenes/Outro";
+import { EndScreen } from "../../shared/scenes/EndScreen";
 import { FONTS, COLORS, FPS, T } from "../styles";
 
 export const Section5: React.FC = () => {
@@ -24,6 +25,7 @@ export const Section5: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          entrance="slideLeft"
         />
       </TransitionSeries.Sequence>
 
@@ -56,8 +58,8 @@ export const Section5: React.FC = () => {
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-bottom" })}
+        timing={linearTiming({ durationInFrames: 20 })}
       />
 
       {/* Scene 28: Bullet Reveal */}
@@ -86,7 +88,7 @@ export const Section5: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 29: Summary Recap */}
+      {/* Scene 29: Summary Recap — scale entrance */}
       <TransitionSeries.Sequence durationInFrames={10 * FPS}>
         <SummaryRecap
           heading="Quick Recap"
@@ -104,6 +106,7 @@ export const Section5: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          itemEntrance="scale"
         />
       </TransitionSeries.Sequence>
 
@@ -112,9 +115,9 @@ export const Section5: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 30: Outro */}
+      {/* Scene 30: End Screen (replaces basic Outro) */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
-        <Outro
+        <EndScreen
           channel="medevsmaker"
           cta="Subscribe for more"
           tagline="Tech explained for builders"

@@ -136,7 +136,44 @@ For educational videos, use the medevsmaker-educational palette by default (see 
 | Demo | Clean solid with accent border |
 | Educational | Gradient (bg → bgLight, subtle) |
 
-## Step 5: Output Format
+## Step 5: Visual Effects
+
+Choose visual polish settings for the production brief:
+
+### Background Overlay
+| Video Type | Default Overlay |
+|-----------|----------------|
+| Promo | radialGlow |
+| Tutorial | grid |
+| Explainer | particles |
+| Social Clip | none |
+| Announcement | radialGlow |
+| Demo | grid |
+| Educational | particles |
+
+### Transition Variety
+Plan 2-3 different transition types per video to avoid monotony:
+- **fade** (15 frames) — default, use for most transitions
+- **slideLeft/slideRight** (20 frames) — use after section titles or between conceptual shifts
+- **slideUp** (20 frames) — use before summary/recap scenes
+- **wipeRight** (18 frames) — use after diagram/stat scenes for dramatic reveal
+- **clockWipe** (25 frames) — use sparingly for major section changes
+
+### Entrance Variety
+Assign entrance props to scenes for visual variety:
+- HookQuestion: `typewriter` for dramatic reveals, `blur` for mysterious openings
+- TitleIntro: `scaleRotate` for dynamic titles, `splitReveal` for dramatic reveals
+- SectionTitle: alternate between `fadeUp`, `slideLeft`, `scaleBlur`
+- ConceptExplain: use `fadeLeft` or `typewriter` occasionally
+- VisualMetaphor: rotate `iconEffect` between `pop`, `rotate`, `bounce`
+- StatHighlight: use `glow` or `gradient` emphasis for key stats
+- ComparisonSplit: use `overshoot` for dramatic comparisons
+
+### Branding
+- Always add `<Watermark>` in index.tsx
+- Use `EndScreen` instead of basic `Outro` for educational videos
+
+## Step 6: Output Format
 
 Animation selection is handled in Phase 2/3. The brief only needs to note the pacing strategy (fast/medium/slow) — the code generator picks specific springs and timings.
 

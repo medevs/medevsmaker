@@ -1,6 +1,7 @@
 import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
+import { slide } from "@remotion/transitions/slide";
 import { HookQuestion } from "../../shared/scenes/HookQuestion";
 import { TitleIntro } from "../../shared/scenes/TitleIntro";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
@@ -13,13 +14,14 @@ import { FONTS, COLORS, FPS, T } from "../styles";
 export const Section1: React.FC = () => {
   return (
     <TransitionSeries>
-      {/* Scene 1: Hook */}
+      {/* Scene 1: Hook — typewriter entrance */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <HookQuestion
           question="What actually happens when you click a link?"
           subtext="It's way more complex than you think"
           colors={{ bg: COLORS.bg, text: COLORS.text, accent: COLORS.cyan }}
           fontFamily={FONTS.heading}
+          entrance="typewriter"
         />
       </TransitionSeries.Sequence>
 
@@ -28,7 +30,7 @@ export const Section1: React.FC = () => {
         timing={linearTiming({ durationInFrames: T })}
       />
 
-      {/* Scene 2: Title Intro */}
+      {/* Scene 2: Title Intro — scaleRotate entrance */}
       <TransitionSeries.Sequence durationInFrames={8 * FPS}>
         <TitleIntro
           title="How the Web Actually Works"
@@ -45,15 +47,16 @@ export const Section1: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          entrance="scaleRotate"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-left" })}
+        timing={linearTiming({ durationInFrames: 20 })}
       />
 
-      {/* Scene 3: Section Title */}
+      {/* Scene 3: Section Title — slideLeft entrance */}
       <TransitionSeries.Sequence durationInFrames={3 * FPS}>
         <SectionTitle
           sectionNumber={1}
@@ -66,6 +69,7 @@ export const Section1: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          entrance="slideLeft"
         />
       </TransitionSeries.Sequence>
 
@@ -125,11 +129,11 @@ export const Section1: React.FC = () => {
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-right" })}
+        timing={linearTiming({ durationInFrames: 20 })}
       />
 
-      {/* Scene 6: Visual Metaphor */}
+      {/* Scene 6: Visual Metaphor — rotate icon effect */}
       <TransitionSeries.Sequence durationInFrames={6 * FPS}>
         <VisualMetaphor
           icon="🍽️"
@@ -142,6 +146,7 @@ export const Section1: React.FC = () => {
             muted: COLORS.muted,
           }}
           fontFamily={FONTS.heading}
+          iconEffect="rotate"
         />
       </TransitionSeries.Sequence>
 

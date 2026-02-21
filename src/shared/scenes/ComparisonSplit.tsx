@@ -14,12 +14,15 @@ type ComparisonSide = {
   color: string;
 };
 
+type EntranceStyle = "slide" | "spring" | "overshoot";
+
 type ComparisonSplitProps = {
   heading: string;
   left: ComparisonSide;
   right: ComparisonSide;
   colors?: { bg: string; text: string; muted: string };
   fontFamily?: string;
+  entranceStyle?: EntranceStyle;
 };
 
 export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
@@ -28,6 +31,7 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
   right,
   colors = { bg: BRAND.bg, text: BRAND.text, muted: BRAND.textMuted },
   fontFamily = "Inter",
+  entranceStyle = "slide",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -35,12 +39,22 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
 
+  // Pick spring config based on entrance style
+  const sideConfig =
+    entranceStyle === "overshoot"
+      ? SCENE_DEFAULTS.springBouncy
+      : entranceStyle === "spring"
+        ? SCENE_DEFAULTS.springSnappy
+        : SCENE_DEFAULTS.springSmooth;
+
+  const sideDistance = entranceStyle === "overshoot" ? 100 : 60;
+
   const leftP = spring({
     frame: frame - 10,
     fps,
-    config: SCENE_DEFAULTS.springSmooth,
+    config: sideConfig,
   });
-  const leftX = interpolate(leftP, [0, 1], [-60, 0], {
+  const leftX = interpolate(leftP, [0, 1], [-sideDistance, 0], {
     extrapolateRight: "clamp",
   });
   const leftOpacity = interpolate(leftP, [0, 1], [0, 1], {
@@ -50,9 +64,9 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
   const rightP = spring({
     frame: frame - 10,
     fps,
-    config: SCENE_DEFAULTS.springSmooth,
+    config: sideConfig,
   });
-  const rightX = interpolate(rightP, [0, 1], [60, 0], {
+  const rightX = interpolate(rightP, [0, 1], [sideDistance, 0], {
     extrapolateRight: "clamp",
   });
   const rightOpacity = interpolate(rightP, [0, 1], [0, 1], {

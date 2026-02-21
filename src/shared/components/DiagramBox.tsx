@@ -5,7 +5,8 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { glowPulse } from "../animations";
 
 type DiagramBoxProps = {
   label: string;
@@ -16,6 +17,8 @@ type DiagramBoxProps = {
   height?: number;
   fontSize?: number;
   fontFamily?: string;
+  glow?: boolean;
+  gradient?: boolean;
 };
 
 export const DiagramBox: React.FC<DiagramBoxProps> = ({
@@ -27,6 +30,8 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
   height = 100,
   fontSize = 24,
   fontFamily = "Inter",
+  glow = false,
+  gradient = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -44,6 +49,10 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
     extrapolateRight: "clamp",
   });
 
+  const boxShadow = glow
+    ? glowPulse(frame, color, 90)
+    : SHADOWS.sm;
+
   return (
     <div
       style={{
@@ -52,13 +61,19 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
         width,
         height,
         borderRadius: 16,
-        backgroundColor: `${color}18`,
+        backgroundColor: gradient
+          ? undefined
+          : `${color}18`,
+        background: gradient
+          ? GRADIENTS.cardGradient(color)
+          : undefined,
         border: `2px solid ${color}`,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         gap: 4,
+        boxShadow,
       }}
     >
       <div

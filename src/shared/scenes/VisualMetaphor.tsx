@@ -7,6 +7,9 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { pulse } from "../animations";
+
+type IconEffect = "pop" | "rotate" | "bounce";
 
 type VisualMetaphorProps = {
   icon: string;
@@ -14,6 +17,7 @@ type VisualMetaphorProps = {
   analogy: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
+  iconEffect?: IconEffect;
 };
 
 export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
@@ -27,6 +31,7 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
     muted: BRAND.textMuted,
   },
   fontFamily = "Inter",
+  iconEffect = "pop",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -39,6 +44,18 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
   const iconScale = interpolate(iconP, [0, 1], [0, 1], {
     extrapolateRight: "clamp",
   });
+
+  let iconTransform: string;
+  if (iconEffect === "rotate") {
+    const rotation = pulse(frame, 120, 8);
+    iconTransform = `scale(${iconScale}) rotate(${rotation}deg)`;
+  } else if (iconEffect === "bounce") {
+    const bounceY = pulse(frame, 45, 6);
+    iconTransform = `scale(${iconScale}) translateY(${bounceY}px)`;
+  } else {
+    // Default "pop" — original behavior
+    iconTransform = `scale(${iconScale})`;
+  }
 
   const headP = spring({
     frame: frame - 10,
@@ -74,7 +91,7 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
     >
       <div
         style={{
-          transform: `scale(${iconScale})`,
+          transform: iconTransform,
           fontSize: 96,
           lineHeight: 1,
         }}

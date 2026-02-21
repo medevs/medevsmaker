@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
 
 type SectionBadgeProps = {
   number: number;
@@ -13,6 +13,7 @@ type SectionBadgeProps = {
   color?: string;
   size?: number;
   fontFamily?: string;
+  gradient?: boolean;
 };
 
 export const SectionBadge: React.FC<SectionBadgeProps> = ({
@@ -21,6 +22,7 @@ export const SectionBadge: React.FC<SectionBadgeProps> = ({
   color = BRAND.indigo,
   size = 56,
   fontFamily = "Inter",
+  gradient = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -44,7 +46,10 @@ export const SectionBadge: React.FC<SectionBadgeProps> = ({
         width: size,
         height: size,
         borderRadius: 14,
-        backgroundColor: color,
+        backgroundColor: gradient ? undefined : color,
+        background: gradient
+          ? GRADIENTS.textGradient(color, BRAND.violet)
+          : undefined,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -52,6 +57,7 @@ export const SectionBadge: React.FC<SectionBadgeProps> = ({
         fontSize: size * 0.45,
         fontWeight: 800,
         color: "#ffffff",
+        boxShadow: SHADOWS.glow(color),
       }}
     >
       {label}
