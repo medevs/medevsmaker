@@ -56,7 +56,7 @@ export const VideoName: React.FC = () => {
         </Series.Sequence>
         {/* ... more sections */}
       </Series>
-      <Watermark delay={30} />
+      <Watermark position="top-right" delay={30} />
     </AbsoluteFill>
   );
 };
@@ -175,6 +175,17 @@ The `<ProgressBar>` component renders at the bottom of the screen, showing secti
 ```
 
 This gives viewers a sense of progress through the video — especially important for 5-10 minute content.
+
+## Visual Balance
+
+Educational videos target a **60/40 visual-to-text ratio** for content scenes:
+
+- **60%+ visual-heavy**: DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter, TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen
+- **40% max text-heavy**: ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout
+- **Structural scenes** (HookQuestion, TitleIntro, SectionTitle, KeyTakeaway, SummaryRecap, EndScreen) don't count toward this ratio
+
+### Humor Placement
+Each section should have 1 humor beat — typically in a VisualMetaphor (absurd analogy) or WarningCallout (exaggerated consequence). Place it after a dense concept scene to act as a pattern interrupt and retention hook.
 
 ## Performance Notes
 

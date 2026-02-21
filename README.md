@@ -1,369 +1,181 @@
 # medevsmaker — AI Video Director
 
-Generate complete Remotion videos from a single prompt. Built for the medevsmaker YouTube channel — 65 educational videos targeting vibe coders and non-technical AI builders.
+One prompt, complete Remotion video. Educational content, promos, tutorials, and more.
+
+## What This Does
+
+Type `/video How the Web Actually Works` in Claude Code and get a complete, production-ready Remotion video project — scenes, animations, transitions, branding, and rendering instructions. No video editing knowledge required.
 
 ## Quick Start
 
 ```bash
-# Install dependencies
+# 1. Clone and install
+git clone <repo-url> && cd medevsmaker
 npm install
 
-# Preview videos in Remotion Studio
+# 2. Generate a video (in Claude Code)
+/video How the Web Actually Works
+
+# 3. Preview in Remotion Studio
 npx remotion studio
 
-# Generate a video (in Claude Code)
-/video How the Web Actually Works
+# 4. Render to MP4
+npx remotion render src/index.ts HowTheWebWorks out/video.mp4
 ```
 
 ## How It Works
 
-The `/video` command triggers a 3-phase AI workflow that turns a simple idea into production-ready Remotion code.
-
-### Phase 1: Research & Expand
-
-You type a topic. Claude:
-
-1. **Detects the video type** — educational (conceptual topics), promo, tutorial, explainer, social-clip, announcement, or demo
-2. **Looks up the content plan** — if `youtube-content-plan.md` exists, pulls bullet points for the matching topic
-3. **Generates a production brief** — duration, sections, learning objectives, color palette, typography, audience context
-
-**Type detection examples:**
-| Input | Detected Type |
-|-------|--------------|
-| `How the Web Actually Works` | educational |
-| `Promo for AI note-taking app` | promo |
-| `Tutorial: set up Next.js` | tutorial |
-| `Instagram reel: 3 reasons to use TypeScript` | social-clip |
-
-Educational is the default for conceptual/learning topics. Promo is the default for product/service topics.
-
-### Phase 2: Scene Planning
-
-Claude creates a **scene manifest** — a table mapping every scene to one of 15 reusable scene types.
-
 ```
-Section 1: Introduction (~32s, 6 scenes)
-| # | Scene Type      | Duration | Content                          |
-|---|-----------------|----------|----------------------------------|
-| 1 | HookQuestion    | 4s       | "What happens when you click..." |
-| 2 | TitleIntro      | 7s       | Title + 3 learning objectives    |
-| 3 | SectionTitle    | 3s       | "01 — The Client"                |
-| 4 | ConceptExplain  | 7s       | Browser = client concept          |
-| 5 | VisualMetaphor  | 6s       | Phone analogy                    |
-| 6 | KeyTakeaway     | 5s       | Section summary                  |
+Your Idea → [Phase 1: Research & Expand] → Production Brief
+         → [Phase 2: Scene Planning]     → Scene Manifest
+         → [Phase 3: Code Generation]    → Remotion Code
 ```
 
-**Rules enforced:**
-- Video starts with HookQuestion + TitleIntro
-- Video ends with SummaryRecap + Outro
-- Each section bookended by SectionTitle and KeyTakeaway
-- No 3+ consecutive same scene type
-- Dense/light alternation (concept -> metaphor -> diagram)
-- Every concept gets an analogy
-
-### Phase 3: Batched Code Generation
-
-Claude writes files in dependency order:
-
-```
-src/HowTheWebWorks/
-  styles.ts              # 1st — colors, fonts, tokens
-  sections/
-    Section1.tsx          # 2nd — imports shared scene components
-    Section2.tsx
-    Section3.tsx
-    Section4.tsx
-  index.tsx               # 3rd — chains sections with <Series>
-
-src/Root.tsx              # 4th — adds <Composition> entry
-```
-
-Then provides render commands:
-```bash
-npx remotion studio                                          # Preview
-npx remotion render src/index.ts HowTheWebWorks out/video.mp4  # Export
-```
-
----
-
-## Project Structure
-
-```
-src/
-  index.ts                          # registerRoot entry point
-  Root.tsx                          # Composition registry (all videos)
-  shared/                           # Reusable library
-    styles.ts                       # baseTokens + BRAND palette + SCENE_DEFAULTS
-    components/                     # 10 building-block components
-      AnimatedText.tsx              # Fade-up text with spring animation
-      Background.tsx                # Gradient background layer
-      CodeBlock.tsx                 # Syntax-highlighted code with typewriter
-      DiagramBox.tsx                # Labeled box for flow diagrams
-      DiagramArrow.tsx              # SVG animated arrow between points
-      StatCounter.tsx               # Animated number counter (0 -> target)
-      BulletReveal.tsx              # Staggered bullet point list
-      SectionBadge.tsx              # Section number badge (01, 02...)
-      AccentBox.tsx                 # Colored-border card (info/warning/success/danger)
-      ProgressBar.tsx               # Video progress indicator (section dots)
-    scenes/                         # 15 scene templates
-      HookQuestion.tsx              # Provocative opening question
-      TitleIntro.tsx                # Video title + learning objectives
-      SectionTitle.tsx              # Chapter marker (badge + title)
-      ConceptExplain.tsx            # Heading + body + analogy
-      DiagramFlow.tsx               # Animated boxes + arrows
-      CodeDisplay.tsx               # Code block + annotations
-      ComparisonSplit.tsx           # Two-column A vs B
-      StatHighlight.tsx             # Big animated number
-      BulletRevealScene.tsx         # Progressive bullet list
-      VisualMetaphor.tsx            # Large emoji + analogy text
-      KeyTakeaway.tsx               # Accent box summary
-      SummaryRecap.tsx              # Numbered recap list
-      Outro.tsx                     # Channel branding + CTA
-      WarningCallout.tsx            # Red/amber danger callout
-      StepSequence.tsx              # Numbered steps with badges
-  <VideoName>/                      # One folder per generated video
-    index.tsx                       # Main composition
-    styles.ts                       # Video-specific design tokens
-    sections/                       # Section files (educational)
-    scenes/                         # Scene files (short-form)
-
-.agents/skills/                     # Skills source (managed by npx skills)
-  remotion-best-practices/          # Remotion API knowledge
-  video-director/                   # Video Director workflow
-    SKILL.md                        # Main skill definition (3-phase workflow)
-    rules/
-      prompt-expansion.md           # Phase 1 rules
-      video-types.md                # 7 video types with defaults
-      audience-profile.md           # Target audience + tone rules
-      educational-scenes.md         # 15 scene type catalog
-      long-form-architecture.md     # Section-based code architecture
-      assets/
-        promo-example.tsx           # Reference: short promo video
-        tutorial-example.tsx        # Reference: tutorial video
-        educational-example.tsx     # Reference: long-form educational video
-
-commands/video/command.md           # /video slash command definition
-```
-
----
+1. **Research & Expand** — Detects video type, generates a production brief with sections, colors, typography, audience context, and engagement plan
+2. **Scene Planning** — Maps every scene to one of 20 reusable templates with timing, content, and visual variety
+3. **Code Generation** — Writes all Remotion files in dependency order: `styles.ts` → `sections/` → `index.tsx` → `Root.tsx`
 
 ## Video Types
 
-### Educational (NEW — primary type)
+| Type | Auto-detected keywords | Default Duration |
+|------|----------------------|-----------------|
+| Educational | conceptual topics, "how X works" | 3-10 min |
+| Promo | "promo", "ad", "launch" | 15-30s |
+| Tutorial | "tutorial", "how to", "guide" | 60-120s |
+| Explainer | "explainer", "how it works" | 30-60s |
+| Social Clip | "reel", "tiktok", "shorts" | 15-30s |
+| Announcement | "announcing", "new feature" | 15-30s |
+| Demo | "demo", "showcase", "preview" | 30-60s |
 
-| Setting | Value |
-|---------|-------|
-| Duration | 3-10 minutes (default 5 min) |
-| Scenes | 15-60 |
-| Sections | 3-7 |
-| FPS | 30 |
-| Resolution | 1920x1080 |
-| Architecture | Section-based (`<Series>` + `<TransitionSeries>`) |
+## What You Get
 
-**Structure:** Hook -> Title Intro -> [Section 1..N] -> Summary Recap -> Outro
+```
+src/HowTheWebWorks/
+  styles.ts              # Colors, fonts, timing tokens
+  sections/
+    Section1.tsx          # Introduction (HookQuestion + TitleIntro + content)
+    Section2.tsx          # Core concept sections
+    Section3.tsx
+    ...
+  index.tsx               # Main composition — chains sections
+src/Root.tsx              # Updated with new Composition entry
+```
 
-Each section: SectionTitle -> [Content Scenes] -> KeyTakeaway
+## Shared Library
 
-### Short-Form Types
+### Components (`src/shared/components/`) — 13 total
 
-| Type | Default Duration | Scenes | Use Case |
-|------|-----------------|--------|----------|
-| Promo | 20s | 3-6 | Product launches, marketing |
-| Tutorial | 90s | 8-12 | Step-by-step guides |
-| Explainer | 45s | 5-8 | Concept explanations |
-| Social Clip | 15s | 3-4 | Reels, TikTok, Shorts |
-| Announcement | 20s | 5 | Feature releases |
-| Demo | 45s | 5-7 | Product walkthroughs |
-
----
-
-## Shared Component Library
-
-### Building-Block Components (`src/shared/components/`)
-
-| Component | What It Does |
+| Component | Description |
 |-----------|-------------|
-| `AnimatedText` | Text with fade-up spring animation |
-| `Background` | Gradient background (static or animated) |
-| `CodeBlock` | Typewriter code reveal with line numbers and highlights |
-| `DiagramBox` | Labeled box that scales in (for flow diagrams) |
-| `DiagramArrow` | SVG arrow that draws itself between two points |
-| `StatCounter` | Number that counts from 0 to target with spring |
-| `BulletReveal` | Bullet points that stagger in from the left |
-| `SectionBadge` | Numbered badge (01, 02...) with pop-in animation |
-| `AccentBox` | Colored card with left border (info/warning/success/danger) |
-| `ProgressBar` | Section dots at the bottom of the screen |
+| AnimatedText | Text with fade-up spring animation |
+| Background | Gradient background with particle/grid overlay |
+| CodeBlock | Typewriter code reveal with line numbers |
+| DiagramBox | Labeled box that scales in for flow diagrams |
+| DiagramArrow | SVG arrow that draws itself between points |
+| StatCounter | Number counter from 0 to target with spring |
+| BulletReveal | Bullet points that stagger in from left |
+| SectionBadge | Numbered badge (01, 02...) with pop-in |
+| AccentBox | Colored card with left border (info/warning/success/danger) |
+| ProgressBar | Section progress dots at screen bottom |
+| Watermark | Persistent branding overlay (default: top-right) |
+| ParticleField | Deterministic floating particle system |
+| GridPattern | Subtle background grid |
 
-### Scene Templates (`src/shared/scenes/`)
+### Scene Templates (`src/shared/scenes/`) — 20 total
 
-| Scene | Duration | Layout | Used For |
-|-------|----------|--------|----------|
-| `HookQuestion` | 4-5s | Centered hero | Opening question (always first) |
-| `TitleIntro` | 6-8s | Centered + divider | Title + objectives (always second) |
-| `SectionTitle` | 3-4s | Centered + badge | Chapter markers |
-| `ConceptExplain` | 6-8s | Left-aligned | Core teaching content |
-| `DiagramFlow` | 8-12s | Title + diagram | Processes, flows, architectures |
-| `CodeDisplay` | 8-15s | Code + annotations | Technical code content |
-| `ComparisonSplit` | 6-10s | Two columns + VS | A vs B comparisons |
-| `StatHighlight` | 4-6s | Centered number | Key statistics |
-| `BulletRevealScene` | 5-10s | Heading + bullets | Lists of items |
-| `VisualMetaphor` | 5-8s | Icon + text | Analogies for abstract concepts |
-| `KeyTakeaway` | 4-6s | Centered + accent box | Section summaries (end of each section) |
-| `SummaryRecap` | 8-12s | Numbered list | Video recap (near end) |
-| `Outro` | 4-6s | Centered branding | Channel CTA (always last) |
-| `WarningCallout` | 5-7s | Centered + danger box | Mistakes, pitfalls |
-| `StepSequence` | 8-12s | Heading + numbered steps | How-to processes |
-
----
-
-## Architecture: Educational Videos
-
-Educational videos use a **section pattern** instead of one flat TransitionSeries.
-
-### Why?
-
-A 5-minute video at 30fps has ~25-35 scenes. Putting them all in one TransitionSeries makes the file enormous and hard to maintain. Instead:
-
-- `index.tsx` uses `<Series>` to chain sections sequentially
-- Each `sections/SectionN.tsx` uses `<TransitionSeries>` for its own scenes
-- Shared scene components are imported from `src/shared/scenes/` — never re-implemented
-- `<ProgressBar>` is overlaid on each section to show video progress
-
-### Duration Calculation
-
-```
-Per section:  sectionFrames = sum(scene durations) - (numTransitions * 15)
-Total video:  totalFrames = sum(all sectionFrames)
-```
-
-Note: `<Series>` has no transitions between sections. SectionTitle scenes act as natural visual breaks.
-
-### Example (from `educational-example.tsx`)
-
-```
-Section 1 (Intro):      885 frames  = (4+7+3+7+6+5)*30 - 5*15
-Section 2 (The Server):  990 frames  = (3+7+10+10+5)*30 - 4*15
-Section 3 (The Database): 945 frames  = (3+7+8+5+6+5)*30 - 5*15
-Section 4 (Wrap-up):     435 frames  = (10+5)*30 - 1*15
-Total:                  3255 frames  = 108.5 seconds (~1:49)
-```
-
----
+| Scene | Duration | Used For |
+|-------|----------|----------|
+| HookQuestion | 4-5s | Opening question (always first) |
+| TitleIntro | 6-8s | Title + objectives (always second) |
+| SectionTitle | 3-4s | Chapter markers |
+| ConceptExplain | 6-8s | Core teaching content |
+| DiagramFlow | 8-12s | Processes, flows, architectures |
+| CodeDisplay | 8-15s | Technical code content |
+| ComparisonSplit | 6-10s | A vs B comparisons |
+| StatHighlight | 4-6s | Key statistics |
+| BulletRevealScene | 5-10s | Lists of items |
+| VisualMetaphor | 5-8s | Analogies for abstract concepts |
+| KeyTakeaway | 4-6s | Section summaries |
+| SummaryRecap | 8-12s | Video recap |
+| Outro | 4-6s | Channel branding + CTA |
+| EndScreen | 4-6s | Polished end card with gradient text + glow CTA |
+| WarningCallout | 5-7s | Mistakes, pitfalls |
+| StepSequence | 8-12s | Numbered step-by-step processes |
+| ColdOpen | 4-6s | Dramatic opening statements |
+| BeforeAfter | 8-12s | Before/after comparisons with wipe |
+| TimelineScene | 8-12s | Historical progressions, evolution |
+| DataChart | 8-12s | Animated bar charts, statistics |
 
 ## Design System
 
-### Brand Palette (medevsmaker-educational)
+### Color Palette (medevsmaker-educational)
 
-| Token | Color | Hex | Usage |
-|-------|-------|-----|-------|
-| indigo | Purple-blue | `#6366f1` | Primary, section badges |
-| violet | Purple | `#8b5cf6` | Secondary, concept accents |
-| cyan | Blue-green | `#06b6d4` | Accent, bullet markers, code text |
-| amber | Yellow-orange | `#f59e0b` | Warnings, highlights |
-| green | Emerald | `#10b981` | Success, "good" examples |
-| red | Red | `#ef4444` | Danger, "bad" examples |
-| bg | Dark navy | `#0f0f1a` | Background |
-| text | Near white | `#f8fafc` | Primary text |
-| textMuted | Slate gray | `#94a3b8` | Secondary text, labels |
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Indigo | `#6366f1` | Primary, section badges |
+| Violet | `#8b5cf6` | Secondary, concept accents |
+| Cyan | `#06b6d4` | Accent, bullet markers |
+| Amber | `#f59e0b` | Warnings, highlights |
+| Green | `#10b981` | Success, good examples |
+| Red | `#ef4444` | Danger, bad examples |
+| Background | `#0f0f1a` | Dark navy |
+| Text | `#f8fafc` | Near white |
 
-### Animation Defaults
+### Spring Configs
 
-| Constant | Value | Usage |
-|----------|-------|-------|
-| `springSmooth` | `{ damping: 200 }` | Text, fade-ups, gentle entrances |
-| `springSnappy` | `{ damping: 20, stiffness: 200 }` | Badges, buttons, pop-ins |
-| `transitionFrames` | 15 (0.5s at 30fps) | Fade between scenes |
-| `staggerDelay` | 8 frames | Between staggered list items |
+| Config | Settings | Use |
+|--------|----------|-----|
+| Smooth | `damping: 200` | Text, fade-ups, gentle entrances |
+| Snappy | `damping: 20, stiffness: 200` | Badges, buttons, pop-ins |
+| Bouncy | `damping: 8` | Dramatic entrances |
+| Heavy | `damping: 15, stiffness: 80, mass: 2` | Impactful reveals |
 
-### Remotion Rules
+### Transition Presets
 
-- All animations via `useCurrentFrame()` + `interpolate()` / `spring()` — NEVER CSS
-- Always `extrapolateRight: 'clamp'` on interpolations
-- `<AbsoluteFill>` + flexbox for layout — never manual `position: absolute`
-- Fonts via `@remotion/google-fonts` — never CSS `@import`
-- `durationInFrames = seconds * fps`
+| Transition | Frames | Use |
+|------------|--------|-----|
+| fade | 15 | Default, most transitions |
+| slide | 20 | After section titles, conceptual shifts |
+| wipe | 18 | After diagram/stat scenes |
+| clockWipe | 25 | Major section changes (sparingly) |
+| springFade | 15 | Smooth spring-based fade |
 
----
+## For Contributors
 
-## Target Audience
-
-**Vibe coders** — build with AI tools (Cursor, Claude, Copilot) but lack deep CS understanding.
-
-**Non-technical AI builders** — PMs, designers, founders using no-code/low-code + AI.
-
-### Tone
-- Direct, not condescending
-- Peer, not teacher
-- Practical, not theoretical
-- Every concept gets an analogy
-
-### On-Screen Text Limits
-- Headings: max 6 words
-- Body: max 15 words per line, max 2 lines
-- Code: max 5 lines
-- Bullets: max 8 words each, max 5 per scene
-- Minimum 3 seconds reading time for any text
-
----
-
-## Testing
-
-### Compile check
-```bash
-npx remotion studio
-```
-Starts Remotion Studio. If shared components have import or syntax errors, they surface immediately during the webpack build.
-
-### Generate a test video
-```
-/video How the Web Actually Works
-```
-
-### Verify the output
-
-1. **Phase 1** — Brief shows type `educational`, learning objectives, 3-5 sections, medevsmaker palette
-2. **Phase 2** — Scene manifest has 25-35 scenes using varied scene types, no 3+ consecutive same type
-3. **Phase 3** — Files written to `src/HowTheWebWorks/` with section pattern
-4. **Render** — `npx remotion studio` -> select composition -> scrub through
-5. **Visual checks:**
-   - Duration is ~3-5 minutes
-   - Scenes are visually diverse (not all the same layout)
-   - Flow is correct: hook -> intro -> sections -> summary -> outro
-   - Animations are smooth (spring-based)
-   - Progress bar visible at the bottom
-   - Text is readable (proper sizing and contrast)
-
-### Render to file
-```bash
-npx remotion render src/index.ts HowTheWebWorks out/video.mp4
-```
-
----
-
-## Skill Management
-
-Skills are managed by the `npx skills` CLI:
+### How skills work
+Skills live in `.agents/skills/` with symlinks in `.claude/skills/`. Managed by `npx skills`:
 
 ```bash
 npx skills list                    # Show installed skills
-npx skills add <github-url>        # Install a skill from GitHub
+npx skills add <github-url>        # Install from GitHub
 npx skills init <path>             # Create a new skill
 ```
 
-Source of truth: `.agents/skills/` (with symlinks in `.claude/skills/`)
+### Adding a new scene template
+1. Create `src/shared/scenes/YourScene.tsx` following the existing pattern
+2. Add props type, use `useCurrentFrame()` + `spring()` for all animations
+3. Document in `.agents/skills/video-director/rules/educational-scenes.md`
+4. Classify as visual-heavy or text-heavy in the Scene Visual Classification table
 
----
+### Key rule files
+| File | What it controls |
+|------|-----------------|
+| `SKILL.md` | 3-phase workflow, constraints, code patterns |
+| `rules/prompt-expansion.md` | Phase 1 — brief generation, engagement planning |
+| `rules/video-types.md` | 7 video types — defaults, palettes |
+| `rules/audience-profile.md` | Audience, tone, humor, engagement psychology |
+| `rules/educational-scenes.md` | 20 scene types — props, usage, visual classification |
+| `rules/long-form-architecture.md` | Section pattern, duration math |
 
-## File Reference
+## Commands
 
-| File | Purpose |
-|------|---------|
-| `SKILL.md` | Main skill definition — 3-phase workflow, constraints, code patterns |
-| `rules/prompt-expansion.md` | Phase 1 — type detection, content plan lookup, brief format |
-| `rules/video-types.md` | All 7 video types — defaults, scene structures, palettes |
-| `rules/audience-profile.md` | Target audience, tone rules, text constraints |
-| `rules/educational-scenes.md` | 15 scene types — props, durations, layout, animation, usage rules |
-| `rules/long-form-architecture.md` | Section pattern — file structure, Series/TransitionSeries, duration math |
-| `rules/assets/promo-example.tsx` | Reference: 11s promo video (3 scenes) |
-| `rules/assets/tutorial-example.tsx` | Reference: 31s tutorial (5 scenes) |
-| `rules/assets/educational-example.tsx` | Reference: 109s educational (4 sections, 19 scenes) |
+```bash
+# Generate a video (Claude Code)
+/video <your idea>
+
+# Preview
+npx remotion studio
+
+# Render
+npx remotion render src/index.ts <CompositionId> out/video.mp4
+```

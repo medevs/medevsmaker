@@ -63,7 +63,9 @@ Mention a platform to auto-set resolution:
 ## Educational video features
 
 Educational videos (3-10 min) use a special section-based architecture:
-- **15 reusable scene types**: diagrams, code blocks, comparisons, stats, bullet reveals, and more
+- **20 reusable scene types**: diagrams, code blocks, comparisons, stats, timelines, charts, before/after, and more
+- **Visual-heavy approach**: 60%+ visual scenes (diagrams, metaphors, charts) over text-heavy scenes
 - **Section structure**: Each section groups related scenes with chapter markers
+- **Engagement hooks**: Humor beats, pattern interrupts, open loops for YouTube retention
 - **Progress bar**: Visual indicator showing video progress
 - **Audience-aware tone**: Written for vibe coders and non-technical AI builders

@@ -19,9 +19,11 @@ src/                                # Remotion project
   Root.tsx                          # Composition registry (all videos)
   shared/                           # Reusable component library
     styles.ts                       # baseTokens + BRAND palette + SCENE_DEFAULTS
-    components/                     # 10 building-block components
+    animations.ts                   # EASINGS + entrances + pulse + glowPulse
+    transitions.ts                  # TRANSITIONS presets (fade, slide, wipe, clockWipe, springFade)
+    components/                     # 13 building-block components
       AnimatedText.tsx              # Fade-up text
-      Background.tsx                # Gradient background
+      Background.tsx                # Gradient background with overlay support
       CodeBlock.tsx                 # Typewriter code reveal
       DiagramBox.tsx                # Labeled box for diagrams
       DiagramArrow.tsx              # SVG animated arrow
@@ -30,7 +32,10 @@ src/                                # Remotion project
       SectionBadge.tsx              # Section number badge
       AccentBox.tsx                 # Colored-border card
       ProgressBar.tsx               # Video progress indicator
-    scenes/                         # 15 reusable scene templates
+      Watermark.tsx                 # Persistent branding overlay (default: top-right)
+      ParticleField.tsx             # Deterministic particle system
+      GridPattern.tsx               # Subtle grid background
+    scenes/                         # 20 reusable scene templates
       HookQuestion.tsx              # Opening question
       TitleIntro.tsx                # Title + objectives
       SectionTitle.tsx              # Chapter marker
@@ -44,8 +49,13 @@ src/                                # Remotion project
       KeyTakeaway.tsx               # Section summary
       SummaryRecap.tsx              # Numbered recap
       Outro.tsx                     # Channel branding
+      EndScreen.tsx                 # Polished end card with gradient text + glow CTA
       WarningCallout.tsx            # Danger callout
       StepSequence.tsx              # Numbered steps
+      ColdOpen.tsx                  # Dramatic opening statement
+      BeforeAfter.tsx               # Before/after comparison with wipe reveal
+      TimelineScene.tsx             # Horizontal/vertical timeline with node pop-ins
+      DataChart.tsx                 # Animated bar chart with spring bars
   <VideoName>/                      # One folder per generated video
     index.tsx                        # Main composition
     styles.ts                        # Design tokens
@@ -59,8 +69,8 @@ src/                                # Remotion project
     rules/
       prompt-expansion.md            # Phase 1 rules
       video-types.md                 # 7 video types with defaults
-      audience-profile.md            # Target audience + tone
-      educational-scenes.md          # 15 scene type catalog
+      audience-profile.md            # Target audience + tone + humor + engagement
+      educational-scenes.md          # 20 scene type catalog
       long-form-architecture.md      # Section-based architecture
       assets/
         promo-example.tsx            # Reference: promo video
@@ -73,10 +83,14 @@ commands/video/command.md            # /video slash command
 
 ## Remotion Conventions
 - Always use `useCurrentFrame()` for animations — NEVER CSS transitions
-- Use `spring()` with `{ damping: 200 }` for smooth entrances
+- Spring configs: `{ damping: 200 }` smooth, `{ damping: 20, stiffness: 200 }` snappy, `{ damping: 8 }` bouncy, `{ damping: 15, stiffness: 80, mass: 2 }` heavy
+- Always `extrapolateRight: 'clamp'` on interpolations
 - Use `<AbsoluteFill>` + flexbox for layout
 - Use `<TransitionSeries>` for scene sequencing within sections
 - Use `<Series>` for chaining sections in educational videos
 - Load fonts via `@remotion/google-fonts`
 - Calculate `durationInFrames = seconds * fps`
 - Educational videos import shared scenes from `src/shared/scenes/`
+- Watermark position: `"top-right"` (avoids ProgressBar overlap)
+- Visual-first: 60%+ content scenes should be visual-heavy
+- Use `EndScreen` instead of basic `Outro` for polished end cards

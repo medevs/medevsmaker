@@ -9,6 +9,21 @@ metadata:
 
 All scene types available for educational videos. Each scene is a reusable React component in `src/shared/scenes/`.
 
+## Scene Visual Classification
+
+```
+VISUAL-HEAVY (target 60%+ of content scenes):
+  DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter,
+  TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen
+
+TEXT-HEAVY (target 40% max of content scenes):
+  ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout
+
+STRUCTURAL (don't count toward ratio):
+  HookQuestion, TitleIntro, SectionTitle, KeyTakeaway,
+  SummaryRecap, Outro, EndScreen
+```
+
 ---
 
 ## 1. HookQuestion
@@ -363,6 +378,10 @@ subtext: "It's more complex than you think"
 2. **Alternate dense and light**: ConceptExplain/CodeDisplay/DiagramFlow → VisualMetaphor/StatHighlight → next concept
 3. **Every section starts with SectionTitle and ends with KeyTakeaway**
 4. **Video always starts with HookQuestion → TitleIntro**
-5. **Video always ends with SummaryRecap → Outro**
+5. **Video always ends with SummaryRecap → EndScreen** (use EndScreen, not basic Outro)
 6. **DiagramFlow and CodeDisplay are "heavy" scenes** — follow with a lighter scene
 7. **StatHighlight and VisualMetaphor are "palette cleansers"** — use between heavy scenes
+8. **Visual ratio rule**: At least 60% of content scenes (excluding structural) must be visual-heavy
+9. **No 2+ text-heavy scenes in a row** — always insert a visual scene between them
+10. **DiagramFlow preference**: When explaining a process, always prefer DiagramFlow over ConceptExplain
+11. **Replace pattern**: ConceptExplain with body > 20 words should be split into: short ConceptExplain (heading + 1 line) followed by DiagramFlow or VisualMetaphor

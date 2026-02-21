@@ -66,6 +66,9 @@ Outro (4-6s)
 - **Every concept needs an analogy** — connect to something they know
 - **Alternate scene types** — no 3+ consecutive same type
 - **Dense/light alternation** — heavy concept → visual metaphor → next concept
+- **Visual-first** — 60%+ content scenes should be visual-heavy (diagrams, metaphors, charts, comparisons, timelines)
+- **Humor** — 1 light humor beat per section: absurd analogies, dev jokes, unexpected consequences
+- **Pattern interrupts** — break visual rhythm every 25-35 seconds (scene type change, humor, unexpected stat)
 - **Section markers** — every section starts with SectionTitle, ends with KeyTakeaway
 - **Max 60 scenes, max 7 sections** per video
 - **Use shared scene components** — import from `src/shared/scenes/`
@@ -76,7 +79,7 @@ Outro (4-6s)
 See [audience-profile.md](audience-profile.md) for full audience definition and tone rules.
 
 ### Visual Polish
-- Use `<Watermark>` in index.tsx for persistent branding
+- Use `<Watermark position="top-right">` in index.tsx — top-right avoids ProgressBar overlap
 - Use `<Background overlay="particles">` for visual depth
 - Use `EndScreen` instead of `Outro` for polished end cards with gradient text and glow CTA
 - Vary entrance props across scenes: typewriter hooks, scaleRotate titles, slideLeft section titles

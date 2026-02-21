@@ -68,3 +68,68 @@ For any concept, follow this order:
 5. **Summarize** — One-line takeaway
 
 Not every scene needs all 5, but the overall section should cover them.
+
+## Humor & Personality
+
+### Voice
+- **Dry tech humor** (Fireship style) — one-liners, not comedy sketches
+- **Frequency**: 1 humor beat per section (place in HookQuestion, VisualMetaphor, or WarningCallout)
+- **Types**: Absurd analogies, self-deprecating dev jokes, unexpected emoji punchlines, exaggerated consequences ("Your app crashes. Your users cry. Your boss sends a Slack.")
+
+### Anti-Patterns
+- No memes or dated references
+- No inside jokes that exclude beginners
+- No forced humor — if it doesn't land naturally, skip it
+
+### Hook Humor
+- Opening HookQuestion should be surprising or slightly funny to create curiosity
+- Example: "Ever wonder why your app is slower than your grandma's WiFi?"
+
+## YouTube Engagement Psychology
+
+### 3-Second Rule
+First 3 seconds must create a **curiosity gap** or provoke a reaction. The viewer decides to stay or leave in this window.
+
+### Pattern Interrupts
+Every 25-35 seconds, break the visual rhythm:
+- Switch scene type (diagram after text, metaphor after code)
+- Drop a humor beat
+- Show an unexpected stat
+- Change the visual energy (calm → dramatic or vice versa)
+
+### Open Loops
+Tease upcoming sections early to keep viewers watching:
+- "We'll see why this breaks in Section 3"
+- "The surprising part comes next"
+- Use TitleIntro objectives as open loops: "You'll be surprised by #3"
+
+### Progress Anchoring
+ProgressBar + SectionTitle give viewers a sense of advancement through the video. This reduces drop-off by showing them how far they've come and how much is left.
+
+### Payoff Cadence
+Every 60-90 seconds, deliver a concrete "aha moment" or surprising insight. Viewers need regular rewards for continued attention.
+
+### End Screen Retention
+Last 10 seconds should prompt next video / subscribe. Use EndScreen (not basic Outro) for gradient text, glow CTA, and optional social links.
+
+## Visual-First Content Philosophy
+
+### Core Rule
+Visuals explain, voiceover narrates — on-screen text is supplementary, not primary.
+
+### Target Ratio
+- **60%+ visual scenes**: DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter, TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen
+- **40% max text scenes**: ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout
+
+### When Using Text-Heavy Scenes
+- Keep body text to 1 line max — voiceover carries the detail
+- Use bold headings as anchors, not full explanations
+
+### Prefer
+- Diagrams over bullet lists
+- Metaphors over explanations
+- Comparisons over descriptions
+- Charts over number lists
+
+### Scene Replacement Guidance
+If planning 3+ ConceptExplain in a row, replace the middle one(s) with DiagramFlow or VisualMetaphor. No two text-heavy scenes should be adjacent.

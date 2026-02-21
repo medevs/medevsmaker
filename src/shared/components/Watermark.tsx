@@ -30,9 +30,9 @@ const POSITION_STYLES: Record<WatermarkPosition, React.CSSProperties> = {
 
 export const Watermark: React.FC<WatermarkProps> = ({
   text = "medevsmaker",
-  position = "bottom-right",
-  opacity = 0.15,
-  fontSize = 16,
+  position = "top-right",
+  opacity = 0.35,
+  fontSize = 20,
   fontFamily = "Inter",
   delay = 0,
 }) => {
@@ -60,7 +60,7 @@ export const Watermark: React.FC<WatermarkProps> = ({
         color: "#ffffff",
         textTransform: "uppercase",
         letterSpacing: 2,
-        textShadow: "0 1px 4px rgba(0,0,0,0.5)",
+        textShadow: "0 2px 6px rgba(0,0,0,0.6)",
         zIndex: 10,
         pointerEvents: "none",
         userSelect: "none",

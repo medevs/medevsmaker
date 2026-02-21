@@ -170,8 +170,30 @@ Assign entrance props to scenes for visual variety:
 - ComparisonSplit: use `overshoot` for dramatic comparisons
 
 ### Branding
-- Always add `<Watermark>` in index.tsx
+- Always add `<Watermark position="top-right">` in index.tsx
 - Use `EndScreen` instead of basic `Outro` for educational videos
+
+## Step 5.5: Engagement Planning
+
+For educational videos, plan engagement hooks alongside the scene manifest:
+
+### Humor Beats
+- Plan 1 humor beat per section (assign to a specific scene — usually VisualMetaphor or WarningCallout)
+- Humor types: absurd analogies, self-deprecating dev jokes, exaggerated consequences
+- Opening HookQuestion should be surprising or slightly funny
+
+### Pattern Interrupts
+- Plan 1 pattern interrupt per 30 seconds (scene type change, unexpected stat, humor beat)
+- No two consecutive sections should open with the same scene type after SectionTitle
+
+### Open Loops
+- In TitleIntro objectives, tease later content: "You'll be surprised by #3"
+- In early sections, reference upcoming reveals: "We'll see why this matters in Section 3"
+
+### Entrance Variety
+- Assign entrance props per section — no two consecutive sections with the same entrance style
+- Rotate through: fadeUp, slideLeft, scaleBlur for SectionTitle
+- Rotate through: pop, rotate, bounce for VisualMetaphor iconEffect
 
 ## Step 6: Output Format
 
@@ -240,6 +262,12 @@ Present the brief in this exact format:
 3. **[Section Title]** (~Xs) — [What this section covers]
 ...
 
+### Engagement Plan
+- Hook style: [curiosity gap / surprising stat / absurd question]
+- Humor beats: [1 per section, placed in VisualMetaphor or WarningCallout]
+- Pattern interrupts: [scene types that break rhythm]
+- Open loops: [teasers for later sections]
+
 ### Visual System
 
 **Typography**:
@@ -280,3 +308,9 @@ Before finalizing the brief, verify:
 - [ ] (Educational) Sections start with SectionTitle, end with KeyTakeaway
 - [ ] (Educational) No 3+ consecutive same scene type
 - [ ] (Educational) Dense/light alternation is maintained
+- [ ] (Educational) Visual-heavy ratio: 60%+ content scenes are visual (diagram, metaphor, comparison, chart, timeline)
+- [ ] (Educational) No 2+ consecutive text-heavy scenes
+- [ ] (Educational) At least 1 humor beat per section
+- [ ] (Educational) Hook creates curiosity gap in under 3 seconds
+- [ ] (Educational) Pattern interrupt every 25-35 seconds
+- [ ] (Educational) EndScreen used instead of basic Outro

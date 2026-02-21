@@ -92,11 +92,21 @@ For **educational videos** (3-10 min):
 
 - **Every section starts with SectionTitle, ends with KeyTakeaway**
 - **Video starts with HookQuestion → TitleIntro** (in Section 1)
-- **Video ends with SummaryRecap → Outro** (in last section)
+- **Video ends with SummaryRecap → EndScreen** (in last section — use EndScreen, not basic Outro)
 - **Never 3+ consecutive scenes of the same type**
 - **Alternate dense/light**: ConceptExplain → VisualMetaphor → DiagramFlow
 - **One concept per scene** — never stack ideas
 - **Every concept needs an analogy** (via ConceptExplain or VisualMetaphor)
+
+### Engagement & Retention Rules
+
+- **Visual ratio**: 60%+ content scenes must be visual-heavy (DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter, TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen)
+- **No 2+ text-heavy scenes in a row** — always insert a visual scene between them
+- **Humor**: 1 light humor beat per section — absurd analogies, dev jokes, exaggerated consequences
+- **Pattern interrupts**: Break visual rhythm every 25-35 seconds (scene type change, humor, unexpected stat)
+- **Open loops**: Tease upcoming sections in TitleIntro and early scenes
+- **3-second hook**: Opening HookQuestion must create curiosity gap immediately
+- **Payoff cadence**: Deliver an "aha moment" every 60-90 seconds
 
 ---
 
@@ -257,7 +267,7 @@ For Remotion-specific patterns (spring configs, interpolation, TransitionSeries,
 ## EXECUTION FLOW
 
 1. **Parse the user's idea** — Extract intent, platform hints, style preferences, detect video type
-2. **Research & Expand** (Phase 1) — Generate the production brief per [rules/prompt-expansion.md](rules/prompt-expansion.md)
+2. **Research & Expand** (Phase 1) — Generate the production brief per [rules/prompt-expansion.md](rules/prompt-expansion.md). For educational: include engagement plan (humor beats, pattern interrupts, open loops, visual ratio target)
 3. **Plan Scenes** (Phase 2) — Create a scene manifest with types from [rules/educational-scenes.md](rules/educational-scenes.md) (for educational) or inline scene plan (for short-form)
 4. **Generate Remotion code** (Phase 3) — Write all files. For educational: styles.ts → sections → index.tsx → Root.tsx update
 5. **Provide rendering instructions**:
@@ -287,9 +297,12 @@ npx remotion render src/index.ts <CompositionId> out/video.mp4
 - Educational videos: max 60 scenes, max 7 sections
 - Educational videos: use shared scene components — don't re-implement
 - Educational videos: every concept needs an analogy
-- Use `<Watermark>` in index.tsx for persistent branding overlay
+- Use `<Watermark position="top-right">` in index.tsx — top-right avoids ProgressBar overlap
 - Use `<Background overlay="particles">` for visual depth
 - Use `EndScreen` instead of basic `Outro` for polished end cards
+- Visual ratio: 60%+ content scenes must be visual-heavy, max 40% text-heavy
+- Humor: 1 beat per section — place in VisualMetaphor or WarningCallout
+- Pattern interrupts every 25-35 seconds
 - Vary transitions: import from `src/shared/transitions.ts` (fade, slideLeft, slideRight, slideUp, wipeRight, clockWipe, springFade)
 - Use visual polish props on components: `glow`, `gradient`, `entrance`, `emphasis`, `iconEffect`
 - New spring configs: `springBouncy` (damping: 8), `springHeavy` (damping: 15, stiffness: 80, mass: 2), `springGentle` (damping: 30, stiffness: 120)
