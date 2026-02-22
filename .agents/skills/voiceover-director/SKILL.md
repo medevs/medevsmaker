@@ -2,7 +2,7 @@
 name: voiceover-director
 description: "Voiceover Director: generates narration transcripts from video manifests, synthesizes TTS audio, and integrates voiceover into Remotion videos. Use when the user invokes /voiceover."
 metadata:
-  tags: voiceover, tts, narration, audio, fish-audio, transcript
+  tags: voiceover, tts, narration, audio, cartesia, transcript
 ---
 
 # Voiceover Director Skill
@@ -39,7 +39,7 @@ Full rules: [rules/transcript-generation.md](rules/transcript-generation.md)
 
 Key principles:
 - **Never read on-screen text verbatim** — narration complements, doesn't duplicate
-- **Stay at or under word budgets** — budget accounts for transition overlaps at 130 WPM (calibrated for Fish Audio TTS). Exceeding budget risks audible cutoff
+- **Stay at or under word budgets** — budget uses adaptive WPM (170/145/125 for short/medium/long scenes). Exceeding budget risks audible cutoff
 - **Count words** — verify every narration is near budget before presenting for review
 - **Always narrate SectionTitle scenes** — silent section gaps make the audio feel broken. Use a brief 4-6 word transition phrase
 - **Explain, don't just label** — narration should teach concepts, not just name them. Use analogies that make abstract ideas concrete
@@ -56,7 +56,7 @@ Key principles:
 ### Prerequisites
 
 1. User has approved the transcript
-2. TTS provider configured in `.env` (default: Edge TTS; Fish Audio requires `FISH_AUDIO_VOICE_ID` + `FISH_AUDIO_API_KEY`)
+2. TTS provider configured in `.env` (default: Cartesia; requires `CARTESIA_VOICE_ID` + `CARTESIA_API_KEY`)
 3. See [rules/tts-providers.md](rules/tts-providers.md) for provider setup
 
 ### Steps
@@ -151,11 +151,11 @@ If no `manifest.json` exists, generate one by parsing the video's section files:
 
 - Always generate manifest.json before transcript.json
 - Never proceed to TTS without user approval of the transcript
-- Stay at or under word budgets (130 WPM) — exceeding budget causes audio cutoff
+- Stay at or under word budgets (adaptive WPM: 170/145/125) — exceeding budget causes audio cutoff
 - Use `staticFile()` for audio paths in Remotion (files in `public/`)
 - VoiceoverLayer renders no visuals — it's purely audio Sequences
 - SectionTitle scenes should always have brief narration (4-6 words) — silent gaps confuse viewers
-- Only EndScreen should be left without narration
+- EndScreen should have a brief conversational CTA (8-12 words) — silence over end cards feels unfinished
 - The voiceover.ts file is auto-generated — don't edit it manually
 
 ## Reference Files

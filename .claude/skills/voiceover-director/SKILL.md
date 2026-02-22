@@ -2,7 +2,7 @@
 name: voiceover-director
 description: "Voiceover Director: generates narration transcripts from video manifests, synthesizes TTS audio, and integrates voiceover into Remotion videos. Use when the user invokes /voiceover."
 metadata:
-  tags: voiceover, tts, narration, audio, fish-audio, transcript
+  tags: voiceover, tts, narration, audio, cartesia, transcript
 ---
 
 # Voiceover Director Skill
@@ -39,10 +39,13 @@ Full rules: [rules/transcript-generation.md](rules/transcript-generation.md)
 
 Key principles:
 - **Never read on-screen text verbatim** — narration complements, doesn't duplicate
-- **Respect word budgets** — each scene has a calculated budget at 150 WPM
-- **Conversational peer tone** — match the video's audience profile
+- **Stay at or under word budgets** — budget uses adaptive WPM (170/145/125 for short/medium/long scenes). Exceeding budget risks audible cutoff
+- **Count words** — verify every narration is near budget before presenting for review
+- **Always narrate SectionTitle scenes** — silent section gaps make the audio feel broken. Use a brief 4-6 word transition phrase
+- **Explain, don't just label** — narration should teach concepts, not just name them. Use analogies that make abstract ideas concrete
+- **Conversational peer tone** — match the video's audience profile (Fireship-style humor, 1 joke per section)
+- **Prefer flowing sentences** — TTS adds pauses for periods/commas that inflate duration. Staccato fragments ("Step one. Step two.") take longer than their word count suggests
 - **Scene-type patterns** — different scene types need different narration approaches
-- **Flow between scenes** — use connective phrases for smooth transitions
 
 ---
 
@@ -53,8 +56,8 @@ Key principles:
 ### Prerequisites
 
 1. User has approved the transcript
-2. `FISH_AUDIO_VOICE_ID` is set in `.env` (see [rules/tts-providers.md](rules/tts-providers.md))
-3. `FISH_AUDIO_API_KEY` is set in `.env`
+2. TTS provider configured in `.env` (default: Cartesia; requires `CARTESIA_VOICE_ID` + `CARTESIA_API_KEY`)
+3. See [rules/tts-providers.md](rules/tts-providers.md) for provider setup
 
 ### Steps
 
@@ -148,10 +151,11 @@ If no `manifest.json` exists, generate one by parsing the video's section files:
 
 - Always generate manifest.json before transcript.json
 - Never proceed to TTS without user approval of the transcript
-- Respect word budgets — narration that's too long will overflow the scene
+- Stay at or under word budgets (adaptive WPM: 170/145/125) — exceeding budget causes audio cutoff
 - Use `staticFile()` for audio paths in Remotion (files in `public/`)
 - VoiceoverLayer renders no visuals — it's purely audio Sequences
-- Scenes with no narration (SectionTitle, EndScreen) are skipped by the TTS script
+- SectionTitle scenes should always have brief narration (4-6 words) — silent gaps confuse viewers
+- EndScreen should have a brief conversational CTA (8-12 words) — silence over end cards feels unfinished
 - The voiceover.ts file is auto-generated — don't edit it manually
 
 ## Reference Files

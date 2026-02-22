@@ -12,13 +12,13 @@ Slash command that converts a simple idea into a complete Remotion video.
 **3-phase workflow**: Research & Expand -> Scene Planning -> Batched Code Generation (+ manifest.json)
 
 ### /voiceover-director — Voiceover Director
-Adds voiceover narration to an existing video. Generates transcript, synthesizes TTS audio via Fish Audio, and integrates into the composition.
+Adds voiceover narration to an existing video. Generates transcript, synthesizes TTS audio via Cartesia, and integrates into the composition.
 
 **Usage**: `/voiceover <VideoName>`
 
 **3-phase workflow**: Transcript Generation -> TTS Synthesis -> Audio Integration
 
-**Provider**: Fish Audio (provider-agnostic — switch via `TTS_PROVIDER` env var)
+**Provider**: Cartesia (provider-agnostic — switch via `TTS_PROVIDER` env var)
 
 ## Project Structure
 
@@ -103,7 +103,7 @@ scripts/tts/                        # TTS synthesis pipeline
   generate-audio.ts                  # TTS synthesis runner
   providers/
     index.ts                         # Provider factory
-    fish-audio.ts                    # Fish Audio implementation
+    cartesia.ts                      # Cartesia implementation
 
 public/vo/                          # Generated voiceover audio (gitignored)
   <VideoName>/                       # One folder per video

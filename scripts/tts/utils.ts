@@ -30,19 +30,35 @@ export function getAudioDuration(filePath: string): number {
 }
 
 /**
+ * Adaptive WPM based on expected narration length.
+ * Neural TTS speaks short sentences significantly faster than long ones:
+ *   - Short (< 3s effective): ~170 WPM — quick phrases, section titles
+ *   - Medium (3-7s effective): ~145 WPM — typical narration sentences
+ *   - Long (> 7s effective): ~125 WPM — multi-sentence narrations
+ *
+ * Using a flat 130 WPM under-fills short scenes (large silence gaps)
+ * and risks overflowing long scenes. This adaptive scale matches
+ * measured Cartesia sonic-2 pacing across 30+ scenes.
+ */
+function adaptiveWPM(effectiveSeconds: number): number {
+  if (effectiveSeconds < 3) return 170;
+  if (effectiveSeconds < 7) return 145;
+  return 125;
+}
+
+/**
  * Calculate word budget for a scene duration.
- * Based on 130 WPM — calibrated for Fish Audio TTS pacing.
- * Real TTS speaks at ~115-130 WPM depending on sentence complexity.
+ * Uses adaptive WPM to match actual neural TTS pacing.
  */
 export function wordBudget(seconds: number): number {
-  return Math.floor((seconds * 130) / 60);
+  return Math.floor((seconds * adaptiveWPM(seconds)) / 60);
 }
 
 /**
  * Calculate effective word budget accounting for transition overlaps.
  * TransitionSeries scenes share frames with neighbors, so the actual
  * audio time is shorter than the raw scene duration.
- * Uses 130 WPM — calibrated for Fish Audio TTS pacing (~115-130 WPM).
+ * Uses adaptive WPM calibrated for neural TTS pacing.
  * The clamping mechanism in buildVoiceoverScenes handles minor overflow.
  */
 export function effectiveWordBudget(
@@ -51,7 +67,7 @@ export function effectiveWordBudget(
   fps: number,
 ): number {
   const effectiveDuration = durationSeconds - transitionAfterFrames / fps;
-  return Math.floor((effectiveDuration * 130) / 60);
+  return Math.floor((effectiveDuration * adaptiveWPM(effectiveDuration)) / 60);
 }
 
 /**

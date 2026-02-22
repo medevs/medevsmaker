@@ -7,7 +7,7 @@ export type TTSRequest = {
   voiceId: string;
   format?: "mp3" | "wav" | "opus";
   speed?: number;
-  /** Fish Audio S1 emotion tags: "(excited)", "(serious)", "(warm)" etc. */
+  /** Provider-specific emotion/style tags */
   emotion?: string | null;
 };
 

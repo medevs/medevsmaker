@@ -1,6 +1,6 @@
 {
   "videoName": "HowTheWebWorks",
-  "voiceId": "",
+  "voiceId": "79f8b5fb-2cc8-479a-80df-29f7a7cf1a3e",
   "scenes": [
     {
       "sceneIndex": 1,
@@ -9,14 +9,14 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 4.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 9,
+      "wordBudget": 10,
       "onScreenText": [
         "What actually happens when you click a link?",
         "Spoiler: it's not magic, but it's close"
       ],
-      "narration": "Every click triggers a chain reaction you never see.",
+      "narration": "Every click triggers an invisible relay race you'll never see.",
       "audioFile": "vo/HowTheWebWorks/scene-01.mp3",
-      "actualDurationSeconds": 3.288
+      "actualDurationSeconds": 3.056313
     },
     {
       "sceneIndex": 2,
@@ -33,9 +33,9 @@
         "What happens inside a server",
         "Why your data survives a reboot"
       ],
-      "narration": "We'll trace every step from URL to rendered page. After this, loading spinners hit different.",
+      "narration": "In this video, we'll break down every step from URL to fully rendered page.",
       "audioFile": "vo/HowTheWebWorks/scene-02.mp3",
-      "actualDurationSeconds": 6.048
+      "actualDurationSeconds": 4.205688
     },
     {
       "sceneIndex": 3,
@@ -44,14 +44,14 @@
       "durationSeconds": 3,
       "effectiveDurationSeconds": 2.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 5,
+      "wordBudget": 7,
       "onScreenText": [
         "The Client",
         "Your browser is smarter than you think"
       ],
-      "narration": "Let's start with your browser.",
+      "narration": "First up, let's talk about your browser.",
       "audioFile": "vo/HowTheWebWorks/scene-03.mp3",
-      "actualDurationSeconds": 1.656
+      "actualDurationSeconds": 1.802438
     },
     {
       "sceneIndex": 4,
@@ -60,7 +60,7 @@
       "durationSeconds": 10,
       "effectiveDurationSeconds": 9.33,
       "transitionAfterFrames": 20,
-      "wordBudget": 20,
+      "wordBudget": 19,
       "onScreenText": [
         "What Your Browser Does",
         "URL",
@@ -68,9 +68,9 @@
         "Request",
         "Response"
       ],
-      "narration": "Browser grabs the domain from the URL, asks DNS for the IP, fires an HTTP request, and gets a response.",
+      "narration": "Your browser parses the domain, asks DNS for the IP, fires off a request, and gets back a response.",
       "audioFile": "vo/HowTheWebWorks/scene-04.mp3",
-      "actualDurationSeconds": 8.184
+      "actualDurationSeconds": 6.687313
     },
     {
       "sceneIndex": 5,
@@ -79,14 +79,14 @@
       "durationSeconds": 6,
       "effectiveDurationSeconds": 5.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 11,
+      "wordBudget": 13,
       "onScreenText": [
         "You're the Customer",
         "Your browser is the waiter. It takes your order, runs to the kitchen (server), and brings back your food (HTML). Tip not required."
       ],
-      "narration": "Your browser's basically a waiter sprinting between you and the server.",
+      "narration": "Your browser is basically a waiter, sprinting between you and the kitchen nonstop.",
       "audioFile": "vo/HowTheWebWorks/scene-05.mp3",
-      "actualDurationSeconds": 4.176
+      "actualDurationSeconds": 4.780375
     },
     {
       "sceneIndex": 6,
@@ -95,7 +95,7 @@
       "durationSeconds": 8,
       "effectiveDurationSeconds": 7.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 16,
+      "wordBudget": 15,
       "onScreenText": [
         "Every Click, Same Dance",
         "Parse the URL",
@@ -105,9 +105,9 @@
         "Send the request",
         "Browser asks the server over HTTP"
       ],
-      "narration": "Same three steps every single click. Parse the domain, resolve the IP, then fire the request.",
+      "narration": "Same three steps every click, parse the domain, resolve the IP, fire the request.",
       "audioFile": "vo/HowTheWebWorks/scene-06.mp3",
-      "actualDurationSeconds": 6.744
+      "actualDurationSeconds": 5.0155
     },
     {
       "sceneIndex": 7,
@@ -116,13 +116,13 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 5,
       "transitionAfterFrames": 0,
-      "wordBudget": 10,
+      "wordBudget": 12,
       "onScreenText": [
         "The client (your browser) sends requests. It never stores the real data — it just displays what the server sends back."
       ],
-      "narration": "Your browser sends requests and displays responses. Storage isn't its job.",
+      "narration": "Your browser sends requests and displays what comes back, no storage involved.",
       "audioFile": "vo/HowTheWebWorks/scene-07.mp3",
-      "actualDurationSeconds": 5.088
+      "actualDurationSeconds": 4.54525
     },
     {
       "sceneIndex": 8,
@@ -131,14 +131,14 @@
       "durationSeconds": 3,
       "effectiveDurationSeconds": 2.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 5,
+      "wordBudget": 7,
       "onScreenText": [
         "DNS Lookup",
         "The internet's phone book"
       ],
-      "narration": "Next, the internet's phone book.",
+      "narration": "Next up, the internet's phone book.",
       "audioFile": "vo/HowTheWebWorks/scene-08.mp3",
-      "actualDurationSeconds": 2.208
+      "actualDurationSeconds": 2.08975
     },
     {
       "sceneIndex": 9,
@@ -147,14 +147,14 @@
       "durationSeconds": 6,
       "effectiveDurationSeconds": 5.33,
       "transitionAfterFrames": 20,
-      "wordBudget": 11,
+      "wordBudget": 12,
       "onScreenText": [
         "Names to Numbers",
         "You type google.com but computers only speak numbers. DNS is your browser frantically flipping through a phone book at light speed."
       ],
-      "narration": "DNS converts domain names into numeric IP addresses servers understand.",
+      "narration": "Computers only speak numbers, so DNS translates your domain names into addresses.",
       "audioFile": "vo/HowTheWebWorks/scene-09.mp3",
-      "actualDurationSeconds": 5.256
+      "actualDurationSeconds": 4.675875
     },
     {
       "sceneIndex": 10,
@@ -163,7 +163,7 @@
       "durationSeconds": 10,
       "effectiveDurationSeconds": 9.4,
       "transitionAfterFrames": 18,
-      "wordBudget": 20,
+      "wordBudget": 19,
       "onScreenText": [
         "How DNS Resolution Works",
         "Browser",
@@ -172,9 +172,9 @@
         "TLD",
         "Auth"
       ],
-      "narration": "Browser checks cache first. Miss? The resolver queries root then TLD servers until the authoritative one returns the IP.",
+      "narration": "Browser checks cache first, on a miss the resolver queries root then TLD then authoritative to get the IP.",
       "audioFile": "vo/HowTheWebWorks/scene-10.mp3",
-      "actualDurationSeconds": 8.664
+      "actualDurationSeconds": 6.217125
     },
     {
       "sceneIndex": 11,
@@ -183,11 +183,11 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 4.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 9,
+      "wordBudget": 10,
       "onScreenText": [],
-      "narration": "Over a trillion DNS lookups happen every single day.",
+      "narration": "Over a trillion DNS lookups happen every single day worldwide.",
       "audioFile": "vo/HowTheWebWorks/scene-11.mp3",
-      "actualDurationSeconds": 3.72
+      "actualDurationSeconds": 3.761625
     },
     {
       "sceneIndex": 12,
@@ -196,7 +196,7 @@
       "durationSeconds": 10,
       "effectiveDurationSeconds": 9.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 20,
+      "wordBudget": 19,
       "onScreenText": [
         "DNS Caching Layers",
         "Browser",
@@ -210,9 +210,9 @@
         "Root",
         "Last resort — full lookup"
       ],
-      "narration": "Five caching layers stand between you and a full DNS lookup. Browser, OS, router, ISP. Most queries never reach root.",
+      "narration": "Five caching layers between you and a full lookup, browser, OS, router, ISP, then root as a last resort.",
       "audioFile": "vo/HowTheWebWorks/scene-12.mp3",
-      "actualDurationSeconds": 9.144
+      "actualDurationSeconds": 7.131375
     },
     {
       "sceneIndex": 13,
@@ -221,13 +221,13 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 5,
       "transitionAfterFrames": 0,
-      "wordBudget": 10,
+      "wordBudget": 12,
       "onScreenText": [
         "DNS translates domain names into IP addresses. Multiple cache layers make it blazing fast — most lookups never reach the root."
       ],
-      "narration": "DNS turns names into numbers. Caching makes repeat lookups instant.",
+      "narration": "DNS turns names into numbers, caching makes most lookups resolve almost instantly.",
       "audioFile": "vo/HowTheWebWorks/scene-13.mp3",
-      "actualDurationSeconds": 4.992
+      "actualDurationSeconds": 4.623625
     },
     {
       "sceneIndex": 14,
@@ -236,14 +236,14 @@
       "durationSeconds": 3,
       "effectiveDurationSeconds": 2.33,
       "transitionAfterFrames": 20,
-      "wordBudget": 5,
+      "wordBudget": 6,
       "onScreenText": [
         "The Server",
         "Where the magic actually happens"
       ],
-      "narration": "Now, the server side.",
+      "narration": "Alright, now the server side.",
       "audioFile": "vo/HowTheWebWorks/scene-14.mp3",
-      "actualDurationSeconds": 1.704
+      "actualDurationSeconds": 1.933063
     },
     {
       "sceneIndex": 15,
@@ -252,7 +252,7 @@
       "durationSeconds": 10,
       "effectiveDurationSeconds": 9.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 20,
+      "wordBudget": 19,
       "onScreenText": [
         "The Request-Response Cycle",
         "Request",
@@ -260,9 +260,9 @@
         "Logic",
         "Response"
       ],
-      "narration": "Request hits the server. Router matches it to a handler, logic runs, response gets built and sent back.",
+      "narration": "Request arrives at the server, router matches it to a handler, logic processes everything, and back goes the response.",
       "audioFile": "vo/HowTheWebWorks/scene-15.mp3",
-      "actualDurationSeconds": 6.984
+      "actualDurationSeconds": 6.870188
     },
     {
       "sceneIndex": 16,
@@ -271,14 +271,14 @@
       "durationSeconds": 6,
       "effectiveDurationSeconds": 5.4,
       "transitionAfterFrames": 18,
-      "wordBudget": 11,
+      "wordBudget": 13,
       "onScreenText": [
         "The Kitchen Analogy",
         "The server is a short-order cook. Request comes in, cook processes it, plates the response. No request? Cook just waits. Servers are patient."
       ],
-      "narration": "Think diner cook. Orders in, plates out. No requests? Just waiting.",
+      "narration": "Picture a short-order cook, orders in plates out, no request just waiting.",
       "audioFile": "vo/HowTheWebWorks/scene-16.mp3",
-      "actualDurationSeconds": 5.256
+      "actualDurationSeconds": 3.892188
     },
     {
       "sceneIndex": 17,
@@ -287,14 +287,14 @@
       "durationSeconds": 12,
       "effectiveDurationSeconds": 11.33,
       "transitionAfterFrames": 20,
-      "wordBudget": 24,
+      "wordBudget": 23,
       "onScreenText": [
         "A Simple HTTP Response",
         "HTTP/1.1 200 OK\nContent-Type: text/html\n\n<html>\n  <body>Hello World</body>\n</html>"
       ],
-      "narration": "Here's a real HTTP response. Two hundred means everything worked, Content-Type tells the browser what's coming, and the body is the actual page.",
+      "narration": "Here's a real HTTP response, two hundred means success, Content-Type tells the browser what's coming, and the body carries the actual page content.",
       "audioFile": "vo/HowTheWebWorks/scene-17.mp3",
-      "actualDurationSeconds": 9.744
+      "actualDurationSeconds": 9.508563
     },
     {
       "sceneIndex": 18,
@@ -303,7 +303,7 @@
       "durationSeconds": 10,
       "effectiveDurationSeconds": 9.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 20,
+      "wordBudget": 19,
       "onScreenText": [
         "HTTP Status Codes",
         "200 OK",
@@ -311,9 +311,9 @@
         "404 Missing",
         "500 Broken"
       ],
-      "narration": "Usually you get a happy two hundred. Four oh four means page not found, five hundred means something broke on the server.",
+      "narration": "Usually you get a happy two hundred OK, four oh four means gone, and five hundred means something broke.",
       "audioFile": "vo/HowTheWebWorks/scene-18.mp3",
-      "actualDurationSeconds": 7.56
+      "actualDurationSeconds": 6.635063
     },
     {
       "sceneIndex": 19,
@@ -322,13 +322,13 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 5,
       "transitionAfterFrames": 0,
-      "wordBudget": 10,
+      "wordBudget": 12,
       "onScreenText": [
         "The server receives requests, processes them, and sends back responses with status codes. Every website follows this exact pattern."
       ],
-      "narration": "Request in, response out. Every website follows this exact pattern.",
+      "narration": "Request in response out, every website follows this exact same pattern.",
       "audioFile": "vo/HowTheWebWorks/scene-19.mp3",
-      "actualDurationSeconds": 4.752
+      "actualDurationSeconds": 4.493063
     },
     {
       "sceneIndex": 20,
@@ -337,14 +337,14 @@
       "durationSeconds": 3,
       "effectiveDurationSeconds": 2.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 5,
+      "wordBudget": 7,
       "onScreenText": [
         "The Database",
         "Where your data actually lives"
       ],
-      "narration": "Now, where data actually lives.",
+      "narration": "Now, where your data actually lives.",
       "audioFile": "vo/HowTheWebWorks/scene-20.mp3",
-      "actualDurationSeconds": 2.304
+      "actualDurationSeconds": 2.324875
     },
     {
       "sceneIndex": 21,
@@ -353,7 +353,7 @@
       "durationSeconds": 10,
       "effectiveDurationSeconds": 9.4,
       "transitionAfterFrames": 18,
-      "wordBudget": 20,
+      "wordBudget": 19,
       "onScreenText": [
         "With vs Without a Database",
         "No Database",
@@ -367,9 +367,9 @@
         "Survives crashes",
         "Actual useful app"
       ],
-      "narration": "Without a database your app gets amnesia every restart. With one, data survives crashes, reboots, even your worst bugs.",
+      "narration": "Without a database your app forgets everything on restart, with one data survives crashes reboots and your worst bugs.",
       "audioFile": "vo/HowTheWebWorks/scene-21.mp3",
-      "actualDurationSeconds": 8.472
+      "actualDurationSeconds": 7.053063
     },
     {
       "sceneIndex": 22,
@@ -378,7 +378,7 @@
       "durationSeconds": 8,
       "effectiveDurationSeconds": 7.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 16,
+      "wordBudget": 15,
       "onScreenText": [
         "SQL vs NoSQL",
         "SQL",
@@ -392,9 +392,9 @@
         "Great for scale",
         "MongoDB, Firebase"
       ],
-      "narration": "SQL gives you structured tables while NoSQL offers flexible documents, different tools for different problems.",
+      "narration": "SQL gives you structured tables for relationships, NoSQL gives you flexible documents built for scale.",
       "audioFile": "vo/HowTheWebWorks/scene-22.mp3",
-      "actualDurationSeconds": 6.984
+      "actualDurationSeconds": 6.112625
     },
     {
       "sceneIndex": 23,
@@ -403,14 +403,14 @@
       "durationSeconds": 6,
       "effectiveDurationSeconds": 5.33,
       "transitionAfterFrames": 20,
-      "wordBudget": 11,
+      "wordBudget": 12,
       "onScreenText": [
         "Your App's Memory",
         "Without a database, your app has amnesia. Every restart it forgets everything. Your users cry. Your boss sends a Slack."
       ],
-      "narration": "No database? Your app's a goldfish. Every restart, completely blank.",
+      "narration": "No database and your app becomes a goldfish, every restart completely blank.",
       "audioFile": "vo/HowTheWebWorks/scene-23.mp3",
-      "actualDurationSeconds": 5.136
+      "actualDurationSeconds": 4.414688
     },
     {
       "sceneIndex": 24,
@@ -419,14 +419,14 @@
       "durationSeconds": 6,
       "effectiveDurationSeconds": 5.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 11,
+      "wordBudget": 13,
       "onScreenText": [
         "Never Trust the Client",
         "Always validate data on the server before writing to the database. Client-side validation can be bypassed in 5 seconds flat."
       ],
-      "narration": "Never trust client data. Always validate everything on the server.",
+      "narration": "Critical rule, never trust the client, always validate everything on the server.",
       "audioFile": "vo/HowTheWebWorks/scene-24.mp3",
-      "actualDurationSeconds": 4.248
+      "actualDurationSeconds": 4.728125
     },
     {
       "sceneIndex": 25,
@@ -435,13 +435,13 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 5,
       "transitionAfterFrames": 0,
-      "wordBudget": 10,
+      "wordBudget": 12,
       "onScreenText": [
         "Databases store the permanent data. The server reads from and writes to the database on every request that needs data."
       ],
-      "narration": "Databases are permanent memory. The server reads and writes constantly.",
+      "narration": "Databases give your app permanent memory, the server reads and writes constantly.",
       "audioFile": "vo/HowTheWebWorks/scene-25.mp3",
-      "actualDurationSeconds": 4.68
+      "actualDurationSeconds": 4.623625
     },
     {
       "sceneIndex": 26,
@@ -450,14 +450,14 @@
       "durationSeconds": 3,
       "effectiveDurationSeconds": 2.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 5,
+      "wordBudget": 7,
       "onScreenText": [
         "The Full Picture",
         "All the pieces working together"
       ],
-      "narration": "Now let's connect the pieces.",
+      "narration": "Finally, let's connect all the pieces together.",
       "audioFile": "vo/HowTheWebWorks/scene-26.mp3",
-      "actualDurationSeconds": 1.752
+      "actualDurationSeconds": 2.586063
     },
     {
       "sceneIndex": 27,
@@ -466,7 +466,7 @@
       "durationSeconds": 12,
       "effectiveDurationSeconds": 11.4,
       "transitionAfterFrames": 18,
-      "wordBudget": 24,
+      "wordBudget": 23,
       "onScreenText": [
         "The Complete Request Lifecycle",
         "Browser",
@@ -475,9 +475,9 @@
         "Database",
         "Response"
       ],
-      "narration": "You click a link. DNS finds the IP, server processes the request, queries the database, builds a response, and sends it back.",
+      "narration": "You click a link, DNS finds the IP, server processes the request, queries the database, builds a response, and sends everything back.",
       "audioFile": "vo/HowTheWebWorks/scene-27.mp3",
-      "actualDurationSeconds": 8.736
+      "actualDurationSeconds": 8.254688
     },
     {
       "sceneIndex": 28,
@@ -486,11 +486,11 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 4.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 9,
+      "wordBudget": 10,
       "onScreenText": [],
-      "narration": "All of that in roughly a hundred milliseconds.",
+      "narration": "That entire round trip happens in roughly a hundred milliseconds.",
       "audioFile": "vo/HowTheWebWorks/scene-28.mp3",
-      "actualDurationSeconds": 2.808
+      "actualDurationSeconds": 3.657125
     },
     {
       "sceneIndex": 29,
@@ -499,14 +499,14 @@
       "durationSeconds": 6,
       "effectiveDurationSeconds": 5.33,
       "transitionAfterFrames": 20,
-      "wordBudget": 11,
+      "wordBudget": 12,
       "onScreenText": [
         "Invisible Complexity",
         "All of this happens before you even see the page. Your browser runs a relay race across the planet while you impatiently stare at a loading spinner."
       ],
-      "narration": "Your browser raced across the planet. All you saw? A spinner.",
+      "narration": "Your browser raced across the planet, all you noticed was a spinner.",
       "audioFile": "vo/HowTheWebWorks/scene-29.mp3",
-      "actualDurationSeconds": 4.08
+      "actualDurationSeconds": 3.84
     },
     {
       "sceneIndex": 30,
@@ -515,7 +515,7 @@
       "durationSeconds": 10,
       "effectiveDurationSeconds": 9.5,
       "transitionAfterFrames": 15,
-      "wordBudget": 20,
+      "wordBudget": 19,
       "onScreenText": [
         "Quick Recap",
         "The client (browser) sends requests",
@@ -524,9 +524,9 @@
         "The database stores persistent data",
         "This cycle repeats for every page load"
       ],
-      "narration": "Quick recap: browser sends requests, DNS resolves addresses, server processes, database stores, and this cycle runs every page load.",
+      "narration": "Quick recap, browser sends requests, DNS resolves addresses, server processes, database stores, this cycle runs every page load.",
       "audioFile": "vo/HowTheWebWorks/scene-30.mp3",
-      "actualDurationSeconds": 9.816
+      "actualDurationSeconds": 8.96
     },
     {
       "sceneIndex": 31,
@@ -535,9 +535,11 @@
       "durationSeconds": 5,
       "effectiveDurationSeconds": 5,
       "transitionAfterFrames": 0,
-      "wordBudget": 10,
+      "wordBudget": 12,
       "onScreenText": [],
-      "narration": ""
+      "narration": "If this helped, hit subscribe, I'll catch you in the next one.",
+      "audioFile": "vo/HowTheWebWorks/scene-31.mp3",
+      "actualDurationSeconds": 3.36975
     }
   ]
 }

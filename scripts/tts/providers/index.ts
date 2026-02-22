@@ -1,5 +1,5 @@
 import type { TTSProvider } from "../types.ts";
-import { FishAudioProvider } from "./fish-audio.ts";
+import { CartesiaProvider } from "./cartesia.ts";
 import { EdgeTTSProvider } from "./edge-tts.ts";
 
 /**
@@ -7,17 +7,17 @@ import { EdgeTTSProvider } from "./edge-tts.ts";
  * Add new providers here — nothing else changes.
  */
 export function createProvider(): TTSProvider {
-  const providerName = process.env.TTS_PROVIDER ?? "edge-tts";
+  const providerName = process.env.TTS_PROVIDER ?? "cartesia";
 
   switch (providerName) {
     case "edge-tts":
       return new EdgeTTSProvider();
-    case "fish-audio":
-      return new FishAudioProvider();
+    case "cartesia":
+      return new CartesiaProvider();
     default:
       throw new Error(
         `Unknown TTS provider: "${providerName}". ` +
-          `Supported: edge-tts, fish-audio`,
+          `Supported: cartesia, edge-tts`,
       );
   }
 }
