@@ -120,6 +120,7 @@ For **educational videos** (3-10 min):
 src/
   VideoName/
     index.tsx              # Main composition — wires scenes via TransitionSeries
+    manifest.json          # Structured scene data for voiceover pipeline
     scenes/
       HeroScene.tsx        # One file per scene
       ContentScene.tsx
@@ -135,6 +136,7 @@ src/
 src/
   VideoName/
     index.tsx              # Main composition — chains sections via <Series>
+    manifest.json          # Structured scene data for voiceover pipeline
     styles.ts              # Video-specific colors, fonts, tokens
     sections/
       Section1.tsx         # Each section: TransitionSeries of shared scenes
@@ -207,6 +209,44 @@ export const TIMING = {
 - [ ] `durationInFrames = seconds * fps` calculated precisely including transition overlaps
 - [ ] TransitionSeries total = sum(scene durations) - sum(transition durations)
 - [ ] Educational videos: ProgressBar overlay on each Series.Sequence
+- [ ] `manifest.json` generated alongside code (see below)
+
+### manifest.json (Required)
+
+After generating all code files, output a `manifest.json` in `src/<VideoName>/`. This structured file captures scene data for the voiceover pipeline (`/voiceover`).
+
+```json
+{
+  "videoName": "HowTheWebWorks",
+  "fps": 30,
+  "totalFrames": 5833,
+  "sections": [
+    {
+      "sectionIndex": 1,
+      "title": "The Client",
+      "durationFrames": 1250,
+      "scenes": [
+        {
+          "sceneIndex": 1,
+          "sceneType": "HookQuestion",
+          "durationSeconds": 5,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "question": "What actually happens when you click a link?",
+            "subtext": "Spoiler: it's not magic, but it's close"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Rules**:
+- Every scene must include `sceneType`, `durationSeconds`, and `props` (the props object passed to the scene component)
+- Every scene except the last in a section must include `transitionAfter` with `type` and `frames`
+- Section `durationFrames` must match the calculated value from styles.ts
+- `totalFrames` must match the Composition's `durationInFrames`
 
 ### Layout Patterns (Quick Reference)
 

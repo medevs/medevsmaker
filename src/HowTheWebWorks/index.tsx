@@ -3,11 +3,13 @@ import { AbsoluteFill, Series } from "remotion";
 import { Background } from "../shared/components/Background";
 import { ProgressBar } from "../shared/components/ProgressBar";
 import { Watermark } from "../shared/components/Watermark";
+import { VoiceoverLayer } from "../shared/components/VoiceoverLayer";
 import { Section1 } from "./sections/Section1";
 import { Section2 } from "./sections/Section2";
 import { Section3 } from "./sections/Section3";
 import { Section4 } from "./sections/Section4";
 import { Section5 } from "./sections/Section5";
+import { VOICEOVER_SCENES } from "./voiceover";
 import {
   FONTS,
   COLORS,
@@ -75,6 +77,7 @@ export const HowTheWebWorks: React.FC = () => {
         </Series.Sequence>
       </Series>
       <Watermark fontFamily={FONTS.heading} delay={30} />
+      <VoiceoverLayer scenes={VOICEOVER_SCENES} />
     </AbsoluteFill>
   );
 };

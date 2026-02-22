@@ -9,7 +9,16 @@ Slash command that converts a simple idea into a complete Remotion video.
 
 **Supported video types**: educational, promo, tutorial, explainer, social-clip, announcement, demo
 
-**3-phase workflow**: Research & Expand -> Scene Planning -> Batched Code Generation
+**3-phase workflow**: Research & Expand -> Scene Planning -> Batched Code Generation (+ manifest.json)
+
+### /voiceover-director — Voiceover Director
+Adds voiceover narration to an existing video. Generates transcript, synthesizes TTS audio via Fish Audio, and integrates into the composition.
+
+**Usage**: `/voiceover <VideoName>`
+
+**3-phase workflow**: Transcript Generation -> TTS Synthesis -> Audio Integration
+
+**Provider**: Fish Audio (provider-agnostic — switch via `TTS_PROVIDER` env var)
 
 ## Project Structure
 
@@ -35,6 +44,7 @@ src/                                # Remotion project
       Watermark.tsx                 # Persistent branding overlay (default: top-right)
       ParticleField.tsx             # Deterministic particle system
       GridPattern.tsx               # Subtle grid background
+      VoiceoverLayer.tsx            # Audio layer for voiceover narration
     scenes/                         # 20 reusable scene templates
       HookQuestion.tsx              # Opening question
       TitleIntro.tsx                # Title + objectives
@@ -58,7 +68,10 @@ src/                                # Remotion project
       DataChart.tsx                 # Animated bar chart with spring bars
   <VideoName>/                      # One folder per generated video
     index.tsx                        # Main composition
+    manifest.json                    # Scene data for voiceover pipeline
     styles.ts                        # Design tokens
+    voiceover.ts                     # Generated: VOICEOVER_SCENES array
+    transcript.json                  # Generated: narration text per scene
     sections/                        # Section files (educational)
     scenes/                          # Scene files (short-form)
 
@@ -76,9 +89,29 @@ src/                                # Remotion project
         promo-example.tsx            # Reference: promo video
         tutorial-example.tsx         # Reference: tutorial video
         educational-example.tsx      # Reference: educational video
+  voiceover-director/                # Voiceover Director workflow (local)
+    SKILL.md                         # 3-phase workflow definition
+    rules/
+      transcript-generation.md       # Narration writing rules per scene type
+      tts-providers.md               # Provider configuration guide
+      audio-integration.md           # Remotion audio patterns
+
+scripts/tts/                        # TTS synthesis pipeline
+  types.ts                           # TTSProvider interface + manifest/transcript types
+  utils.ts                           # Audio duration, word budget, frame offsets
+  generate-transcript.ts             # Skeleton transcript generator
+  generate-audio.ts                  # TTS synthesis runner
+  providers/
+    index.ts                         # Provider factory
+    fish-audio.ts                    # Fish Audio implementation
+
+public/vo/                          # Generated voiceover audio (gitignored)
+  <VideoName>/                       # One folder per video
+    scene-01.mp3                     # MP3 per scene
 
 .claude/skills/                     # Symlinks -> .agents/skills/
 commands/video/command.md            # /video slash command
+commands/voiceover/command.md        # /voiceover slash command
 ```
 
 ## Remotion Conventions
@@ -94,3 +127,7 @@ commands/video/command.md            # /video slash command
 - Watermark position: `"top-right"` (avoids ProgressBar overlap)
 - Visual-first: 60%+ content scenes should be visual-heavy
 - Use `EndScreen` instead of basic `Outro` for polished end cards
+- Phase 3 must output `manifest.json` alongside code (for voiceover pipeline)
+- Voiceover: `<Audio>` from `@remotion/media`, placed inside `<Sequence>` via `VoiceoverLayer`
+- Audio files in `public/vo/<VideoName>/`, referenced via `staticFile()`
+- `npm run voiceover <VideoName>` synthesizes audio from transcript

@@ -4,3 +4,9 @@ out/
 .DS_Store
 *.mp4
 *.webm
+
+.env*
+.env*.local
+
+# Generated voiceover audio (large, regenerable)
+public/vo/

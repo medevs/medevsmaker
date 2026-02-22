@@ -2,16 +2,23 @@
   "name": "medevsmaker",
   "version": "1.0.0",
   "description": "AI Video Director — generate Remotion videos from simple ideas",
+  "type": "module",
   "scripts": {
     "studio": "remotion studio",
     "render": "remotion render",
     "build": "remotion render src/index.ts",
-    "upgrade": "remotion upgrade"
+    "upgrade": "remotion upgrade",
+    "manifest": "node --experimental-strip-types scripts/tts/generate-manifest.ts",
+    "transcript": "node --experimental-strip-types --env-file=.env scripts/tts/generate-transcript.ts",
+    "voiceover": "node --experimental-strip-types --env-file=.env scripts/tts/generate-audio.ts"
   },
   "dependencies": {
     "@remotion/cli": "4.0.427",
     "@remotion/google-fonts": "4.0.427",
+    "@remotion/media": "4.0.427",
     "@remotion/transitions": "4.0.427",
+    "edge-tts-universal": "^1.3.3",
+    "msedge-tts": "^2.0.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remotion": "4.0.427",
