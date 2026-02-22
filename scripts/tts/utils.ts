@@ -32,18 +32,19 @@ export function getAudioDuration(filePath: string): number {
 /**
  * Adaptive WPM based on expected narration length.
  * Neural TTS speaks short sentences significantly faster than long ones:
- *   - Short (< 3s effective): ~170 WPM — quick phrases, section titles
- *   - Medium (3-7s effective): ~145 WPM — typical narration sentences
- *   - Long (> 7s effective): ~125 WPM — multi-sentence narrations
+ *   - Short (< 3s effective): ~190 WPM — quick phrases, section titles
+ *   - Medium (3-7s effective): ~160 WPM — typical narration sentences
+ *   - Long (> 7s effective): ~140 WPM — multi-sentence narrations
  *
- * Using a flat 130 WPM under-fills short scenes (large silence gaps)
- * and risks overflowing long scenes. This adaptive scale matches
- * measured Cartesia sonic-2 pacing across 30+ scenes.
+ * Raised ~15% from original 170/145/125 thresholds based on measured data:
+ * actual WPM across 30+ scenes was consistently higher than budgets allowed,
+ * causing 2-3s silent gaps. Combined with sonic-3 speed 0.95 for more
+ * controlled delivery.
  */
 function adaptiveWPM(effectiveSeconds: number): number {
-  if (effectiveSeconds < 3) return 170;
-  if (effectiveSeconds < 7) return 145;
-  return 125;
+  if (effectiveSeconds < 3) return 190;
+  if (effectiveSeconds < 7) return 160;
+  return 140;
 }
 
 /**

@@ -1,19 +1,18 @@
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { loadFont as loadCode } from "@remotion/google-fonts/JetBrainsMono";
+import { loadFont as loadCodeFont } from "@remotion/google-fonts/JetBrainsMono";
 
 const { fontFamily: mainFont } = loadFont("normal", {
   weights: ["400", "700", "800"],
   subsets: ["latin"],
 });
 
-const { fontFamily: codeFont } = loadCode("normal", {
+const { fontFamily: codeFont } = loadCodeFont("normal", {
   weights: ["400"],
   subsets: ["latin"],
 });
 
 export const FONTS = {
-  heading: mainFont,
-  body: mainFont,
+  main: mainFont,
   code: codeFont,
 } as const;
 
@@ -28,39 +27,47 @@ export const COLORS = {
   amber: "#f59e0b",
   green: "#10b981",
   red: "#ef4444",
+  pink: "#ec4899",
 } as const;
 
 export const FPS = 30;
-export const T = 15; // default transition frames (fade)
 
-// ─── Section Duration Calculations ──────────────────────────────
-// Formula: sum(scene durations in seconds) * FPS - sum(transition frame durations)
+// Transition frame counts
+export const T_FADE = 15;
+export const T_SLIDE = 20;
+export const T_WIPE = 18;
 
-// Section 1: Hook(5) + Title(8) + SectionTitle(3) + Diagram(10) + Metaphor(6) + Steps(8) + Takeaway(5) = 45s
-// 6 transitions: fade(15) + slide(20) + fade(15) + slide(20) + fade(15) + fade(15) = 100
-// 45*30 - 100 = 1250
-export const SECTION_1_FRAMES = 1250;
+// Section duration constants (frames)
+// Section 1: Hook(5) + Title(8) + SectionTitle(3) + Concept(7) + Diagram(10) + Metaphor(6) + Takeaway(5) = 44s
+// 6 transitions: fade + fade + slide + fade + fade + fade = 15+15+20+15+15+15 = 95
+export const SECTION_1_FRAMES = 44 * FPS - 95; // 1225
 
-// Section 2: SectionTitle(3) + Metaphor(6) + Diagram(10) + Stat(5) + Timeline(10) + Takeaway(5) = 39s
-// 5 transitions: fade(15) + slide(20) + wipe(18) + fade(15) + fade(15) = 83
-// 39*30 - 83 = 1087
-export const SECTION_2_FRAMES = 1087;
+// Section 2: SectionTitle(3) + Concept(7) + Steps(8) + Metaphor(6) + Takeaway(5) = 29s
+// 4 transitions: slide + fade + fade + fade = 20+15+15+15 = 65
+export const SECTION_2_FRAMES = 29 * FPS - 65; // 805
 
-// Section 3: SectionTitle(3) + Diagram(10) + Metaphor(6) + Code(12) + DataChart(10) + Takeaway(5) = 46s
-// 5 transitions: slide(20) + fade(15) + wipe(18) + slide(20) + fade(15) = 88
-// 46*30 - 88 = 1292
-export const SECTION_3_FRAMES = 1292;
+// Section 3: SectionTitle(3) + Concept(7) + Comparison(8) + Code(10) + Stat(5) + Takeaway(5) = 38s
+// 5 transitions: slide + fade + wipe + fade + fade = 20+15+18+15+15 = 83
+export const SECTION_3_FRAMES = 38 * FPS - 83; // 1057
 
-// Section 4: SectionTitle(3) + BeforeAfter(10) + Comparison(8) + Metaphor(6) + Warning(6) + Takeaway(5) = 38s
-// 5 transitions: fade(15) + wipe(18) + fade(15) + slide(20) + fade(15) = 83
-// 38*30 - 83 = 1057
-export const SECTION_4_FRAMES = 1057;
+// Section 4: SectionTitle(3) + Diagram(10) + BeforeAfter(8) + Warning(6) + Takeaway(5) = 32s
+// 4 transitions: slide + fade + fade + fade = 20+15+15+15 = 65
+export const SECTION_4_FRAMES = 32 * FPS - 65; // 895
 
-// Section 5: SectionTitle(3) + Diagram(12) + Stat(5) + Metaphor(6) + Summary(10) + EndScreen(5) = 41s
-// 5 transitions: fade(15) + wipe(18) + fade(15) + slide(20) + fade(15) = 83
-// 41*30 - 83 = 1147
-export const SECTION_5_FRAMES = 1147;
+// Section 5: SectionTitle(3) + Timeline(10) + Concept(7) + Chart(8) + Takeaway(5) = 33s
+// 4 transitions: slide + fade + fade + fade = 20+15+15+15 = 65
+export const SECTION_5_FRAMES = 33 * FPS - 65; // 925
 
-// Total = 1250 + 1087 + 1292 + 1057 + 1147 = 5833 frames = ~194.4s (~3:14)
-export const TOTAL_FRAMES = 5833;
-export const TOTAL_SECTIONS = 5;
+// Section 6: Summary(10) + EndScreen(5) = 15s
+// 1 transition: fade = 15
+export const SECTION_6_FRAMES = 15 * FPS - 15; // 435
+
+export const TOTAL_FRAMES =
+  SECTION_1_FRAMES +
+  SECTION_2_FRAMES +
+  SECTION_3_FRAMES +
+  SECTION_4_FRAMES +
+  SECTION_5_FRAMES +
+  SECTION_6_FRAMES; // 5342
+
+export const TOTAL_SECTIONS = 6;

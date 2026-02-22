@@ -4,149 +4,133 @@ import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
-import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
+import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
+import { ComparisonSplit } from "../../shared/scenes/ComparisonSplit";
 import { CodeDisplay } from "../../shared/scenes/CodeDisplay";
-import { VisualMetaphor } from "../../shared/scenes/VisualMetaphor";
-import { DataChart } from "../../shared/scenes/DataChart";
+import { StatHighlight } from "../../shared/scenes/StatHighlight";
 import { KeyTakeaway } from "../../shared/scenes/KeyTakeaway";
-import { FONTS, COLORS, FPS, T } from "../styles";
+import { FONTS, COLORS, FPS, T_FADE, T_SLIDE, T_WIPE, TOTAL_SECTIONS } from "../styles";
 
 export const Section3: React.FC = () => {
   return (
     <TransitionSeries>
-      {/* Scene 14: Section Title */}
+      {/* Scene 13: Section Title */}
       <TransitionSeries.Sequence durationInFrames={3 * FPS}>
         <SectionTitle
           sectionNumber={3}
-          title="The Server"
-          subtitle="Where the magic actually happens"
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-          entrance="slideLeft"
+          title="The Request"
+          subtitle="Speaking HTTP to the server"
+          totalSections={TOTAL_SECTIONS}
+          fontFamily={FONTS.main}
+          entrance="fadeUp"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
         presentation={slide({ direction: "from-right" })}
-        timing={linearTiming({ durationInFrames: 20 })}
+        timing={linearTiming({ durationInFrames: T_SLIDE })}
       />
 
-      {/* Scene 15: Diagram — request-response cycle (visual-heavy) */}
-      <TransitionSeries.Sequence durationInFrames={10 * FPS}>
-        <DiagramFlow
-          title="The Request-Response Cycle"
-          nodes={[
-            { label: "Request", sublabel: "GET /page", color: COLORS.cyan },
-            { label: "Router", sublabel: "Match path", color: COLORS.indigo },
-            { label: "Logic", sublabel: "Process", color: COLORS.violet },
-            { label: "Response", sublabel: "Send HTML", color: COLORS.green },
-          ]}
-          connections={[
-            { from: 0, to: 1, label: "URL" },
-            { from: 1, to: 2, label: "handler" },
-            { from: 2, to: 3, label: "result" },
-          ]}
-          direction="horizontal"
-          colors={{ bg: COLORS.bg, text: COLORS.text, accent: COLORS.cyan }}
-          fontFamily={FONTS.heading}
+      {/* Scene 14: Concept Explain */}
+      <TransitionSeries.Sequence durationInFrames={7 * FPS}>
+        <ConceptExplain
+          heading="HTTP Is a Conversation"
+          body="Your browser sends a request with a method, URL, and headers. The server reads it, does its work, and sends back a response with a status code and data."
+          analogy="It's ordering at a restaurant. You say what you want, the kitchen makes it, and they bring it back."
+          icon="💬"
+          fontFamily={FONTS.main}
+          headingEntrance="fadeLeft"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
         presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        timing={linearTiming({ durationInFrames: T_FADE })}
       />
 
-      {/* Scene 16: Visual Metaphor — humor beat */}
-      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
-        <VisualMetaphor
-          icon="🍳"
-          heading="The Kitchen Analogy"
-          analogy="The server is a short-order cook. Request comes in, cook processes it, plates the response. No request? Cook just waits. Servers are patient."
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
+      {/* Scene 15: Comparison Split */}
+      <TransitionSeries.Sequence durationInFrames={8 * FPS}>
+        <ComparisonSplit
+          heading="GET vs POST"
+          left={{
+            title: "GET",
+            items: [
+              "Reads data",
+              "Parameters in URL",
+              "Can be cached",
+              "Bookmarkable",
+            ],
+            color: COLORS.cyan,
           }}
-          fontFamily={FONTS.heading}
-          iconEffect="bounce"
+          right={{
+            title: "POST",
+            items: [
+              "Sends data",
+              "Parameters in body",
+              "Never cached",
+              "Form submissions",
+            ],
+            color: COLORS.violet,
+          }}
+          fontFamily={FONTS.main}
+          entranceStyle="spring"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
         presentation={wipe({ direction: "from-left" })}
-        timing={linearTiming({ durationInFrames: 18 })}
+        timing={linearTiming({ durationInFrames: T_WIPE })}
       />
 
-      {/* Scene 17: Code Display — HTTP response */}
-      <TransitionSeries.Sequence durationInFrames={12 * FPS}>
+      {/* Scene 16: Code Display */}
+      <TransitionSeries.Sequence durationInFrames={10 * FPS}>
         <CodeDisplay
-          title="A Simple HTTP Response"
+          title="A Real HTTP Response"
           code={`HTTP/1.1 200 OK
 Content-Type: text/html
+Content-Length: 1256
+Cache-Control: max-age=3600
 
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <body>Hello World</body>
 </html>`}
           annotations={[
-            { line: 1, text: "Status — 200 means success" },
+            { line: 1, text: "200 means everything worked" },
             { line: 2, text: "Tells browser it's HTML" },
-            { line: 5, text: "The actual page content" },
+            { line: 4, text: "Cache for 1 hour" },
           ]}
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.cyan,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-        />
-      </TransitionSeries.Sequence>
-
-      <TransitionSeries.Transition
-        presentation={slide({ direction: "from-left" })}
-        timing={linearTiming({ durationInFrames: 20 })}
-      />
-
-      {/* Scene 18: DataChart — HTTP status codes (visual, replaces BulletReveal) */}
-      <TransitionSeries.Sequence durationInFrames={10 * FPS}>
-        <DataChart
-          heading="HTTP Status Codes"
-          bars={[
-            { label: "200 OK", value: 85, color: COLORS.green },
-            { label: "301 Moved", value: 8, color: COLORS.amber },
-            { label: "404 Missing", value: 5, color: COLORS.red },
-            { label: "500 Broken", value: 2, color: COLORS.red },
-          ]}
-          maxValue={100}
-          suffix="%"
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.cyan,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
+          fontFamily={FONTS.main}
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
         presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        timing={linearTiming({ durationInFrames: T_FADE })}
       />
 
-      {/* Scene 19: Key Takeaway */}
+      {/* Scene 17: Stat Highlight */}
+      <TransitionSeries.Sequence durationInFrames={5 * FPS}>
+        <StatHighlight
+          stat={5}
+          suffix="B+"
+          label="HTTP requests per day globally"
+          context="Every click, scroll, and page load fires at least one"
+          fontFamily={FONTS.main}
+          emphasis="glow"
+        />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: T_FADE })}
+      />
+
+      {/* Scene 18: Key Takeaway */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <KeyTakeaway
-          takeaway="The server receives requests, processes them, and sends back responses with status codes. Every website follows this exact pattern."
-          colors={{ bg: COLORS.bg, text: COLORS.text }}
-          fontFamily={FONTS.heading}
+          takeaway="HTTP is the language browsers and servers speak. Every web interaction is a request-response pair."
+          fontFamily={FONTS.main}
         />
       </TransitionSeries.Sequence>
     </TransitionSeries>

@@ -2,153 +2,97 @@ import React from "react";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
-import { wipe } from "@remotion/transitions/wipe";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
-import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
-import { StatHighlight } from "../../shared/scenes/StatHighlight";
-import { VisualMetaphor } from "../../shared/scenes/VisualMetaphor";
-import { SummaryRecap } from "../../shared/scenes/SummaryRecap";
-import { EndScreen } from "../../shared/scenes/EndScreen";
-import { FONTS, COLORS, FPS, T } from "../styles";
+import { TimelineScene } from "../../shared/scenes/TimelineScene";
+import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
+import { DataChart } from "../../shared/scenes/DataChart";
+import { KeyTakeaway } from "../../shared/scenes/KeyTakeaway";
+import { FONTS, COLORS, FPS, T_FADE, T_SLIDE, TOTAL_SECTIONS } from "../styles";
 
 export const Section5: React.FC = () => {
   return (
     <TransitionSeries>
-      {/* Scene 26: Section Title */}
+      {/* Scene 24: Section Title */}
       <TransitionSeries.Sequence durationInFrames={3 * FPS}>
         <SectionTitle
           sectionNumber={5}
-          title="The Full Picture"
-          subtitle="All the pieces working together"
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.violet,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-          entrance="fadeUp"
+          title="The Render"
+          subtitle="From raw HTML to pixels on screen"
+          totalSections={TOTAL_SECTIONS}
+          fontFamily={FONTS.main}
+          entrance="scaleBlur"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-right" })}
+        timing={linearTiming({ durationInFrames: T_SLIDE })}
       />
 
-      {/* Scene 27: Full Lifecycle Diagram (visual) */}
-      <TransitionSeries.Sequence durationInFrames={12 * FPS}>
-        <DiagramFlow
-          title="The Complete Request Lifecycle"
-          nodes={[
-            { label: "Browser", sublabel: "Click link", color: COLORS.cyan },
-            { label: "DNS", sublabel: "Resolve IP", color: COLORS.amber },
-            { label: "Server", sublabel: "Process", color: COLORS.indigo },
-            { label: "Database", sublabel: "Query data", color: COLORS.green },
-            { label: "Response", sublabel: "Send HTML", color: COLORS.violet },
-          ]}
-          connections={[
-            { from: 0, to: 1, label: "URL" },
-            { from: 1, to: 2, label: "IP" },
-            { from: 2, to: 3, label: "query" },
-            { from: 3, to: 4, label: "data" },
-          ]}
-          direction="horizontal"
-          colors={{ bg: COLORS.bg, text: COLORS.text, accent: COLORS.cyan }}
-          fontFamily={FONTS.heading}
-        />
-      </TransitionSeries.Sequence>
-
-      <TransitionSeries.Transition
-        presentation={wipe({ direction: "from-left" })}
-        timing={linearTiming({ durationInFrames: 18 })}
-      />
-
-      {/* Scene 28: Stat — pattern interrupt, speed payoff */}
-      <TransitionSeries.Sequence durationInFrames={5 * FPS}>
-        <StatHighlight
-          stat={100}
-          suffix="ms"
-          label="Average full page load"
-          context="Five hops, three lookups, one database query — all under a blink"
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.violet,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-          emphasis="gradient"
-        />
-      </TransitionSeries.Sequence>
-
-      <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
-      />
-
-      {/* Scene 29: Visual Metaphor — humor beat, final payoff */}
-      <TransitionSeries.Sequence durationInFrames={6 * FPS}>
-        <VisualMetaphor
-          icon="⚡"
-          heading="Invisible Complexity"
-          analogy="All of this happens before you even see the page. Your browser runs a relay race across the planet while you impatiently stare at a loading spinner."
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.violet,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-          iconEffect="bounce"
-        />
-      </TransitionSeries.Sequence>
-
-      <TransitionSeries.Transition
-        presentation={slide({ direction: "from-bottom" })}
-        timing={linearTiming({ durationInFrames: 20 })}
-      />
-
-      {/* Scene 30: Summary Recap */}
+      {/* Scene 25: Rendering Pipeline Timeline */}
       <TransitionSeries.Sequence durationInFrames={10 * FPS}>
-        <SummaryRecap
-          heading="Quick Recap"
-          items={[
-            "The client (browser) sends requests",
-            "DNS translates URLs to IP addresses",
-            "The server processes and responds",
-            "The database stores persistent data",
-            "This cycle repeats for every page load",
+        <TimelineScene
+          heading="Browser Rendering Pipeline"
+          nodes={[
+            { label: "Parse HTML", description: "Build the DOM tree" },
+            { label: "Parse CSS", description: "Build the CSSOM" },
+            { label: "Render Tree", description: "Combine DOM + CSSOM" },
+            { label: "Layout", description: "Calculate positions" },
+            { label: "Paint", description: "Draw pixels" },
           ]}
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-          itemEntrance="scale"
+          layout="horizontal"
+          fontFamily={FONTS.main}
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
         presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        timing={linearTiming({ durationInFrames: T_FADE })}
       />
 
-      {/* Scene 31: End Screen */}
+      {/* Scene 26: Concept Explain */}
+      <TransitionSeries.Sequence durationInFrames={7 * FPS}>
+        <ConceptExplain
+          heading="The Critical Render Path"
+          body="The browser can't show anything until it builds the DOM and CSSOM. That's why blocking CSS and JavaScript in the head slow down your page."
+          analogy="You can't hang a painting until the wall is built and painted. Same idea."
+          icon="🎨"
+          fontFamily={FONTS.main}
+          headingEntrance="fadeUp"
+        />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: T_FADE })}
+      />
+
+      {/* Scene 27: Data Chart */}
+      <TransitionSeries.Sequence durationInFrames={8 * FPS}>
+        <DataChart
+          heading="What Takes the Longest"
+          bars={[
+            { label: "DNS", value: 20, color: COLORS.cyan },
+            { label: "TCP", value: 30, color: COLORS.amber },
+            { label: "Server", value: 100, color: COLORS.indigo },
+            { label: "Download", value: 80, color: COLORS.violet },
+            { label: "Render", value: 60, color: COLORS.green },
+          ]}
+          suffix="ms"
+          fontFamily={FONTS.main}
+        />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: T_FADE })}
+      />
+
+      {/* Scene 28: Key Takeaway */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
-        <EndScreen
-          channel="medevsmaker"
-          cta="Subscribe for more"
-          tagline="Tech explained for builders"
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
+        <KeyTakeaway
+          takeaway="The browser parses HTML and CSS, builds a render tree, calculates layout, and paints pixels. This all happens in milliseconds."
+          fontFamily={FONTS.main}
         />
       </TransitionSeries.Sequence>
     </TransitionSeries>

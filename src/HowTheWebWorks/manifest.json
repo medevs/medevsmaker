@@ -1,713 +1,388 @@
 {
   "videoName": "HowTheWebWorks",
   "fps": 30,
-  "totalFrames": 5833,
+  "totalDurationFrames": 5342,
   "sections": [
     {
-      "sectionIndex": 1,
-      "title": "How the Web Actually Works",
-      "durationFrames": 1250,
+      "name": "Introduction + DNS Resolution",
+      "durationFrames": 1225,
       "scenes": [
         {
-          "sceneIndex": 1,
           "sceneType": "HookQuestion",
           "durationSeconds": 5,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "question": "What actually happens when you click a link?",
-            "subtext": "Spoiler: it's not magic, but it's close",
-            "entrance": "fadeUp"
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
+            "question": "What happens when you click a link?",
+            "subtext": "The answer involves more steps than you think"
           }
         },
         {
-          "sceneIndex": 2,
           "sceneType": "TitleIntro",
           "durationSeconds": 8,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "title": "How the Web Actually Works",
-            "entrance": "scaleRotate",
+            "title": "How the Web Works",
             "objectives": [
-              "Understand the client-server model",
-              "See how DNS translates URLs",
-              "What happens inside a server",
-              "Why your data survives a reboot"
+              "Understand DNS and IP addresses",
+              "Know the TCP handshake",
+              "See a full HTTP request cycle",
+              "Watch the browser render a page"
             ]
-          },
-          "transitionAfter": {
-            "type": "slide",
-            "frames": 20
           }
         },
         {
-          "sceneIndex": 3,
           "sceneType": "SectionTitle",
           "durationSeconds": 3,
+          "transitionAfter": { "type": "slide", "frames": 20 },
           "props": {
-            "title": "The Client",
-            "subtitle": "Your browser is smarter than you think",
-            "entrance": "slideLeft"
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
+            "sectionNumber": 1,
+            "title": "DNS Resolution",
+            "subtitle": "The internet's phone book"
           }
         },
         {
-          "sceneIndex": 4,
+          "sceneType": "ConceptExplain",
+          "durationSeconds": 7,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "heading": "Domains Are for Humans",
+            "body": "Computers use IP addresses like 142.250.80.46 to find each other. DNS translates the domain name you type into the IP address the network needs.",
+            "analogy": "It's like looking up a contact name in your phone to find their number.",
+            "icon": "\ud83c\udf10"
+          }
+        },
+        {
           "sceneType": "DiagramFlow",
           "durationSeconds": 10,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "title": "What Your Browser Does",
+            "title": "The DNS Lookup Chain",
             "nodes": [
-              {
-                "label": "URL",
-                "sublabel": "You type it"
-              },
-              {
-                "label": "DNS",
-                "sublabel": "Find server"
-              },
-              {
-                "label": "Request",
-                "sublabel": "Ask for page"
-              },
-              {
-                "label": "Response",
-                "sublabel": "Get HTML"
-              }
+              { "label": "Browser", "sublabel": "Cache" },
+              { "label": "OS", "sublabel": "Cache" },
+              { "label": "Router", "sublabel": "Cache" },
+              { "label": "ISP DNS", "sublabel": "Resolver" },
+              { "label": "Root", "sublabel": "Server" }
             ],
             "connections": [
-              {
-                "label": "parse",
-                "from": 0,
-                "to": 1
-              },
-              {
-                "label": "IP",
-                "from": 1,
-                "to": 2
-              },
-              {
-                "label": "HTTP",
-                "from": 2,
-                "to": 3
-              }
+              { "from": 0, "to": 1, "label": "miss" },
+              { "from": 1, "to": 2, "label": "miss" },
+              { "from": 2, "to": 3, "label": "miss" },
+              { "from": 3, "to": 4, "label": "query" }
             ]
-          },
-          "transitionAfter": {
-            "type": "slide",
-            "frames": 20
           }
         },
         {
-          "sceneIndex": 5,
           "sceneType": "VisualMetaphor",
           "durationSeconds": 6,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "icon": "🍽️",
-            "heading": "You're the Customer",
-            "analogy": "Your browser is the waiter. It takes your order, runs to the kitchen (server), and brings back your food (HTML). Tip not required.",
-            "iconEffect": "rotate"
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
+            "icon": "\ud83d\udcd6",
+            "heading": "The Internet's Phone Book",
+            "analogy": "DNS is a massive, distributed phone book. You give it a name, it gives you the number. And just like a phone book, it gets cached so you don't look up the same name twice."
           }
         },
         {
-          "sceneIndex": 6,
+          "sceneType": "KeyTakeaway",
+          "durationSeconds": 5,
+          "props": {
+            "takeaway": "DNS converts human-readable domain names into machine-readable IP addresses. Every web request starts here."
+          }
+        }
+      ]
+    },
+    {
+      "name": "The Connection",
+      "durationFrames": 805,
+      "scenes": [
+        {
+          "sceneType": "SectionTitle",
+          "durationSeconds": 3,
+          "transitionAfter": { "type": "slide", "frames": 20 },
+          "props": {
+            "sectionNumber": 2,
+            "title": "The Connection",
+            "subtitle": "TCP and the three-way handshake"
+          }
+        },
+        {
+          "sceneType": "ConceptExplain",
+          "durationSeconds": 7,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "heading": "Why TCP Matters",
+            "body": "Before any data moves, your browser and the server need to agree they can talk. TCP guarantees that every packet arrives, in order, without corruption.",
+            "analogy": "Imagine calling someone. You don't just start talking, you wait for them to pick up first.",
+            "icon": "\ud83e\udd1d"
+          }
+        },
+        {
           "sceneType": "StepSequence",
           "durationSeconds": 8,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "heading": "Every Click, Same Dance",
+            "heading": "The Three-Way Handshake",
             "steps": [
-              {
-                "title": "Parse the URL",
-                "description": "Extract the domain from the address bar"
-              },
-              {
-                "title": "Resolve the IP",
-                "description": "DNS translates the name to a number"
-              },
-              {
-                "title": "Send the request",
-                "description": "Browser asks the server over HTTP"
-              }
+              { "title": "SYN", "description": "Client says: I want to connect" },
+              { "title": "SYN-ACK", "description": "Server says: Got it, I'm ready" },
+              { "title": "ACK", "description": "Client says: Great, let's go" }
             ]
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
           }
         },
         {
-          "sceneIndex": 7,
-          "sceneType": "KeyTakeaway",
-          "durationSeconds": 5,
-          "props": {
-            "takeaway": "The client (your browser) sends requests. It never stores the real data — it just displays what the server sends back."
-          }
-        }
-      ]
-    },
-    {
-      "sectionIndex": 2,
-      "title": "DNS Lookup",
-      "durationFrames": 1087,
-      "scenes": [
-        {
-          "sceneIndex": 8,
-          "sceneType": "SectionTitle",
-          "durationSeconds": 3,
-          "props": {
-            "title": "DNS Lookup",
-            "subtitle": "The internet's phone book",
-            "entrance": "scaleBlur"
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
-          }
-        },
-        {
-          "sceneIndex": 9,
           "sceneType": "VisualMetaphor",
           "durationSeconds": 6,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "icon": "📖",
-            "heading": "Names to Numbers",
-            "analogy": "You type google.com but computers only speak numbers. DNS is your browser frantically flipping through a phone book at light speed.",
-            "iconEffect": "pop"
-          },
-          "transitionAfter": {
-            "type": "slide",
-            "frames": 20
+            "icon": "\ud83d\udcde",
+            "heading": "It's Like a Phone Call",
+            "analogy": "You dial, they pick up and say hello, you confirm you hear them. Three steps before you say a single useful word. TCP works the same way."
           }
         },
         {
-          "sceneIndex": 10,
-          "sceneType": "DiagramFlow",
-          "durationSeconds": 10,
-          "props": {
-            "title": "How DNS Resolution Works",
-            "nodes": [
-              {
-                "label": "Browser",
-                "sublabel": "Cache check"
-              },
-              {
-                "label": "Resolver",
-                "sublabel": "ISP lookup"
-              },
-              {
-                "label": "Root",
-                "sublabel": ".com zone"
-              },
-              {
-                "label": "TLD",
-                "sublabel": "google.com"
-              },
-              {
-                "label": "Auth",
-                "sublabel": "IP found"
-              }
-            ],
-            "connections": [
-              {
-                "label": "query",
-                "from": 0,
-                "to": 1
-              },
-              {
-                "label": "ask",
-                "from": 1,
-                "to": 2
-              },
-              {
-                "label": "refer",
-                "from": 2,
-                "to": 3
-              },
-              {
-                "label": "resolve",
-                "from": 3,
-                "to": 4
-              }
-            ]
-          },
-          "transitionAfter": {
-            "type": "wipe",
-            "frames": 18
-          }
-        },
-        {
-          "sceneIndex": 11,
-          "sceneType": "StatHighlight",
-          "durationSeconds": 5,
-          "props": {
-            "suffix": " trillion",
-            "label": "DNS queries per day",
-            "context": "Every click, every API call, every image — starts with a DNS lookup",
-            "emphasis": "glow",
-            "stat": 1.1
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
-          }
-        },
-        {
-          "sceneIndex": 12,
-          "sceneType": "TimelineScene",
-          "durationSeconds": 10,
-          "props": {
-            "heading": "DNS Caching Layers",
-            "layout": "horizontal",
-            "nodes": [
-              {
-                "label": "Browser",
-                "description": "Checks local cache first"
-              },
-              {
-                "label": "OS",
-                "description": "System-level DNS cache"
-              },
-              {
-                "label": "Router",
-                "description": "Your home network cache"
-              },
-              {
-                "label": "ISP",
-                "description": "Your provider's resolver"
-              },
-              {
-                "label": "Root",
-                "description": "Last resort — full lookup"
-              }
-            ]
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
-          }
-        },
-        {
-          "sceneIndex": 13,
           "sceneType": "KeyTakeaway",
           "durationSeconds": 5,
           "props": {
-            "takeaway": "DNS translates domain names into IP addresses. Multiple cache layers make it blazing fast — most lookups never reach the root."
+            "takeaway": "TCP's three-way handshake ensures both sides are ready before any data is sent. It's slower, but nothing gets lost."
           }
         }
       ]
     },
     {
-      "sectionIndex": 3,
-      "title": "The Server",
-      "durationFrames": 1292,
-      "scenes": [
-        {
-          "sceneIndex": 14,
-          "sceneType": "SectionTitle",
-          "durationSeconds": 3,
-          "props": {
-            "title": "The Server",
-            "subtitle": "Where the magic actually happens",
-            "entrance": "slideLeft"
-          },
-          "transitionAfter": {
-            "type": "slide",
-            "frames": 20
-          }
-        },
-        {
-          "sceneIndex": 15,
-          "sceneType": "DiagramFlow",
-          "durationSeconds": 10,
-          "props": {
-            "title": "The Request-Response Cycle",
-            "nodes": [
-              {
-                "label": "Request",
-                "sublabel": "GET /page"
-              },
-              {
-                "label": "Router",
-                "sublabel": "Match path"
-              },
-              {
-                "label": "Logic",
-                "sublabel": "Process"
-              },
-              {
-                "label": "Response",
-                "sublabel": "Send HTML"
-              }
-            ],
-            "connections": [
-              {
-                "label": "URL",
-                "from": 0,
-                "to": 1
-              },
-              {
-                "label": "handler",
-                "from": 1,
-                "to": 2
-              },
-              {
-                "label": "result",
-                "from": 2,
-                "to": 3
-              }
-            ]
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
-          }
-        },
-        {
-          "sceneIndex": 16,
-          "sceneType": "VisualMetaphor",
-          "durationSeconds": 6,
-          "props": {
-            "icon": "🍳",
-            "heading": "The Kitchen Analogy",
-            "analogy": "The server is a short-order cook. Request comes in, cook processes it, plates the response. No request? Cook just waits. Servers are patient.",
-            "iconEffect": "bounce"
-          },
-          "transitionAfter": {
-            "type": "wipe",
-            "frames": 18
-          }
-        },
-        {
-          "sceneIndex": 17,
-          "sceneType": "CodeDisplay",
-          "durationSeconds": 12,
-          "props": {
-            "title": "A Simple HTTP Response",
-            "annotations": [
-              {
-                "text": "Status — 200 means success",
-                "line": 1
-              },
-              {
-                "text": "Tells browser it's HTML",
-                "line": 2
-              },
-              {
-                "text": "The actual page content",
-                "line": 5
-              }
-            ],
-            "code": "HTTP/1.1 200 OK\nContent-Type: text/html\n\n<html>\n  <body>Hello World</body>\n</html>"
-          },
-          "transitionAfter": {
-            "type": "slide",
-            "frames": 20
-          }
-        },
-        {
-          "sceneIndex": 18,
-          "sceneType": "DataChart",
-          "durationSeconds": 10,
-          "props": {
-            "heading": "HTTP Status Codes",
-            "suffix": "%",
-            "maxValue": 100,
-            "bars": [
-              {
-                "label": "200 OK",
-                "value": 85
-              },
-              {
-                "label": "301 Moved",
-                "value": 8
-              },
-              {
-                "label": "404 Missing",
-                "value": 5
-              },
-              {
-                "label": "500 Broken",
-                "value": 2
-              }
-            ]
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
-          }
-        },
-        {
-          "sceneIndex": 19,
-          "sceneType": "KeyTakeaway",
-          "durationSeconds": 5,
-          "props": {
-            "takeaway": "The server receives requests, processes them, and sends back responses with status codes. Every website follows this exact pattern."
-          }
-        }
-      ]
-    },
-    {
-      "sectionIndex": 4,
-      "title": "The Database",
+      "name": "The Request",
       "durationFrames": 1057,
       "scenes": [
         {
-          "sceneIndex": 20,
           "sceneType": "SectionTitle",
           "durationSeconds": 3,
+          "transitionAfter": { "type": "slide", "frames": 20 },
           "props": {
-            "title": "The Database",
-            "subtitle": "Where your data actually lives",
-            "entrance": "scaleBlur"
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
+            "sectionNumber": 3,
+            "title": "The Request",
+            "subtitle": "Speaking HTTP to the server"
           }
         },
         {
-          "sceneIndex": 21,
-          "sceneType": "BeforeAfter",
-          "durationSeconds": 10,
+          "sceneType": "ConceptExplain",
+          "durationSeconds": 7,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "heading": "With vs Without a Database",
-            "reveal": "wipe",
-            "before": {
-              "title": "No Database",
-              "items": [
-                "Data lost on restart",
-                "No user accounts",
-                "Everything temporary",
-                "Basically a calculator"
-              ]
-            },
-            "after": {
-              "title": "With Database",
-              "items": [
-                "Data persists forever",
-                "Users, posts, orders saved",
-                "Survives crashes",
-                "Actual useful app"
-              ]
-            }
-          },
-          "transitionAfter": {
-            "type": "wipe",
-            "frames": 18
+            "heading": "HTTP Is a Conversation",
+            "body": "Your browser sends a request with a method, URL, and headers. The server reads it, does its work, and sends back a response with a status code and data.",
+            "analogy": "It's ordering at a restaurant. You say what you want, the kitchen makes it, and they bring it back.",
+            "icon": "\ud83d\udcac"
           }
         },
         {
-          "sceneIndex": 22,
           "sceneType": "ComparisonSplit",
           "durationSeconds": 8,
+          "transitionAfter": { "type": "wipe", "frames": 18 },
           "props": {
-            "heading": "SQL vs NoSQL",
-            "entranceStyle": "overshoot",
+            "heading": "GET vs POST",
             "left": {
-              "title": "SQL",
-              "items": [
-                "Structured tables",
-                "Fixed schema",
-                "Great for relations",
-                "PostgreSQL, MySQL"
-              ]
+              "title": "GET",
+              "items": ["Reads data", "Parameters in URL", "Can be cached", "Bookmarkable"]
             },
             "right": {
-              "title": "NoSQL",
-              "items": [
-                "Flexible documents",
-                "Schema-free",
-                "Great for scale",
-                "MongoDB, Firebase"
-              ]
+              "title": "POST",
+              "items": ["Sends data", "Parameters in body", "Never cached", "Form submissions"]
             }
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
           }
         },
         {
-          "sceneIndex": 23,
-          "sceneType": "VisualMetaphor",
-          "durationSeconds": 6,
+          "sceneType": "CodeDisplay",
+          "durationSeconds": 10,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "icon": "🗄️",
-            "heading": "Your App's Memory",
-            "analogy": "Without a database, your app has amnesia. Every restart it forgets everything. Your users cry. Your boss sends a Slack.",
-            "iconEffect": "pop"
-          },
-          "transitionAfter": {
-            "type": "slide",
-            "frames": 20
+            "title": "A Real HTTP Response",
+            "code": "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: 1256\nCache-Control: max-age=3600\n\n<!DOCTYPE html>\n<html lang=\"en\">\n  <body>Hello World</body>\n</html>",
+            "annotations": [
+              { "line": 1, "text": "200 means everything worked" },
+              { "line": 2, "text": "Tells browser it's HTML" },
+              { "line": 4, "text": "Cache for 1 hour" }
+            ]
           }
         },
         {
-          "sceneIndex": 24,
-          "sceneType": "WarningCallout",
-          "durationSeconds": 6,
+          "sceneType": "StatHighlight",
+          "durationSeconds": 5,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "heading": "Never Trust the Client",
-            "body": "Always validate data on the server before writing to the database. Client-side validation can be bypassed in 5 seconds flat.",
-            "severity": "danger"
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
+            "stat": 5,
+            "suffix": "B+",
+            "label": "HTTP requests per day globally",
+            "context": "Every click, scroll, and page load fires at least one"
           }
         },
         {
-          "sceneIndex": 25,
           "sceneType": "KeyTakeaway",
           "durationSeconds": 5,
           "props": {
-            "takeaway": "Databases store the permanent data. The server reads from and writes to the database on every request that needs data."
+            "takeaway": "HTTP is the language browsers and servers speak. Every web interaction is a request-response pair."
           }
         }
       ]
     },
     {
-      "sectionIndex": 5,
-      "title": "The Full Picture",
-      "durationFrames": 1147,
+      "name": "The Server",
+      "durationFrames": 895,
       "scenes": [
         {
-          "sceneIndex": 26,
           "sceneType": "SectionTitle",
           "durationSeconds": 3,
+          "transitionAfter": { "type": "slide", "frames": 20 },
           "props": {
-            "title": "The Full Picture",
-            "subtitle": "All the pieces working together",
-            "entrance": "fadeUp"
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
+            "sectionNumber": 4,
+            "title": "The Server",
+            "subtitle": "Where your request gets processed"
           }
         },
         {
-          "sceneIndex": 27,
           "sceneType": "DiagramFlow",
-          "durationSeconds": 12,
+          "durationSeconds": 10,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
-            "title": "The Complete Request Lifecycle",
+            "title": "Inside the Server",
             "nodes": [
-              {
-                "label": "Browser",
-                "sublabel": "Click link"
-              },
-              {
-                "label": "DNS",
-                "sublabel": "Resolve IP"
-              },
-              {
-                "label": "Server",
-                "sublabel": "Process"
-              },
-              {
-                "label": "Database",
-                "sublabel": "Query data"
-              },
-              {
-                "label": "Response",
-                "sublabel": "Send HTML"
-              }
+              { "label": "Request", "sublabel": "Arrives" },
+              { "label": "Router", "sublabel": "Match URL" },
+              { "label": "Handler", "sublabel": "Run Logic" },
+              { "label": "Database", "sublabel": "Read/Write" },
+              { "label": "Response", "sublabel": "Send Back" }
             ],
             "connections": [
-              {
-                "label": "URL",
-                "from": 0,
-                "to": 1
-              },
-              {
-                "label": "IP",
-                "from": 1,
-                "to": 2
-              },
-              {
-                "label": "query",
-                "from": 2,
-                "to": 3
-              },
-              {
-                "label": "data",
-                "from": 3,
-                "to": 4
-              }
+              { "from": 0, "to": 1 },
+              { "from": 1, "to": 2 },
+              { "from": 2, "to": 3 },
+              { "from": 3, "to": 4 }
             ]
-          },
-          "transitionAfter": {
-            "type": "wipe",
-            "frames": 18
           }
         },
         {
-          "sceneIndex": 28,
-          "sceneType": "StatHighlight",
+          "sceneType": "BeforeAfter",
+          "durationSeconds": 8,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "heading": "Static vs Dynamic",
+            "before": {
+              "title": "Static",
+              "items": ["Pre-built HTML files", "Same for every user", "Fast, no processing"]
+            },
+            "after": {
+              "title": "Dynamic",
+              "items": ["Generated on each request", "Personalized content", "Needs server + database"]
+            }
+          }
+        },
+        {
+          "sceneType": "WarningCallout",
+          "durationSeconds": 6,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "heading": "Never Trust the Client",
+            "body": "Users can modify anything in the browser. Always validate inputs on the server. Client checks are for UX, server checks are for security."
+          }
+        },
+        {
+          "sceneType": "KeyTakeaway",
           "durationSeconds": 5,
           "props": {
-            "suffix": "ms",
-            "label": "Average full page load",
-            "context": "Five hops, three lookups, one database query — all under a blink",
-            "emphasis": "gradient",
-            "stat": 100
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
+            "takeaway": "The server routes requests, runs business logic, talks to the database, and sends back responses. It's the brain of every web app."
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "The Render",
+      "durationFrames": 925,
+      "scenes": [
         {
-          "sceneIndex": 29,
-          "sceneType": "VisualMetaphor",
-          "durationSeconds": 6,
+          "sceneType": "SectionTitle",
+          "durationSeconds": 3,
+          "transitionAfter": { "type": "slide", "frames": 20 },
           "props": {
-            "icon": "⚡",
-            "heading": "Invisible Complexity",
-            "analogy": "All of this happens before you even see the page. Your browser runs a relay race across the planet while you impatiently stare at a loading spinner.",
-            "iconEffect": "bounce"
-          },
-          "transitionAfter": {
-            "type": "slide",
-            "frames": 20
+            "sectionNumber": 5,
+            "title": "The Render",
+            "subtitle": "From raw HTML to pixels on screen"
           }
         },
         {
-          "sceneIndex": 30,
+          "sceneType": "TimelineScene",
+          "durationSeconds": 10,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "heading": "Browser Rendering Pipeline",
+            "nodes": [
+              { "label": "Parse HTML", "description": "Build the DOM tree" },
+              { "label": "Parse CSS", "description": "Build the CSSOM" },
+              { "label": "Render Tree", "description": "Combine DOM + CSSOM" },
+              { "label": "Layout", "description": "Calculate positions" },
+              { "label": "Paint", "description": "Draw pixels" }
+            ]
+          }
+        },
+        {
+          "sceneType": "ConceptExplain",
+          "durationSeconds": 7,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "heading": "The Critical Render Path",
+            "body": "The browser can't show anything until it builds the DOM and CSSOM. That's why blocking CSS and JavaScript in the head slow down your page.",
+            "analogy": "You can't hang a painting until the wall is built and painted. Same idea.",
+            "icon": "\ud83c\udfa8"
+          }
+        },
+        {
+          "sceneType": "DataChart",
+          "durationSeconds": 8,
+          "transitionAfter": { "type": "fade", "frames": 15 },
+          "props": {
+            "heading": "What Takes the Longest",
+            "bars": [
+              { "label": "DNS", "value": 20 },
+              { "label": "TCP", "value": 30 },
+              { "label": "Server", "value": 100 },
+              { "label": "Download", "value": 80 },
+              { "label": "Render", "value": 60 }
+            ],
+            "suffix": "ms"
+          }
+        },
+        {
+          "sceneType": "KeyTakeaway",
+          "durationSeconds": 5,
+          "props": {
+            "takeaway": "The browser parses HTML and CSS, builds a render tree, calculates layout, and paints pixels. This all happens in milliseconds."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wrap-up",
+      "durationFrames": 435,
+      "scenes": [
+        {
           "sceneType": "SummaryRecap",
           "durationSeconds": 10,
+          "transitionAfter": { "type": "fade", "frames": 15 },
           "props": {
             "heading": "Quick Recap",
-            "itemEntrance": "scale",
             "items": [
-              "The client (browser) sends requests",
-              "DNS translates URLs to IP addresses",
-              "The server processes and responds",
-              "The database stores persistent data",
-              "This cycle repeats for every page load"
+              "DNS resolves domain names to IPs",
+              "TCP handshake opens the connection",
+              "HTTP sends requests and responses",
+              "The server processes and queries data",
+              "The browser parses, lays out, and paints"
             ]
-          },
-          "transitionAfter": {
-            "type": "fade",
-            "frames": 15
           }
         },
         {
-          "sceneIndex": 31,
           "sceneType": "EndScreen",
           "durationSeconds": 5,
           "props": {
             "channel": "medevsmaker",
             "cta": "Subscribe for more",
-            "tagline": "Tech explained for builders"
+            "tagline": "Making devs, one video at a time"
           }
         }
       ]

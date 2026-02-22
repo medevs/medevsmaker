@@ -5,166 +5,132 @@ import { slide } from "@remotion/transitions/slide";
 import { HookQuestion } from "../../shared/scenes/HookQuestion";
 import { TitleIntro } from "../../shared/scenes/TitleIntro";
 import { SectionTitle } from "../../shared/scenes/SectionTitle";
+import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 import { DiagramFlow } from "../../shared/scenes/DiagramFlow";
-import { StepSequence } from "../../shared/scenes/StepSequence";
 import { VisualMetaphor } from "../../shared/scenes/VisualMetaphor";
 import { KeyTakeaway } from "../../shared/scenes/KeyTakeaway";
-import { FONTS, COLORS, FPS, T } from "../styles";
+import { FONTS, COLORS, FPS, T_FADE, T_SLIDE, TOTAL_SECTIONS } from "../styles";
 
 export const Section1: React.FC = () => {
   return (
     <TransitionSeries>
-      {/* Scene 1: Hook — curiosity gap with humor */}
+      {/* Scene 1: Hook */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <HookQuestion
-          question="What actually happens when you click a link?"
-          subtext="Spoiler: it's not magic, but it's close"
-          colors={{ bg: COLORS.bg, text: COLORS.text, accent: COLORS.cyan }}
-          fontFamily={FONTS.heading}
-          entrance="fadeUp"
+          question="What happens when you click a link?"
+          subtext="The answer involves more steps than you think"
+          fontFamily={FONTS.main}
+          entrance="blur"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
         presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        timing={linearTiming({ durationInFrames: T_FADE })}
       />
 
-      {/* Scene 2: Title Intro — open loops in objectives */}
+      {/* Scene 2: Title Intro */}
       <TransitionSeries.Sequence durationInFrames={8 * FPS}>
         <TitleIntro
-          title="How the Web Actually Works"
+          title="How the Web Works"
           objectives={[
-            "Understand the client-server model",
-            "See how DNS translates URLs",
-            "What happens inside a server",
-            "Why your data survives a reboot",
+            "Understand DNS and IP addresses",
+            "Know the TCP handshake",
+            "See a full HTTP request cycle",
+            "Watch the browser render a page",
           ]}
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-          entrance="scaleRotate"
+          fontFamily={FONTS.main}
+          entrance="splitReveal"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={slide({ direction: "from-left" })}
-        timing={linearTiming({ durationInFrames: 20 })}
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: T_FADE })}
       />
 
       {/* Scene 3: Section Title */}
       <TransitionSeries.Sequence durationInFrames={3 * FPS}>
         <SectionTitle
           sectionNumber={1}
-          title="The Client"
-          subtitle="Your browser is smarter than you think"
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
+          title="DNS Resolution"
+          subtitle="The internet's phone book"
+          totalSections={TOTAL_SECTIONS}
+          fontFamily={FONTS.main}
           entrance="slideLeft"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        presentation={slide({ direction: "from-right" })}
+        timing={linearTiming({ durationInFrames: T_SLIDE })}
       />
 
-      {/* Scene 4: Diagram — what the browser does (visual-heavy) */}
+      {/* Scene 4: Concept Explain */}
+      <TransitionSeries.Sequence durationInFrames={7 * FPS}>
+        <ConceptExplain
+          heading="Domains Are for Humans"
+          body="Computers use IP addresses like 142.250.80.46 to find each other. DNS translates the domain name you type into the IP address the network needs."
+          analogy="It's like looking up a contact name in your phone to find their number."
+          icon="🌐"
+          fontFamily={FONTS.main}
+          headingEntrance="fadeLeft"
+        />
+      </TransitionSeries.Sequence>
+
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: T_FADE })}
+      />
+
+      {/* Scene 5: DNS Lookup Diagram */}
       <TransitionSeries.Sequence durationInFrames={10 * FPS}>
         <DiagramFlow
-          title="What Your Browser Does"
+          title="The DNS Lookup Chain"
           nodes={[
-            { label: "URL", sublabel: "You type it", color: COLORS.cyan },
-            { label: "DNS", sublabel: "Find server", color: COLORS.amber },
-            { label: "Request", sublabel: "Ask for page", color: COLORS.indigo },
-            { label: "Response", sublabel: "Get HTML", color: COLORS.green },
+            { label: "Browser", sublabel: "Cache", color: COLORS.cyan },
+            { label: "OS", sublabel: "Cache", color: COLORS.amber },
+            { label: "Router", sublabel: "Cache", color: COLORS.violet },
+            { label: "ISP DNS", sublabel: "Resolver", color: COLORS.indigo },
+            { label: "Root", sublabel: "Server", color: COLORS.green },
           ]}
           connections={[
-            { from: 0, to: 1, label: "parse" },
-            { from: 1, to: 2, label: "IP" },
-            { from: 2, to: 3, label: "HTTP" },
+            { from: 0, to: 1, label: "miss" },
+            { from: 1, to: 2, label: "miss" },
+            { from: 2, to: 3, label: "miss" },
+            { from: 3, to: 4, label: "query" },
           ]}
           direction="horizontal"
-          colors={{ bg: COLORS.bg, text: COLORS.text, accent: COLORS.cyan }}
-          fontFamily={FONTS.heading}
+          fontFamily={FONTS.main}
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
-        presentation={slide({ direction: "from-right" })}
-        timing={linearTiming({ durationInFrames: 20 })}
+        presentation={fade()}
+        timing={linearTiming({ durationInFrames: T_FADE })}
       />
 
-      {/* Scene 5: Visual Metaphor — humor beat */}
+      {/* Scene 6: Visual Metaphor */}
       <TransitionSeries.Sequence durationInFrames={6 * FPS}>
         <VisualMetaphor
-          icon="🍽️"
-          heading="You're the Customer"
-          analogy="Your browser is the waiter. It takes your order, runs to the kitchen (server), and brings back your food (HTML). Tip not required."
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.amber,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-          iconEffect="rotate"
+          icon="📖"
+          heading="The Internet's Phone Book"
+          analogy="DNS is a massive, distributed phone book. You give it a name, it gives you the number. And just like a phone book, it gets cached so you don't look up the same name twice."
+          fontFamily={FONTS.main}
+          iconEffect="pop"
         />
       </TransitionSeries.Sequence>
 
       <TransitionSeries.Transition
         presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
-      />
-
-      {/* Scene 6: Step Sequence — the request flow */}
-      <TransitionSeries.Sequence durationInFrames={8 * FPS}>
-        <StepSequence
-          heading="Every Click, Same Dance"
-          steps={[
-            {
-              title: "Parse the URL",
-              description: "Extract the domain from the address bar",
-            },
-            {
-              title: "Resolve the IP",
-              description: "DNS translates the name to a number",
-            },
-            {
-              title: "Send the request",
-              description: "Browser asks the server over HTTP",
-            },
-          ]}
-          colors={{
-            bg: COLORS.bg,
-            text: COLORS.text,
-            accent: COLORS.indigo,
-            muted: COLORS.muted,
-          }}
-          fontFamily={FONTS.heading}
-        />
-      </TransitionSeries.Sequence>
-
-      <TransitionSeries.Transition
-        presentation={fade()}
-        timing={linearTiming({ durationInFrames: T })}
+        timing={linearTiming({ durationInFrames: T_FADE })}
       />
 
       {/* Scene 7: Key Takeaway */}
       <TransitionSeries.Sequence durationInFrames={5 * FPS}>
         <KeyTakeaway
-          takeaway="The client (your browser) sends requests. It never stores the real data — it just displays what the server sends back."
-          colors={{ bg: COLORS.bg, text: COLORS.text }}
-          fontFamily={FONTS.heading}
+          takeaway="DNS converts human-readable domain names into machine-readable IP addresses. Every web request starts here."
+          fontFamily={FONTS.main}
         />
       </TransitionSeries.Sequence>
     </TransitionSeries>

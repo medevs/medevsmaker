@@ -13,9 +13,9 @@ TTS_PROVIDER=cartesia
 # Cartesia config
 CARTESIA_API_KEY=<your-api-key>
 CARTESIA_VOICE_ID=<voice-id-from-cartesia>
-CARTESIA_MODEL=sonic-2       # sonic-2 (default) | sonic-3 | sonic
-CARTESIA_SPEED=slow          # sonic-2: slow | normal | fast
-                             # sonic-3: 0.6 to 1.5 (numeric)
+CARTESIA_MODEL=sonic-3       # sonic-3 (default) | sonic-2 | sonic
+CARTESIA_SPEED=0.95          # sonic-3 only: 0.6 to 1.5 (default: 0.95)
+CARTESIA_EMOTION=neutral     # sonic-3 only: neutral | happy | sad | angry | surprise
 ```
 
 ## Cartesia (Default)
@@ -62,16 +62,54 @@ Before cloning, test the pipeline with a Cartesia stock voice to confirm the sys
 
 ### Models
 
-| Model | Quality | Speed Control | Languages | Notes |
-|-------|---------|---------------|-----------|-------|
-| `sonic-2` | Highest | `slow` / `normal` / `fast` | 15 | Default — best voice cloning fidelity |
-| `sonic-3` | High | `0.6` to `1.5` (numeric) | 42 | Emotion + volume + speed controls |
-| `sonic` | Good | Same as sonic-2 | 15 | Previous generation |
+| Model | Quality | Speed Control | Emotion Control | Languages | Notes |
+|-------|---------|---------------|-----------------|-----------|-------|
+| `sonic-3` | Highest | `0.6` to `1.5` (numeric) | Yes | 42 | **Default** — best quality, full generation_config |
+| `sonic-2` | High | Unreliable | No | 15 | Legacy — good voice cloning but no speed/emotion |
+| `sonic` | Good | Same as sonic-2 | No | 15 | Previous generation |
 
-**Speed control:**
-- `CARTESIA_SPEED=slow` for sonic-2 — recommended for voiceover (clearer articulation)
-- `CARTESIA_SPEED=0.85` for sonic-3 — numeric scale where 1.0 is default
-- Cartesia's default pace (~160-170 WPM on short sentences) is faster than ideal for educational voiceover. Using `slow` brings it closer to the 130 WPM our word budgets target.
+**Why sonic-3 is the default:**
+- Reliable `generation_config` support (speed, emotion, volume)
+- Better naturalness and prosody
+- Voice IDs are cross-compatible — your cloned voice works on sonic-3
+- sonic-2's speed parameter is experimental and unreliable (overcorrects slow sentences, barely affects fast ones)
+
+### Speed Control (sonic-3 only)
+
+Set via `CARTESIA_SPEED` env var. Default: `0.95` (slightly slower for polished narration).
+
+| Value | Effect |
+|-------|--------|
+| `0.6` | Very slow, dramatic |
+| `0.8` | Noticeably slower |
+| `0.95` | Slightly slower (default — polished narration) |
+| `1.0` | Natural pace |
+| `1.2` | Faster, energetic |
+| `1.5` | Very fast |
+
+Speed is "guidance" not strict override — the model maintains natural prosody. For sonic-2, speed config is ignored.
+
+### Emotion Control (sonic-3 only)
+
+Set via `CARTESIA_EMOTION` env var. Not set by default (model uses natural tone).
+
+| Value | Best for |
+|-------|----------|
+| `neutral` | Educational narration, default tone |
+| `happy` | Upbeat intros, positive stats |
+| `sad` | Serious warnings, consequences |
+| `angry` | Urgency, callouts |
+| `surprise` | Shocking stats, reveals |
+
+Emotion is applied as guidance — the model won't sound cartoonishly happy/sad.
+
+### Silence Padding
+
+The provider automatically prepends 100ms of silence to every audio file using ffmpeg. This prevents the first word from being clipped, which happens because Cartesia returns audio with no leading silence and MP3 frame encoding clips the first few milliseconds.
+
+- **Requires ffmpeg** — install from https://ffmpeg.org/
+- If ffmpeg is not available, falls back to raw audio with a warning
+- The padding is model-agnostic and applies to all Cartesia models
 
 ### Audio Format
 

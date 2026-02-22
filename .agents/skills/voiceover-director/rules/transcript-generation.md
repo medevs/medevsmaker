@@ -3,7 +3,7 @@
 ## Core Principles
 
 1. **Never read on-screen text verbatim** — narration complements the visuals, it doesn't duplicate them
-2. **Respect word budgets** — calculated with adaptive WPM (170 for short scenes < 3s, 145 for medium 3-7s, 125 for long > 7s). Going over means the audio will extend past the scene
+2. **Respect word budgets** — calculated with adaptive WPM (190 for short scenes < 3s, 160 for medium 3-7s, 140 for long > 7s). Going over means the audio will extend past the scene
 3. **Conversational peer tone** — talk like a smart friend explaining over coffee, not a professor lecturing. Confident but not preachy.
 4. **One idea per scene** — don't try to cover more than what the scene shows
 5. **Flow naturally** — use connective phrases: "So here's the thing.", "And this is where it clicks.", "Now pay attention to this.", "Here's why that matters."
@@ -14,31 +14,31 @@
 
 Scenes in `TransitionSeries` share frames with neighbors. The **effective duration** subtracts the transition overlap.
 
-Budget uses **adaptive WPM** calibrated from measured Cartesia sonic-2 pacing:
-- **Short scenes (< 3s effective)**: 170 WPM — TTS speaks brief phrases very fast
-- **Medium scenes (3-7s effective)**: 145 WPM — typical single-sentence narration
-- **Long scenes (> 7s effective)**: 125 WPM — multi-sentence narrations are spoken slower
+Budget uses **adaptive WPM** calibrated from measured Cartesia pacing (raised ~15% from original thresholds to reduce silent gaps):
+- **Short scenes (< 3s effective)**: 190 WPM — TTS speaks brief phrases very fast
+- **Medium scenes (3-7s effective)**: 160 WPM — typical single-sentence narration
+- **Long scenes (> 7s effective)**: 140 WPM — multi-sentence narrations are spoken slower
 
 ```
 effectiveDuration = durationSeconds - transitionAfterFrames / fps
-wpm = effectiveDuration < 3 ? 170 : effectiveDuration < 7 ? 145 : 125
+wpm = effectiveDuration < 3 ? 190 : effectiveDuration < 7 ? 160 : 140
 wordBudget = floor(effectiveDuration × wpm / 60)
 ```
 
 | Raw Duration | Transition | Effective | WPM | Budget |
 |-------------|------------|-----------|-----|--------|
-| 3s          | 15f (0.5s) | 2.5s      | 170 | 7 words |
-| 5s          | 15f (0.5s) | 4.5s      | 145 | 10 words |
-| 6s          | 15f (0.5s) | 5.5s      | 145 | 13 words |
-| 6s          | 20f (0.67s)| 5.33s     | 145 | 12 words |
-| 8s          | 15f (0.5s) | 7.5s      | 125 | 15 words |
-| 8s          | 20f (0.67s)| 7.33s     | 125 | 15 words |
-| 10s         | 15f (0.5s) | 9.5s      | 125 | 19 words |
-| 10s         | 18f (0.6s) | 9.4s      | 125 | 19 words |
-| 10s         | 20f (0.67s)| 9.33s     | 125 | 19 words |
-| 12s         | 18f (0.6s) | 11.4s     | 125 | 23 words |
-| 12s         | 20f (0.67s)| 11.33s    | 125 | 23 words |
-| 5s          | 0f (last)  | 5.0s      | 145 | 12 words |
+| 3s          | 15f (0.5s) | 2.5s      | 190 | 7 words |
+| 5s          | 15f (0.5s) | 4.5s      | 160 | 12 words |
+| 6s          | 15f (0.5s) | 5.5s      | 160 | 14 words |
+| 6s          | 20f (0.67s)| 5.33s     | 160 | 14 words |
+| 8s          | 15f (0.5s) | 7.5s      | 140 | 17 words |
+| 8s          | 20f (0.67s)| 7.33s     | 140 | 17 words |
+| 10s         | 15f (0.5s) | 9.5s      | 140 | 22 words |
+| 10s         | 18f (0.6s) | 9.4s      | 140 | 21 words |
+| 10s         | 20f (0.67s)| 9.33s     | 140 | 21 words |
+| 12s         | 18f (0.6s) | 11.4s     | 140 | 26 words |
+| 12s         | 20f (0.67s)| 11.33s    | 140 | 26 words |
+| 5s          | 0f (last)  | 5.0s      | 160 | 13 words |
 
 **Aim for 90-100% of budget.** Under-filling creates awkward silence before the next scene. Going 1-2 words over is tolerable for short narrations but risky for longer ones. If you have 19 words of budget, write 17-19 words, not 12. Add context, elaboration, or a connecting phrase to fill available time. Prefer flowing sentences over staccato fragments — TTS adds pauses for periods and commas that inflate duration beyond word count.
 
