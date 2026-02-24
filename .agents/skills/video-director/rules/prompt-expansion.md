@@ -321,7 +321,7 @@ Medium — alternate dense concept scenes with lighter visual metaphors and stat
 
 ## Quality Checklist
 
-Before finalizing the brief, verify:
+Before finalizing the script output, verify:
 
 - [ ] Total scene durations + transitions = total video duration
 - [ ] No scene has more than 3 simultaneously animating elements
@@ -347,7 +347,8 @@ Before finalizing the brief, verify:
 - [ ] (Educational) Per-section color theming applied — each section has a distinct sectionColor
 - [ ] (Educational) FeatureIntro used for first-time definitions (not ConceptExplain)
 - [ ] (Educational) Content in left 60-65% of frame with breathing room on right (for FeatureIntro, KeyRuleCard)
-- [ ] Every scene has a `narrationIntent` (creative directive, not script)
-- [ ] Every scene has `onScreenText` extracted from props
+- [ ] Every scene has narration that complements (not duplicates) on-screen text
 - [ ] `narratorTone` varies across scenes (not all "neutral")
 - [ ] Section `humorScene` is assigned (1 per section)
+- [ ] Narration uses contractions, no em-dashes, numbers spelled out
+- [ ] No 3+ same-length sentences in a row (rhythm variety)

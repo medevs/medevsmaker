@@ -1,76 +1,43 @@
 ---
 name: video
-description: "Generate a complete Remotion video from a simple idea. Expands the concept into a production brief, then generates all Remotion code."
+description: "Generate Remotion video code from a production script. Computes durations from narration and outputs complete code + manifest + transcript."
 user-invocable: true
 skill: video-director
 ---
 
-# /video — AI Video Director
+# /video — Generate Remotion Video Code
 
-Takes a simple idea and produces a complete Remotion video project.
+Reads a production script and generates complete Remotion video code with durations computed from narration word counts.
 
 ## Usage
 
 ```
-/video <your idea here>
+/video <VideoName>
 ```
 
 ## Examples
 
 ```
-/video How the Web Actually Works
-/video What is an API and why should you care
-/video Promo for AI note-taking app
-/video Tutorial: how to set up a Next.js project
-/video Instagram reel announcing our new dashboard feature
-/video Explainer for how our API works
-/video Social clip: 3 reasons to use TypeScript
-/video Product demo of our analytics dashboard
-/video The AI Stack Explained: Models, APIs, and Agents
-/video Understanding databases for non-technical founders
+/video HowTheWebWorks
+/video TheAIStackExplained
+/video UnderstandingDatabases
 ```
+
+## Prerequisites
+
+- Run `/script <idea>` first to generate `src/<VideoName>/script.json`
+- The script must contain narration for every scene
 
 ## What happens
 
-1. Your idea is analyzed — type detection, audience matching, and content plan lookup
-2. A **structured production brief** is generated with scenes, timing, sections, colors, and typography
-3. For educational videos: a **scene manifest** maps each scene to a reusable template type
-4. **Complete Remotion code** is generated — compositions, sections, scenes, components, and styles
-5. **manifest.json** is generated alongside code — includes `narrationIntent`, `onScreenText`, and `narratorTone` per scene for the transcript pipeline
-6. You get **rendering instructions** to preview and export the video
+1. **Reads script.json** — scene types, props, narration, and style metadata
+2. **Computes durations** — from narration word counts using 155 WPM formula
+3. **Assigns transitions** — fade, slide, wipe, clockWipe per scene context
+4. **Generates Remotion code** — compositions, sections, scenes, styles
+5. **Outputs manifest.json** — structured scene data with computed durations
+6. **Outputs transcript.json** — pre-populated with narration from script (ready for TTS)
+7. You get **rendering instructions** to preview and export the video
 
 ## After reviewing visuals
 
-Run `/transcript <VideoName>` to generate narration, then `/voiceover <VideoName>` to synthesize audio.
-
-## Supported video types
-
-| Type | Auto-detected when you say... | Default duration |
-|------|-------------------------------|-----------------|
-| Educational | conceptual topics, "how X works", "understanding Y" | 3-10 min |
-| Promo | "promo", "ad", "marketing", "launch" | 15-30s |
-| Tutorial | "tutorial", "how to", "guide", "walkthrough" | 60-120s |
-| Explainer | "explainer", "explain", "how it works" | 30-60s |
-| Social Clip | "reel", "tiktok", "shorts", "clip" | 15-30s |
-| Announcement | "announcing", "announcement", "new feature" | 15-30s |
-| Demo | "demo", "showcase", "preview" | 30-60s |
-
-Educational is auto-detected for conceptual/learning topics even without explicit keywords.
-
-## Platform detection
-
-Mention a platform to auto-set resolution:
-- **YouTube** → 1920x1080
-- **Instagram Reel / TikTok / Shorts** → 1080x1920
-- **Instagram Post** → 1080x1080
-- **Twitter/X** → 1280x720
-
-## Educational video features
-
-Educational videos (3-10 min) use a special section-based architecture:
-- **20 reusable scene types**: diagrams, code blocks, comparisons, stats, timelines, charts, before/after, and more
-- **Visual-heavy approach**: 60%+ visual scenes (diagrams, metaphors, charts) over text-heavy scenes
-- **Section structure**: Each section groups related scenes with chapter markers
-- **Engagement hooks**: Humor beats, pattern interrupts, open loops for YouTube retention
-- **Progress bar**: Visual indicator showing video progress
-- **Audience-aware tone**: Written for vibe coders and non-technical AI builders
+Run `/voiceover <VideoName>` to synthesize TTS audio and integrate into the composition.

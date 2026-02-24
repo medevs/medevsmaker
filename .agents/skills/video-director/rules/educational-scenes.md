@@ -9,6 +9,8 @@ metadata:
 
 All scene types available for educational videos. Each scene is a reusable React component in `src/shared/scenes/`.
 
+> **Note**: Duration ranges listed below are **minimum animation times** — the time needed for entrance animations to complete. Actual scene durations are computed from narration word counts (see `duration-calculation.md`). Write narration naturally; the duration will follow.
+
 ## Scene Visual Classification
 
 ```
@@ -36,7 +38,7 @@ STRUCTURAL (don't count toward ratio):
 
 **When to use**: Every video's first scene. Ask a question the viewer thinks they know the answer to.
 
-**narrationIntent example**: "Create curiosity gap — pose a question the viewer can't ignore"
+**narration example**: "Create curiosity gap — pose a question the viewer can't ignore"
 
 **Content constraints**:
 - Question max 8 words
@@ -61,7 +63,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Immediately after the hook. Sets expectations.
 
-**narrationIntent example**: "Set expectations — tease what's coming without listing objectives verbatim"
+**narration example**: "Set expectations — tease what's coming without listing objectives verbatim"
 
 **Content constraints**:
 - Title max 8 words
@@ -80,7 +82,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Start of every section (3-7 per video).
 
-**narrationIntent example**: "Brief transition — connect previous section to what's coming next"
+**narration example**: "Brief transition — connect previous section to what's coming next"
 
 **Content constraints**:
 - Title max 5 words
@@ -98,7 +100,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: The workhorse scene for explaining any concept.
 
-**narrationIntent example**: "Explain concept in own words — use the analogy to make it click"
+**narration example**: "Explain concept in own words — use the analogy to make it click"
 
 **Content constraints**:
 - Heading max 6 words
@@ -117,7 +119,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Any process, pipeline, data flow, request lifecycle.
 
-**narrationIntent example**: "Walk through the flow step by step — connect each node to the next"
+**narration example**: "Walk through the flow step by step — connect each node to the next"
 
 **Content constraints**:
 - Max 5 nodes
@@ -137,7 +139,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Any time you show code, commands, or config.
 
-**narrationIntent example**: "Explain what the code does and why it matters — never read syntax"
+**narration example**: "Explain what the code does and why it matters — never read syntax"
 
 **Content constraints**:
 - Code max 8 lines
@@ -157,7 +159,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Good vs bad, before/after, old vs new, two approaches.
 
-**narrationIntent example**: "Highlight the key difference — make one side clearly better for the context"
+**narration example**: "Highlight the key difference — make one side clearly better for the context"
 
 **Content constraints**:
 - Heading max 6 words
@@ -176,7 +178,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Key statistics, percentages, performance numbers.
 
-**narrationIntent example**: "Build up to the number — frame why this stat should blow their mind"
+**narration example**: "Build up to the number — frame why this stat should blow their mind"
 
 **Content constraints**:
 - One number per scene
@@ -196,7 +198,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Lists of benefits, features, requirements, considerations.
 
-**narrationIntent example**: "Introduce the list, then highlight the 2 most important items"
+**narration example**: "Introduce the list, then highlight the 2 most important items"
 
 **Content constraints**:
 - Heading max 5 words
@@ -215,7 +217,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Breaking complex concepts with relatable analogies. Use after dense scenes.
 
-**narrationIntent example**: "Deliver the analogy with personality — make it funny and memorable"
+**narration example**: "Deliver the analogy with personality — make it funny and memorable"
 
 **Content constraints**:
 - Icon: single emoji
@@ -235,7 +237,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Last scene of each section. Distills the section into one memorable statement.
 
-**narrationIntent example**: "Reinforce the section's key point — one sentence the viewer remembers"
+**narration example**: "Reinforce the section's key point — one sentence the viewer remembers"
 
 **Content constraints**:
 - Takeaway max 25 words
@@ -253,7 +255,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Near the end of the video, before the outro.
 
-**narrationIntent example**: "Rapid-fire recap — hit the highlights from each section in order"
+**narration example**: "Rapid-fire recap — hit the highlights from each section in order"
 
 **Content constraints**:
 - One item per section covered
@@ -272,7 +274,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Always the last scene.
 
-**narrationIntent example**: "Brief sign-off — keep it short, no generic 'thanks for watching'"
+**narration example**: "Brief sign-off — keep it short, no generic 'thanks for watching'"
 
 **Content constraints**:
 - CTA max 4 words ("Subscribe for more")
@@ -290,7 +292,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Common mistakes, pitfalls, security concerns, things to avoid.
 
-**narrationIntent example**: "Deliver with urgency — this is the one thing they absolutely must remember"
+**narration example**: "Deliver with urgency — this is the one thing they absolutely must remember"
 
 **Content constraints**:
 - Heading max 6 words, should feel urgent
@@ -309,7 +311,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Step-by-step processes, setup instructions, workflows.
 
-**narrationIntent example**: "Walk through steps in order — use connecting phrases, not just numbering"
+**narration example**: "Walk through steps in order — use connecting phrases, not just numbering"
 
 **Content constraints**:
 - Max 5 steps
@@ -329,7 +331,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: As a premium replacement for Outro. Use for polished end cards with branding.
 
-**narrationIntent example**: "Conversational CTA — one sentence that feels natural, not salesy"
+**narration example**: "Conversational CTA — one sentence that feels natural, not salesy"
 
 **Content constraints**:
 - CTA max 4 words
@@ -348,7 +350,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Alternative to HookQuestion for dramatic, statement-driven openings.
 
-**narrationIntent example**: "Dramatic attention grab — jump straight into a bold statement, no warmup"
+**narration example**: "Dramatic attention grab — jump straight into a bold statement, no warmup"
 
 **Content constraints**:
 - Statement max 8 words
@@ -366,7 +368,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Showing improvements, transformations, old vs new approaches.
 
-**narrationIntent example**: "Emphasize the contrast — make the 'after' feel like a revelation"
+**narration example**: "Emphasize the contrast — make the 'after' feel like a revelation"
 
 **Content constraints**:
 - Heading max 6 words
@@ -384,7 +386,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Historical progressions, evolution of technology, step sequences over time.
 
-**narrationIntent example**: "Narrate the progression — what happens at each stage and why it matters"
+**narration example**: "Narrate the progression — what happens at each stage and why it matters"
 
 **Content constraints**:
 - Horizontal layout: max 5 nodes, labels max 2 words. For 6+ nodes use vertical layout
@@ -404,7 +406,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Statistics, performance comparisons, survey results, market data.
 
-**narrationIntent example**: "Call out the most interesting data points — pick the standout numbers"
+**narration example**: "Call out the most interesting data points — pick the standout numbers"
 
 **Content constraints**:
 - Max 6 bars
@@ -425,7 +427,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Introducing a new feature, concept, or topic at the start of a section. Prefer over ConceptExplain when defining something for the first time.
 
-**narrationIntent example**: "Build anticipation — explain why this feature matters before defining it"
+**narration example**: "Build anticipation — explain why this feature matters before defining it"
 
 **Content constraints**:
 - Heading max 6 words
@@ -445,7 +447,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Listing capabilities, features, or sequential points that build on each other.
 
-**narrationIntent example**: "Highlight the 2-3 most interesting items — don't just read the list"
+**narration example**: "Highlight the 2-3 most interesting items — don't just read the list"
 
 **Content constraints**:
 - Heading max 6 words
@@ -464,7 +466,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Decision criteria, FAQ-style content, when to use what, feature comparisons as rows.
 
-**narrationIntent example**: "Frame the decision context, then call out the most surprising answer"
+**narration example**: "Frame the decision context, then call out the most surprising answer"
 
 **Content constraints**:
 - Heading max 6 words
@@ -484,7 +486,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Comparing three approaches, tools, or categories. When ComparisonSplit's two columns aren't enough.
 
-**narrationIntent example**: "Highlight what makes each option distinct — create a narrative arc across the three"
+**narration example**: "Highlight what makes each option distinct — create a narrative arc across the three"
 
 **Content constraints**:
 - Heading max 6 words
@@ -503,7 +505,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Showing project structure, file organization, config layouts, directory hierarchies.
 
-**narrationIntent example**: "Explain the architecture reasoning — why it's organized this way, not just what's there"
+**narration example**: "Explain the architecture reasoning — why it's organized this way, not just what's there"
 
 **Content constraints**:
 - Heading max 6 words
@@ -523,7 +525,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: Key rules, important insights, memorable one-liners. Use instead of KeyTakeaway when you want gradient emphasis.
 
-**narrationIntent example**: "Deliver with conviction — short, punchy, let the statement breathe"
+**narration example**: "Deliver with conviction — short, punchy, let the statement breathe"
 
 **Content constraints**:
 - preLabel max 3 words (ALL CAPS)
@@ -544,7 +546,7 @@ subtext: "It's more complex than you think"
 
 **When to use**: System architectures, hub-spoke relationships, central concept with related components.
 
-**narrationIntent example**: "Start from the center hub and explain outward — match the visual reveal rhythm"
+**narration example**: "Start from the center hub and explain outward — match the visual reveal rhythm"
 
 **Content constraints**:
 - Heading max 6 words

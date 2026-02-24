@@ -1,6 +1,9 @@
-# Transcript Generation Rules
+# Transcript Generation Rules (DEPRECATED)
 
-## narrationIntent-First Writing Process
+> **MOVED**: Narration writing rules have moved to `.agents/skills/video-director/rules/narration-writing.md`.
+> Narration is now written during `/script` (not `/transcript`). This file is kept as historical reference only.
+
+## narrationIntent-First Writing Process (Legacy)
 
 Each scene in manifest.json includes a `narrationIntent` field written by the video director during scene planning. This is your primary creative input.
 

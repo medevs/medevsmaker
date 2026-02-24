@@ -14,7 +14,7 @@ Each section below is a complete reference for one video type: when to use it, t
 ## Educational
 
 ### When to Use
-Long-form conceptual teaching content: "How X Works", "Understanding Y", "Fundamentals of Z". Designed for the medevsmaker YouTube channel targeting vibe coders and non-technical AI builders. All visual, no voice — ready for voiceover.
+Long-form conceptual teaching content: "How X Works", "Understanding Y", "Fundamentals of Z". Designed for the medevsmaker YouTube channel targeting vibe coders and non-technical AI builders. Uses the script-first pipeline: `/script` writes narration first, `/video` computes durations from word counts.
 
 ### Defaults
 
@@ -32,33 +32,35 @@ Long-form conceptual teaching content: "How X Works", "Understanding Y", "Fundam
 
 ### Scene Structure
 
+Durations are computed from narration word counts (see duration-calculation.md). The structure below shows scene order only:
+
 ```
-Hook (4-5s)
+Hook
   → Provocative question or surprising stat
   → HookQuestion scene type
 
-Title Intro (6-8s)
+Title Intro
   → Video title + learning objectives
   → TitleIntro scene type
 
 ─── Section 1: [Topic] ───
-  SectionTitle (3-4s) → "01 — [Title]"
-  Content scenes (3-8 scenes, 5-12s each)
+  SectionTitle → "01 — [Title]"
+  Content scenes (3-8 scenes)
     → Use: ConceptExplain, DiagramFlow, CodeDisplay,
       ComparisonSplit, StatHighlight, BulletRevealScene,
       VisualMetaphor, WarningCallout, StepSequence
-  KeyTakeaway (4-6s) → Section summary
+  KeyTakeaway → Section summary
 
 ─── Section 2-N: [Topics] ───
   (Same pattern, 3-7 sections total)
 
-Summary Recap (8-12s)
+Summary Recap
   → Numbered list of all sections covered
   → SummaryRecap scene type
 
-Outro (4-6s)
+EndScreen
   → Channel branding + subscribe CTA
-  → Outro scene type
+  → EndScreen scene type (not basic Outro)
 ```
 
 ### Key Rules

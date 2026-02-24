@@ -3,36 +3,33 @@
 ## 3-Command Pipeline
 
 ```
-/video <idea>         → Remotion code + enhanced manifest.json (FREE)
+/script <idea>        → script.json with full narration + scene plan (FREE)
+                        User reviews narration + scene structure
+
+/video <VideoName>    → Remotion code + manifest.json + transcript.json (FREE)
+                        Durations computed from narration word counts
                         User reviews visuals in Remotion Studio
 
-/transcript <Name>    → transcript.json with full narration (FREE)
-                        User reviews every line of narration
-
-/voiceover <Name>     → TTS synthesis + audio integration ($$)
+/voiceover <VideoName> → TTS synthesis + audio integration ($$)
                         User reviews final video with audio
+
+/sfx <VideoName>      → Sound effects + background music (FUTURE)
 ```
 
 Each step has a validation checkpoint. Review output before proceeding to the next command.
 
 ## Custom Skills
 
-### /video-director — AI Video Director
-Slash command that converts a simple idea into a complete Remotion video.
+### video-director — Powers `/script` and `/video`
 
-**Usage**: `/video <idea>`
+**`/script <idea>`**: Research & Expand → Scene Planning → Narration Writing → `script.json`
+**`/video <VideoName>`**: Duration Calc → Code Generation → manifest.json + transcript.json (pre-populated)
 
 **Supported video types**: educational, promo, tutorial, explainer, social-clip, announcement, demo
 
-**3-phase workflow**: Research & Expand -> Scene Planning -> Batched Code Generation (+ enhanced manifest.json with narrationIntent)
+### voiceover-director — Powers `/voiceover`
 
-### /voiceover-director — Voiceover Director
-Powers both `/transcript` and `/voiceover` commands.
-
-**Usage**: `/transcript <VideoName>` then `/voiceover <VideoName>`
-
-**`/transcript`**: Generates narration from manifest's narrationIntent — user reviews before synthesis.
-**`/voiceover`**: Synthesizes TTS audio via ElevenLabs + integrates into composition.
+**`/voiceover <VideoName>`**: TTS Synthesis → Audio Integration
 
 **Provider**: ElevenLabs (default), Cartesia, Edge TTS — switch via `TTS_PROVIDER` env var
 
@@ -97,38 +94,41 @@ src/                                # Remotion project
       ArchitectureDiagram.tsx       # Hub-spoke architecture layout
   <VideoName>/                      # One folder per generated video
     index.tsx                        # Main composition
-    manifest.json                    # Scene data for voiceover pipeline
+    script.json                      # Production script with narration (from /script)
+    manifest.json                    # Scene data with computed durations (from /video)
     styles.ts                        # Design tokens
     voiceover.ts                     # Generated: VOICEOVER_SCENES array
-    transcript.json                  # Generated: narration text per scene
+    transcript.json                  # Generated: narration pre-populated from script
     sections/                        # Section files (educational)
     scenes/                          # Scene files (short-form)
 
 .agents/skills/                     # Skills (managed by npx skills)
   remotion-best-practices/           # Remotion API knowledge (from GitHub)
-  video-director/                    # Video Director workflow (local)
-    SKILL.md                         # 3-phase workflow definition
+  video-director/                    # Powers /script and /video commands
+    SKILL.md                         # Dual-mode workflow definition
     rules/
       prompt-expansion.md            # Phase 1 rules
       video-types.md                 # 7 video types with defaults
       audience-profile.md            # Target audience + tone + humor + engagement
       educational-scenes.md          # 27 scene type catalog
       long-form-architecture.md      # Section-based architecture
+      narration-writing.md           # Narration writing rules (Phase 3)
+      duration-calculation.md        # WPM formula + transition rules (Phase 4)
       assets/
         promo-example.tsx            # Reference: promo video
         tutorial-example.tsx         # Reference: tutorial video
         educational-example.tsx      # Reference: educational video
-  voiceover-director/                # Voiceover Director workflow (local)
-    SKILL.md                         # 3-phase workflow definition
+  voiceover-director/                # Powers /voiceover command
+    SKILL.md                         # TTS synthesis + audio integration
     rules/
-      transcript-generation.md       # Narration writing rules per scene type
+      transcript-generation.md       # Historical reference (narration rules moved to video-director)
       tts-providers.md               # Provider configuration guide
       audio-integration.md           # Remotion audio patterns
 
 scripts/tts/                        # TTS synthesis pipeline
-  types.ts                           # TTSProvider interface + manifest/transcript types
-  utils.ts                           # Audio duration, word budget, frame offsets
-  generate-transcript.ts             # Skeleton transcript generator
+  types.ts                           # TTSProvider interface + manifest/transcript/script types
+  utils.ts                           # Audio duration, word budget, frame offsets, duration calculation
+  generate-transcript.ts             # Transcript generator (supports --from-script mode)
   generate-audio.ts                  # TTS synthesis runner
   providers/
     index.ts                         # Provider factory
@@ -140,8 +140,8 @@ public/vo/                          # Generated voiceover audio (gitignored)
     scene-01.mp3                     # MP3 per scene
 
 .claude/skills/                     # Symlinks -> .agents/skills/
+commands/script/command.md           # /script slash command
 commands/video/command.md            # /video slash command
-commands/transcript/command.md       # /transcript slash command
 commands/voiceover/command.md        # /voiceover slash command
 ```
 
@@ -158,10 +158,10 @@ commands/voiceover/command.md        # /voiceover slash command
 - Watermark position: `"top-right"` (avoids ProgressBar overlap)
 - Visual-first: 60%+ content scenes should be visual-heavy
 - Use `EndScreen` instead of basic `Outro` for polished end cards
-- Phase 3 must output `manifest.json` alongside code — includes `narrationIntent`, `onScreenText`, `narratorTone` per scene
+- Script-first pipeline: narration drives scene durations (155 WPM formula)
+- `/video` outputs `manifest.json` + `transcript.json` (pre-populated with narration from script.json)
 - Voiceover: `<Audio>` from `@remotion/media`, placed inside `<Sequence>` via `VoiceoverLayer`
 - Audio files in `public/vo/<VideoName>/`, referenced via `staticFile()`
-- `/transcript <VideoName>` generates narration from manifest, `/voiceover <VideoName>` synthesizes audio
 - Per-section color theming: use `SECTION_THEMES.get(index)` for section accent colors
 - Persistent overlays: `SectionTracker` (bottom-right), `FeatureCounter` (top-left, optional)
 - Prefer `springSilky` + `fadeUpSlow`/`fadeLeftSlow` for polished, slower animations

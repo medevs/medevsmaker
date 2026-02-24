@@ -2,6 +2,49 @@ import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import type { VideoManifest, VoiceoverScene, SceneTranscript } from "./types.ts";
 
+// ─── Duration Calculation (script-first pipeline) ──────────
+
+/** Minimum scene durations in seconds, by scene type. */
+export const MIN_SCENE_DURATIONS: Record<string, number> = {
+  SectionTitle: 3,
+  HookQuestion: 4,
+  EndScreen: 5,
+  DiagramFlow: 8,
+  CodeDisplay: 8,
+  TimelineScene: 8,
+  ArchitectureDiagram: 8,
+  ThreeColumnCompare: 8,
+  FileTreeScene: 8,
+  default: 3,
+};
+
+/**
+ * Calculate scene duration from narration word count.
+ *
+ * Uses 155 WPM (conservative) with 0.5s visual breathing room,
+ * rounded up to nearest 0.5s, floored by MIN_SCENE_DURATIONS.
+ *
+ * @param narration  The narration text for the scene
+ * @param sceneType  Scene type key (for minimum duration lookup)
+ * @param wpm        Words per minute (default 155)
+ * @returns Duration in seconds (rounded to nearest 0.5s)
+ */
+export function calculateDurationFromNarration(
+  narration: string,
+  sceneType: string,
+  wpm = 155,
+): number {
+  const wordCount = narration.split(/\s+/).filter(Boolean).length;
+  if (wordCount === 0) {
+    return MIN_SCENE_DURATIONS[sceneType] ?? MIN_SCENE_DURATIONS.default;
+  }
+  const baseDuration = (wordCount / wpm) * 60;
+  const paddedDuration = baseDuration + 0.5;
+  const rounded = Math.ceil(paddedDuration * 2) / 2; // nearest 0.5s up
+  const minDuration = MIN_SCENE_DURATIONS[sceneType] ?? MIN_SCENE_DURATIONS.default;
+  return Math.max(rounded, minDuration);
+}
+
 /**
  * Get audio duration in seconds using ffprobe.
  * Falls back to rough estimation from file size if ffprobe is unavailable.

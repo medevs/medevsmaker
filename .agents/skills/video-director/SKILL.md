@@ -1,29 +1,32 @@
 ---
 name: video-director
-description: "AI Video Director: converts simple ideas into structured Remotion production briefs, then generates complete Remotion video code. Handles short-form (promo, social, announcement) and long-form educational videos (3-10 min). Use when the user invokes /video or asks to create a Remotion video from a concept."
+description: "AI Video Director: powers /script and /video commands. /script converts simple ideas into production scripts with full narration. /video reads a script and generates complete Remotion code with computed durations."
 metadata:
-  tags: video, remotion, animation, director, prompt-expansion, code-generation, educational
+  tags: video, remotion, animation, director, script, code-generation, educational
 ---
 
 # Video Director Skill
 
-You are an expert AI Video Director. When given a simple video idea, you execute a **three-phase workflow** to produce production-ready Remotion code.
+You are an expert AI Video Director. This skill powers two commands in the script-first pipeline:
 
 ```
-User Idea → [Phase 1: Research & Expand] → Production Brief → [Phase 2: Scene Planning] → Scene Manifest → [Phase 3: Code Generation] → Remotion Code
+/script <idea>        → Phase 1-3: Research, Scene Plan, Narration → script.json
+/video <VideoName>    → Phase 4-6: Duration Calc, Code Gen, Manifest + Transcript → Remotion code
 ```
-
-The user only provides a short idea (e.g., "How the Web Actually Works"). You handle everything else.
 
 ---
 
-## PHASE 1: RESEARCH & EXPANSION
+## /script MODE (Phases 1-3)
+
+Triggered when the user runs `/script <idea>`. Takes a simple idea and produces a complete script.json with full narration.
+
+### PHASE 1: RESEARCH & EXPANSION
 
 **Goal**: Transform a vague idea into a detailed, structured production brief.
 
 Full rules: [rules/prompt-expansion.md](rules/prompt-expansion.md)
 
-### What to Generate
+#### What to Generate
 
 1. **Video Type** — Auto-detect: `promo` | `tutorial` | `explainer` | `social-clip` | `announcement` | `demo` | `educational`
 2. **Content Source** — If the topic matches a content plan entry, extract its bullets and structure
@@ -34,10 +37,9 @@ Full rules: [rules/prompt-expansion.md](rules/prompt-expansion.md)
 7. **Typography System** — Font choices, sizes, weights for heading/body/accent
 8. **Color Palette** — Primary, secondary, accent, background, text (hex)
 9. **Background Style** — Gradient, solid, pattern, animated
-10. **Transitions** — Between scenes (fade, slide, wipe)
-11. **Pacing Strategy** — Fast/medium/slow
+10. **Pacing Strategy** — Fast/medium/slow
 
-### Auto-Improvement Rules
+#### Auto-Improvement Rules
 
 - Fix grammar and polish weak phrasing
 - Choose professional, modern defaults when user is vague
@@ -46,19 +48,17 @@ Full rules: [rules/prompt-expansion.md](rules/prompt-expansion.md)
 - No scene should have more than 3 animated elements simultaneously
 - Keep text concise: headings max 6 words, body max 15 words per line
 
-### Type-Specific Defaults
+#### Type-Specific Defaults
 
 Read: [rules/video-types.md](rules/video-types.md) — complete defaults, scene structures, creative rules, and palettes for all 7 types.
 
-### Audience Profile
+#### Audience Profile
 
 Read: [rules/audience-profile.md](rules/audience-profile.md) — target audience, tone rules, content constraints for educational videos.
 
----
+### PHASE 2: SCENE PLANNING
 
-## PHASE 2: SCENE PLANNING
-
-**Goal**: Convert the production brief into a concrete scene manifest.
+**Goal**: Convert the production brief into a concrete scene plan. **No durations** — durations will be computed from narration in Phase 4.
 
 For **short-form videos** (promo, social, announcement, demo, explainer, tutorial up to 90s):
 - Plan scenes directly from the brief — 3-12 scenes in a flat TransitionSeries
@@ -67,30 +67,32 @@ For **educational videos** (3-10 min):
 - Plan sections first, then scenes within each section
 - Use the scene catalog: [rules/educational-scenes.md](rules/educational-scenes.md)
 
-### Scene Manifest Format (Educational)
+#### Scene Plan Format (Educational)
 
 ```
-## Scene Manifest
+## Scene Plan
 
-### Section 1: [Title] (~Xs, N scenes)
-| # | Scene Type | Duration | Content Summary | Narration Intent |
-|---|------------|----------|-----------------|------------------|
-| 1 | HookQuestion | 4s | "What actually happens when..." | Create urgency — make them feel they're missing something |
-| 2 | TitleIntro | 7s | Title + 3 objectives | Set expectations — tease what's coming without listing objectives |
-| 3 | SectionTitle | 3s | "01 — The Client" | Brief transition — connect to previous section |
-| 4 | ConceptExplain | 7s | Browser = client concept | Explain in own words — use a relatable analogy |
-| 5 | VisualMetaphor | 6s | 📱 "You're always the client" | Deliver analogy with humor — make it memorable |
-| 6 | KeyTakeaway | 5s | Client sends requests summary | Reinforce key point — one sentence distillation |
+### Section 1: [Title] (N scenes)
+| # | Scene Type | Content Summary | Visual Direction |
+|---|------------|-----------------|------------------|
+| 1 | HookQuestion | "What actually happens when..." | Big question on dark bg with particles |
+| 2 | TitleIntro | Title + 3 objectives | Centered with underline divider |
+| 3 | SectionTitle | "01 — The Client" | Badge pop-in + title fade |
+| 4 | FeatureIntro | Browser = client concept | Left-aligned card with pill badges |
+| 5 | VisualMetaphor | 📱 "You're always the client" | Large emoji + analogy text |
+| 6 | KeyTakeaway | Client sends requests summary | Accent box centered |
 
-### Section 2: [Title] (~Xs, N scenes)
+### Section 2: [Title] (N scenes)
 ...
 
-### Total: X scenes, ~Y seconds, Z sections
+### Total: X scenes, Z sections
 ```
 
-### Scene Planning Rules
+**Note**: No duration column — durations come from narration word counts in Phase 4.
 
-- **Every section starts with SectionTitle, ends with KeyTakeaway**
+#### Scene Planning Rules
+
+- **Every section starts with SectionTitle, ends with KeyTakeaway or KeyRuleCard**
 - **Video starts with HookQuestion → TitleIntro** (in Section 1)
 - **Video ends with SummaryRecap → EndScreen** (in last section — use EndScreen, not basic Outro)
 - **Never 3+ consecutive scenes of the same type**
@@ -98,7 +100,7 @@ For **educational videos** (3-10 min):
 - **One concept per scene** — never stack ideas
 - **Every concept needs an analogy** (via ConceptExplain or VisualMetaphor)
 
-### Engagement & Retention Rules
+#### Engagement & Retention Rules
 
 - **Visual ratio**: 60%+ content scenes must be visual-heavy (DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter, TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen)
 - **No 2+ text-heavy scenes in a row** — always insert a visual scene between them
@@ -108,19 +110,126 @@ For **educational videos** (3-10 min):
 - **3-second hook**: Opening HookQuestion must create curiosity gap immediately
 - **Payoff cadence**: Deliver an "aha moment" every 60-90 seconds
 
+### PHASE 3: NARRATION WRITING
+
+**Goal**: Write natural voiceover narration for every scene in the plan.
+
+Full rules: [rules/narration-writing.md](rules/narration-writing.md)
+
+Key principles:
+- **Write naturally** — no word budgets. Durations are computed from your word counts.
+- **Never read on-screen text verbatim** — complement the visuals
+- **Conversational peer tone** — smart friend, not professor
+- **Vary sentence rhythm** — alternate short and medium sentences
+- **Humor**: 1 light beat per section, placed in the designated humor scene
+- **TTS optimization**: Use commas not em-dashes, contractions, spell out numbers
+
+#### Narration Quality Checks
+
+Before outputting script.json, verify:
+- [ ] Every scene has narration (SectionTitle: 4-8 words, EndScreen: 8-15 words)
+- [ ] No narration reads on-screen text verbatim
+- [ ] Sentence rhythm varies (no 3+ same-length sentences in a row)
+- [ ] At least 1 humor beat per section
+- [ ] Contractions used throughout ("it's", "you'll", "that's")
+- [ ] No em-dashes, no standalone ellipses, no exclamation marks
+- [ ] Numbers spelled out ("two hundred" not "200")
+
+### script.json Output Format
+
+```json
+{
+  "videoName": "HowTheWebWorks",
+  "type": "educational",
+  "fps": 30,
+  "resolution": { "width": 1920, "height": 1080 },
+  "meta": {
+    "learningObjectives": ["Understand client-server model", "Know how DNS works"],
+    "audienceProfile": "vibe-coders",
+    "humorStyle": "dry-tech"
+  },
+  "style": {
+    "fontHeading": "Inter",
+    "fontBody": "Inter",
+    "fontMono": "JetBrains Mono",
+    "background": "dark gradient"
+  },
+  "sections": [
+    {
+      "sectionIndex": 1,
+      "title": "Introduction + DNS",
+      "sectionTone": "curious, building intrigue",
+      "sectionColor": "#818CF8",
+      "humorScene": 5,
+      "scenes": [
+        {
+          "sceneIndex": 1,
+          "sceneType": "HookQuestion",
+          "narration": "Every time you click a link, an invisible chain reaction fires off across the entire planet, and it all happens before you even blink.",
+          "narratorTone": "mysterious, playful",
+          "visualDirection": "Big question on dark background with particle field",
+          "onScreenText": ["What actually happens when you click a link?"],
+          "props": {
+            "question": "What actually happens when you click a link?",
+            "subtext": "It's more complex than you think"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Key**: script.json has **no durations, no transitions**. Those are computed by `/video`.
+
+### /script Execution Flow
+
+1. **Parse the user's idea** — Extract intent, platform hints, style preferences, detect video type
+2. **Research & Expand** (Phase 1) — Generate the production brief per [rules/prompt-expansion.md](rules/prompt-expansion.md)
+3. **Plan Scenes** (Phase 2) — Create scene plan with types from [rules/educational-scenes.md](rules/educational-scenes.md)
+4. **Write Narration** (Phase 3) — Write natural narration for every scene per [rules/narration-writing.md](rules/narration-writing.md)
+5. **Output script.json** — Write to `src/<VideoName>/script.json`
+6. **Present for review** — Show the scene plan and key narration excerpts
+7. **Suggest next step**: "After reviewing, run `/video <VideoName>` to generate Remotion code."
+
 ---
 
-## PHASE 3: CODE GENERATION
+## /video MODE (Phases 4-6)
 
-**Goal**: Convert the scene manifest into clean, working Remotion code.
+Triggered when the user runs `/video <VideoName>`. Reads script.json and generates complete Remotion code with computed durations.
 
-### Output File Structure — Short-Form
+### Prerequisites
+
+- `src/<VideoName>/script.json` must exist (generated by `/script`)
+- If no script.json exists, tell the user to run `/script` first
+
+### PHASE 4: DURATION CALCULATION
+
+**Goal**: Compute scene durations from narration word counts.
+
+Full rules: [rules/duration-calculation.md](rules/duration-calculation.md)
+
+For each scene in script.json:
+1. Count words in `narration`
+2. Apply the WPM formula: `baseDuration = (wordCount / 155) * 60`
+3. Add 0.5s padding: `paddedDuration = baseDuration + 0.5`
+4. Round up to nearest 0.5s: `rounded = Math.ceil(paddedDuration * 2) / 2`
+5. Apply minimum: `finalDuration = max(rounded, MIN_DURATIONS[sceneType])`
+6. Assign transitions between scenes (see duration-calculation.md)
+7. Calculate section frame totals and video total frames
+
+### PHASE 5: CODE GENERATION
+
+**Goal**: Generate clean, working Remotion code from the script + computed durations.
+
+#### Output File Structure — Short-Form
 
 ```
 src/
   VideoName/
     index.tsx              # Main composition — wires scenes via TransitionSeries
     manifest.json          # Structured scene data for voiceover pipeline
+    transcript.json        # Pre-populated with narration from script
     scenes/
       HeroScene.tsx        # One file per scene
       ContentScene.tsx
@@ -130,13 +239,14 @@ src/
   Root.tsx                 # Updated with new Composition entry
 ```
 
-### Output File Structure — Educational (Long-Form)
+#### Output File Structure — Educational (Long-Form)
 
 ```
 src/
   VideoName/
     index.tsx              # Main composition — chains sections via <Series>
     manifest.json          # Structured scene data for voiceover pipeline
+    transcript.json        # Pre-populated with narration from script
     styles.ts              # Video-specific colors, fonts, tokens
     sections/
       Section1.tsx         # Each section: TransitionSeries of shared scenes
@@ -149,7 +259,7 @@ src/
 
 Architecture details: [rules/long-form-architecture.md](rules/long-form-architecture.md)
 
-### Shared Components (Educational)
+#### Shared Components (Educational)
 
 Educational videos use shared building-block components from `src/shared/`:
 
@@ -161,7 +271,7 @@ Educational videos use shared building-block components from `src/shared/`:
 
 Import these instead of re-implementing. See [rules/educational-scenes.md](rules/educational-scenes.md) for full prop documentation.
 
-### styles.ts Pattern
+#### styles.ts Pattern
 
 ```tsx
 import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
@@ -196,27 +306,11 @@ export const TIMING = {
 } as const;
 ```
 
-### Code Requirements Checklist
+### PHASE 6: MANIFEST + TRANSCRIPT GENERATION
 
-- [ ] All animations use `useCurrentFrame()` + `interpolate()` or `spring()` — NEVER CSS transitions
-- [ ] `<AbsoluteFill>` as root layout for every scene
-- [ ] `<TransitionSeries>` for scene sequencing within sections
-- [ ] `<Series>` for chaining sections in educational videos
-- [ ] `<Sequence>` with `premountFor` for element timing within scenes
-- [ ] `extrapolateRight: 'clamp'` on all interpolations
-- [ ] Fonts loaded via `@remotion/google-fonts`
-- [ ] `type` declarations for props (not `interface`)
-- [ ] `durationInFrames = seconds * fps` calculated precisely including transition overlaps
-- [ ] TransitionSeries total = sum(scene durations) - sum(transition durations)
-- [ ] Educational videos: ProgressBar overlay on each Series.Sequence
-- [ ] `manifest.json` generated alongside code (see below)
-- [ ] `manifest.json` includes `narrationIntent`, `onScreenText`, `narratorTone` for every scene
-- [ ] `manifest.json` includes `sectionColor`, `sectionTone`, `humorScene` for every section
-- [ ] `manifest.json` includes `meta` block with `learningObjectives`, `audienceProfile`, `humorStyle`
+**Goal**: Output manifest.json (for voiceover pipeline) and transcript.json (pre-populated with narration from script).
 
-### manifest.json (Required)
-
-After generating all code files, output a `manifest.json` in `src/<VideoName>/`. This structured file captures scene data and narration planning for the transcript pipeline (`/transcript` → `/voiceover`).
+#### manifest.json
 
 ```json
 {
@@ -240,14 +334,14 @@ After generating all code files, output a `manifest.json` in `src/<VideoName>/`.
         {
           "sceneIndex": 1,
           "sceneType": "HookQuestion",
-          "durationSeconds": 5,
+          "durationSeconds": 7.5,
           "transitionAfter": { "type": "fade", "frames": 15 },
-          "narrationIntent": "Create urgency — everyone clicks links but nobody knows what happens. Make them feel like they're missing something.",
+          "narrationIntent": "Create urgency — make them feel they're missing something",
           "onScreenText": ["What actually happens when you click a link?"],
           "narratorTone": "mysterious, slightly playful",
           "props": {
             "question": "What actually happens when you click a link?",
-            "subtext": "Spoiler: it's not magic, but it's close"
+            "subtext": "It's more complex than you think"
           }
         }
       ]
@@ -256,28 +350,83 @@ After generating all code files, output a `manifest.json` in `src/<VideoName>/`.
 }
 ```
 
-**Scene-level fields**:
-- `narrationIntent` — creative directive for the transcript writer (what the narration should accomplish, not the exact words)
-- `onScreenText` — array of text strings visible on screen (so narrator avoids reading them verbatim)
-- `narratorTone` — emotional guidance for this specific scene
+**Mapping from script.json to manifest.json**:
+- `narrationIntent` ← copy `visualDirection` from script.json (documents what the scene accomplishes)
+- `durationSeconds` ← computed from narration word count (Phase 4)
+- `transitionAfter` ← assigned in Phase 4
+- `onScreenText` ← copied from script.json
+- `narratorTone` ← copied from script.json
+- `props` ← copied from script.json
+- Section-level fields ← copied from script.json
 
-**Section-level fields**:
-- `sectionColor` — hex color from SECTION_THEMES
-- `sectionTone` — overall emotional arc for the section
-- `humorScene` — which scene index (within section) carries the humor beat
+#### transcript.json (Pre-populated)
 
-**Top-level `meta`**:
-- `learningObjectives` — from the production brief
-- `audienceProfile` — "vibe-coders" or similar
-- `humorStyle` — "dry-tech", "absurd-analogies", etc.
+Generate `transcript.json` with narration already filled from script.json:
 
-**Rules**:
-- Every scene must include `sceneType`, `durationSeconds`, `props`, `narrationIntent`, `onScreenText`, and `narratorTone`
-- Every scene except the last in a section must include `transitionAfter` with `type` and `frames`
-- Section `durationFrames` must match the calculated value from styles.ts
-- `totalFrames` must match the Composition's `durationInFrames`
+```json
+{
+  "videoName": "HowTheWebWorks",
+  "voiceId": "",
+  "scenes": [
+    {
+      "sceneIndex": 1,
+      "sectionIndex": 1,
+      "sceneType": "HookQuestion",
+      "durationSeconds": 7.5,
+      "effectiveDurationSeconds": 7.0,
+      "transitionAfterFrames": 15,
+      "wordBudget": 17,
+      "onScreenText": ["What actually happens when you click a link?"],
+      "narrationIntent": "Create urgency — make them feel they're missing something",
+      "narratorTone": "mysterious, slightly playful",
+      "narration": "Every time you click a link, an invisible chain reaction fires off across the entire planet, and it all happens before you even blink."
+    }
+  ]
+}
+```
 
-### Layout Patterns (Quick Reference)
+The `narration` field is **pre-populated** from script.json — no need for a separate `/transcript` command.
+
+**CLI shortcut**: After generating manifest.json, you can run `node --strip-types scripts/tts/generate-transcript.ts <VideoName> --from-script` to auto-generate transcript.json with precise calculated fields (`effectiveDurationSeconds`, `wordBudget`). This is more reliable than writing transcript.json manually.
+
+### Code Requirements Checklist
+
+- [ ] All animations use `useCurrentFrame()` + `interpolate()` or `spring()` — NEVER CSS transitions
+- [ ] `<AbsoluteFill>` as root layout for every scene
+- [ ] `<TransitionSeries>` for scene sequencing within sections
+- [ ] `<Series>` for chaining sections in educational videos
+- [ ] `<Sequence>` with `premountFor` for element timing within scenes
+- [ ] `extrapolateRight: 'clamp'` on all interpolations
+- [ ] Fonts loaded via `@remotion/google-fonts`
+- [ ] `type` declarations for props (not `interface`)
+- [ ] `durationInFrames = seconds * fps` calculated from narration-derived durations
+- [ ] TransitionSeries total = sum(scene durations) - sum(transition durations)
+- [ ] Educational videos: ProgressBar overlay on each Series.Sequence
+- [ ] `manifest.json` generated from script.json + computed durations
+- [ ] `transcript.json` generated with narration pre-populated from script.json
+
+### /video Execution Flow
+
+1. **Read script.json** — Parse from `src/<VideoName>/script.json`
+2. **Compute durations** (Phase 4) — Apply WPM formula to each scene's narration
+3. **Assign transitions** (Phase 4) — Apply transition rules per duration-calculation.md
+4. **Generate Remotion code** (Phase 5) — Write all files: styles.ts → sections → index.tsx → Root.tsx update
+5. **Generate manifest.json + transcript.json** (Phase 6) — Pre-populated with narration
+6. **Provide rendering instructions**:
+
+```bash
+# Preview in Remotion Studio
+npx remotion studio
+
+# Render to MP4
+npx remotion render src/index.ts <CompositionId> out/video.mp4
+```
+
+7. **Suggest next step**: "After reviewing visuals, run `/voiceover <VideoName>` to synthesize audio."
+
+---
+
+## Layout Patterns (Quick Reference)
 
 | Pattern | Use For | Key Style |
 |---------|---------|-----------|
@@ -294,7 +443,7 @@ After generating all code files, output a `manifest.json` in `src/<VideoName>/`.
 
 All layouts use `<AbsoluteFill>` + flexbox. Use 8px grid spacing: 8/16/24/32/48/80px.
 
-### Composite Animations
+## Composite Animations
 
 **Title with Underline** — Title fades up, then underline expands 15 frames later:
 ```tsx
@@ -312,7 +461,7 @@ const displayNumber = Math.round(interpolate(countProgress, [0, 1], [0, targetNu
 const labelProgress = spring({ frame: frame - 10, fps, config: { damping: 200 } });
 ```
 
-### Design Rules
+## Design Rules
 
 - Modern SaaS aesthetic by default
 - Consistent spacing: 4px/8px grid system
@@ -321,35 +470,9 @@ const labelProgress = spring({ frame: frame - 10, fps, config: { damping: 200 } 
 - Background should complement, not compete with, foreground
 - Transitions: 15-20 frames (0.5-0.67s at 30fps)
 
-### Remotion API Reference
+## Remotion API Reference
 
-For Remotion-specific patterns (spring configs, interpolation, TransitionSeries, Sequence/Series, font loading, text animations, compositions), use the **remotion-best-practices** skill. It covers:
-- Spring configurations and easing
-- TransitionSeries with fade/slide/wipe transitions
-- Composition registration and defaultProps
-- Sequence, Series, and premounting
-- Font loading via @remotion/google-fonts
-- Text animation patterns
-
----
-
-## EXECUTION FLOW
-
-1. **Parse the user's idea** — Extract intent, platform hints, style preferences, detect video type
-2. **Research & Expand** (Phase 1) — Generate the production brief per [rules/prompt-expansion.md](rules/prompt-expansion.md). For educational: include engagement plan (humor beats, pattern interrupts, open loops, visual ratio target)
-3. **Plan Scenes** (Phase 2) — Create a scene manifest with types from [rules/educational-scenes.md](rules/educational-scenes.md) (for educational) or inline scene plan (for short-form)
-4. **Generate Remotion code** (Phase 3) — Write all files. For educational: styles.ts → sections → index.tsx → Root.tsx update
-5. **Provide rendering instructions**:
-
-```bash
-# Preview in Remotion Studio
-npx remotion studio
-
-# Render to MP4
-npx remotion render src/index.ts <CompositionId> out/video.mp4
-```
-
-6. **Suggest next steps**: After reviewing visuals, run `/transcript <VideoName>` to generate narration, then `/voiceover <VideoName>` to synthesize audio.
+For Remotion-specific patterns (spring configs, interpolation, TransitionSeries, Sequence/Series, font loading, text animations, compositions), use the **remotion-best-practices** skill.
 
 ---
 
@@ -392,6 +515,8 @@ npx remotion render src/index.ts <CompositionId> out/video.mp4
 - [rules/audience-profile.md](rules/audience-profile.md) — Target audience and tone rules
 - [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene type catalog (27 types)
 - [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for educational videos
+- [rules/narration-writing.md](rules/narration-writing.md) — Narration writing rules for /script Phase 3
+- [rules/duration-calculation.md](rules/duration-calculation.md) — Duration calculation from narration
 - [rules/assets/promo-example.tsx](rules/assets/promo-example.tsx) — Complete promo reference implementation
 - [rules/assets/tutorial-example.tsx](rules/assets/tutorial-example.tsx) — Complete tutorial reference implementation
 - [rules/assets/educational-example.tsx](rules/assets/educational-example.tsx) — Complete educational reference implementation (section pattern)

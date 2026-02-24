@@ -96,6 +96,47 @@ export type Transcript = {
   scenes: SceneTranscript[];
 };
 
+// ─── Script Types ─────────────────────────────────────────
+// Output by /script Phase 3. Input to /video for duration calculation.
+
+export type ScriptScene = {
+  sceneIndex: number;
+  sceneType: string;
+  narration: string;
+  narratorTone: string;
+  visualDirection: string;
+  onScreenText: string[];
+  props: Record<string, unknown>;
+};
+
+export type ScriptSection = {
+  sectionIndex: number;
+  title: string;
+  sectionTone: string;
+  sectionColor: string;
+  humorScene?: number;
+  scenes: ScriptScene[];
+};
+
+export type VideoScript = {
+  videoName: string;
+  type: string;
+  fps: number;
+  resolution: { width: number; height: number };
+  meta?: {
+    learningObjectives?: string[];
+    audienceProfile?: string;
+    humorStyle?: string;
+  };
+  style?: {
+    fontHeading?: string;
+    fontBody?: string;
+    fontMono?: string;
+    background?: string;
+  };
+  sections: ScriptSection[];
+};
+
 // ─── Voiceover Scene (for Remotion) ─────────────────────────
 // Used by VoiceoverLayer component.
 
