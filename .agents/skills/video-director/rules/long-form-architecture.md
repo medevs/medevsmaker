@@ -31,35 +31,84 @@ src/<VideoName>/
 Uses `<Series>` to chain sections sequentially. Each section is a self-contained `<TransitionSeries>`.
 
 ```tsx
-import { AbsoluteFill, Series } from "remotion";
+import { AbsoluteFill, Series, useCurrentFrame } from "remotion";
 import { Background } from "../shared/components/Background";
 import { ProgressBar } from "../shared/components/ProgressBar";
 import { Watermark } from "../shared/components/Watermark";
+import { SectionTracker } from "../shared/components/SectionTracker";
+import { SECTION_THEMES } from "../shared/styles";
 import { Section1 } from "./sections/Section1";
 import { Section2 } from "./sections/Section2";
 // ...
 
-const TOTAL_SECTIONS = 4;
+const SECTIONS = [
+  { name: "The Client", frames: SECTION_1_FRAMES },
+  { name: "DNS Resolution", frames: SECTION_2_FRAMES },
+  // ...
+];
+
+const TOTAL_SECTIONS = SECTIONS.length;
+
+// Compute current section index from frame
+const useCurrentSection = (frame: number): number => {
+  let accumulated = 0;
+  for (let i = 0; i < SECTIONS.length; i++) {
+    accumulated += SECTIONS[i].frames;
+    if (frame < accumulated) return i;
+  }
+  return SECTIONS.length - 1;
+};
 
 export const VideoName: React.FC = () => {
+  const frame = useCurrentFrame();
+  const currentSection = useCurrentSection(frame);
+
   return (
     <AbsoluteFill>
       <Background colors={["#0f0f1a", "#1a1a2e"]} overlay="particles" particles={{ count: 25, speed: 0.3, opacity: 0.1 }} />
       <Series>
-        <Series.Sequence durationInFrames={SECTION_1_FRAMES}>
+        <Series.Sequence durationInFrames={SECTIONS[0].frames}>
           <Section1 />
           <ProgressBar totalSections={TOTAL_SECTIONS} currentSection={1} />
         </Series.Sequence>
-        <Series.Sequence durationInFrames={SECTION_2_FRAMES}>
+        <Series.Sequence durationInFrames={SECTIONS[1].frames}>
           <Section2 />
           <ProgressBar totalSections={TOTAL_SECTIONS} currentSection={2} />
         </Series.Sequence>
         {/* ... more sections */}
       </Series>
       <Watermark position="top-right" delay={30} />
+      <SectionTracker
+        sections={SECTIONS.map((s, i) => ({
+          name: s.name,
+          color: SECTION_THEMES.get(i),
+        }))}
+        currentIndex={currentSection}
+      />
     </AbsoluteFill>
   );
 };
+```
+
+### Per-Section Color Theming in styles.ts
+
+Each video's `styles.ts` should define section colors using `SECTION_THEMES`:
+
+```tsx
+import { SECTION_THEMES } from "../shared/styles";
+
+// Section colors — pass as sectionColor prop to all scenes in each section
+export const SECTION_COLORS = {
+  section1: SECTION_THEMES.get(0), // indigo
+  section2: SECTION_THEMES.get(1), // cyan
+  section3: SECTION_THEMES.get(2), // amber
+  // ...
+} as const;
+```
+
+Then in each section file, pass the sectionColor to all scenes:
+```tsx
+<FeatureIntro heading="..." definition="..." sectionColor={SECTION_COLORS.section1} />
 ```
 
 ### Section files — TransitionSeries per section

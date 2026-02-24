@@ -8,11 +8,14 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { CodeBlock } from "../components/CodeBlock";
+import { ColorBorderCard } from "../components/ColorBorderCard";
 
 type Annotation = {
   text: string;
   line: number;
 };
+
+type CodeDisplayLayout = "side" | "annotated";
 
 type CodeDisplayProps = {
   title: string;
@@ -20,6 +23,8 @@ type CodeDisplayProps = {
   annotations?: Annotation[];
   showLineNumbers?: boolean;
   highlightLines?: number[];
+  layout?: CodeDisplayLayout;
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
 };
@@ -30,6 +35,8 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
   annotations = [],
   showLineNumbers = true,
   highlightLines = [],
+  layout = "side",
+  sectionColor,
   colors = {
     bg: BRAND.bg,
     text: BRAND.text,
@@ -38,6 +45,7 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
   },
   fontFamily = "Inter",
 }) => {
+  const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -91,15 +99,18 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              gap: 16,
+              gap: layout === "annotated" ? 12 : 16,
               paddingTop: 16,
             }}
           >
             {annotations.map((ann, i) => {
+              const annDelay = 30 + i * 12;
               const annP = spring({
-                frame: frame - 30 - i * 12,
+                frame: frame - annDelay,
                 fps,
-                config: SCENE_DEFAULTS.springSmooth,
+                config: layout === "annotated"
+                  ? SCENE_DEFAULTS.springSilky
+                  : SCENE_DEFAULTS.springSmooth,
               });
               const annOpacity = interpolate(annP, [0, 1], [0, 1], {
                 extrapolateLeft: "clamp",
@@ -109,6 +120,33 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
                 extrapolateLeft: "clamp",
                 extrapolateRight: "clamp",
               });
+
+              if (layout === "annotated") {
+                return (
+                  <ColorBorderCard
+                    key={i}
+                    color={effectiveAccent}
+                    delay={annDelay}
+                    variant="compact"
+                    fontFamily={fontFamily}
+                  >
+                    <div
+                      style={{
+                        fontFamily,
+                        fontSize: 18,
+                        color: colors.muted,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      <span style={{ color: effectiveAccent, fontWeight: 700 }}>
+                        L{ann.line}
+                      </span>{" "}
+                      {ann.text}
+                    </div>
+                  </ColorBorderCard>
+                );
+              }
+
               return (
                 <div
                   key={i}
@@ -119,11 +157,11 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
                     fontSize: 20,
                     color: colors.muted,
                     paddingLeft: 12,
-                    borderLeft: `2px solid ${colors.accent}44`,
+                    borderLeft: `2px solid ${effectiveAccent}44`,
                     lineHeight: 1.4,
                   }}
                 >
-                  <span style={{ color: colors.accent, fontWeight: 700 }}>
+                  <span style={{ color: effectiveAccent, fontWeight: 700 }}>
                     L{ann.line}
                   </span>{" "}
                   {ann.text}

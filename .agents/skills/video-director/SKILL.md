@@ -73,14 +73,14 @@ For **educational videos** (3-10 min):
 ## Scene Manifest
 
 ### Section 1: [Title] (~Xs, N scenes)
-| # | Scene Type | Duration | Content Summary |
-|---|------------|----------|-----------------|
-| 1 | HookQuestion | 4s | "What actually happens when..." |
-| 2 | TitleIntro | 7s | Title + 3 objectives |
-| 3 | SectionTitle | 3s | "01 — The Client" |
-| 4 | ConceptExplain | 7s | Browser = client concept |
-| 5 | VisualMetaphor | 6s | 📱 "You're always the client" |
-| 6 | KeyTakeaway | 5s | Client sends requests summary |
+| # | Scene Type | Duration | Content Summary | Narration Intent |
+|---|------------|----------|-----------------|------------------|
+| 1 | HookQuestion | 4s | "What actually happens when..." | Create urgency — make them feel they're missing something |
+| 2 | TitleIntro | 7s | Title + 3 objectives | Set expectations — tease what's coming without listing objectives |
+| 3 | SectionTitle | 3s | "01 — The Client" | Brief transition — connect to previous section |
+| 4 | ConceptExplain | 7s | Browser = client concept | Explain in own words — use a relatable analogy |
+| 5 | VisualMetaphor | 6s | 📱 "You're always the client" | Deliver analogy with humor — make it memorable |
+| 6 | KeyTakeaway | 5s | Client sends requests summary | Reinforce key point — one sentence distillation |
 
 ### Section 2: [Title] (~Xs, N scenes)
 ...
@@ -153,11 +153,11 @@ Architecture details: [rules/long-form-architecture.md](rules/long-form-architec
 
 Educational videos use shared building-block components from `src/shared/`:
 
-**Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern
+**Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern, VoiceoverLayer, ColorBorderCard, PillBadge, SectionTracker, FeatureCounter, FileTree, GradientText
 
-**Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart
+**Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram
 
-**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances, pulse, glowPulse), transitions.ts (TRANSITIONS presets), styles.ts (SHADOWS, GRADIENTS, spring configs)
+**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow, pulse, glowPulse), transitions.ts (TRANSITIONS presets), styles.ts (SHADOWS, GRADIENTS, SECTION_THEMES, CARD, MONO, spring configs incl. springSilky)
 
 Import these instead of re-implementing. See [rules/educational-scenes.md](rules/educational-scenes.md) for full prop documentation.
 
@@ -210,27 +210,41 @@ export const TIMING = {
 - [ ] TransitionSeries total = sum(scene durations) - sum(transition durations)
 - [ ] Educational videos: ProgressBar overlay on each Series.Sequence
 - [ ] `manifest.json` generated alongside code (see below)
+- [ ] `manifest.json` includes `narrationIntent`, `onScreenText`, `narratorTone` for every scene
+- [ ] `manifest.json` includes `sectionColor`, `sectionTone`, `humorScene` for every section
+- [ ] `manifest.json` includes `meta` block with `learningObjectives`, `audienceProfile`, `humorStyle`
 
 ### manifest.json (Required)
 
-After generating all code files, output a `manifest.json` in `src/<VideoName>/`. This structured file captures scene data for the voiceover pipeline (`/voiceover`).
+After generating all code files, output a `manifest.json` in `src/<VideoName>/`. This structured file captures scene data and narration planning for the transcript pipeline (`/transcript` → `/voiceover`).
 
 ```json
 {
   "videoName": "HowTheWebWorks",
   "fps": 30,
   "totalFrames": 5833,
+  "meta": {
+    "learningObjectives": ["Understand client-server model", "Know how DNS works"],
+    "audienceProfile": "vibe-coders",
+    "humorStyle": "dry-tech"
+  },
   "sections": [
     {
       "sectionIndex": 1,
       "title": "The Client",
       "durationFrames": 1250,
+      "sectionColor": "#6366f1",
+      "sectionTone": "curious, building anticipation",
+      "humorScene": 5,
       "scenes": [
         {
           "sceneIndex": 1,
           "sceneType": "HookQuestion",
           "durationSeconds": 5,
           "transitionAfter": { "type": "fade", "frames": 15 },
+          "narrationIntent": "Create urgency — everyone clicks links but nobody knows what happens. Make them feel like they're missing something.",
+          "onScreenText": ["What actually happens when you click a link?"],
+          "narratorTone": "mysterious, slightly playful",
           "props": {
             "question": "What actually happens when you click a link?",
             "subtext": "Spoiler: it's not magic, but it's close"
@@ -242,8 +256,23 @@ After generating all code files, output a `manifest.json` in `src/<VideoName>/`.
 }
 ```
 
+**Scene-level fields**:
+- `narrationIntent` — creative directive for the transcript writer (what the narration should accomplish, not the exact words)
+- `onScreenText` — array of text strings visible on screen (so narrator avoids reading them verbatim)
+- `narratorTone` — emotional guidance for this specific scene
+
+**Section-level fields**:
+- `sectionColor` — hex color from SECTION_THEMES
+- `sectionTone` — overall emotional arc for the section
+- `humorScene` — which scene index (within section) carries the humor beat
+
+**Top-level `meta`**:
+- `learningObjectives` — from the production brief
+- `audienceProfile` — "vibe-coders" or similar
+- `humorStyle` — "dry-tech", "absurd-analogies", etc.
+
 **Rules**:
-- Every scene must include `sceneType`, `durationSeconds`, and `props` (the props object passed to the scene component)
+- Every scene must include `sceneType`, `durationSeconds`, `props`, `narrationIntent`, `onScreenText`, and `narratorTone`
 - Every scene except the last in a section must include `transitionAfter` with `type` and `frames`
 - Section `durationFrames` must match the calculated value from styles.ts
 - `totalFrames` must match the Composition's `durationInFrames`
@@ -320,6 +349,8 @@ npx remotion studio
 npx remotion render src/index.ts <CompositionId> out/video.mp4
 ```
 
+6. **Suggest next steps**: After reviewing visuals, run `/transcript <VideoName>` to generate narration, then `/voiceover <VideoName>` to synthesize audio.
+
 ---
 
 ## IMPORTANT CONSTRAINTS
@@ -340,6 +371,9 @@ npx remotion render src/index.ts <CompositionId> out/video.mp4
 - Use `<Watermark position="top-right">` in index.tsx — top-right avoids ProgressBar overlap
 - Use `<Background overlay="particles">` for visual depth
 - Use `EndScreen` instead of basic `Outro` for polished end cards
+- Use `<SectionTracker>` (bottom-right) for persistent section progress in educational videos
+- Use `<FeatureCounter>` (top-left) optionally for feature-focused educational videos
+- Use per-section color theming via `SECTION_THEMES.get(sectionIndex)` — pass as `sectionColor` to all scenes
 - Visual ratio: 60%+ content scenes must be visual-heavy, max 40% text-heavy
 - Humor: 1 beat per section — place in VisualMetaphor or WarningCallout
 - Pattern interrupts every 25-35 seconds
@@ -356,7 +390,7 @@ npx remotion render src/index.ts <CompositionId> out/video.mp4
 - [rules/prompt-expansion.md](rules/prompt-expansion.md) — Phase 1 expansion engine
 - [rules/video-types.md](rules/video-types.md) — All 7 video types with defaults, scenes, rules, palettes
 - [rules/audience-profile.md](rules/audience-profile.md) — Target audience and tone rules
-- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene type catalog (20 types)
+- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene type catalog (27 types)
 - [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for educational videos
 - [rules/assets/promo-example.tsx](rules/assets/promo-example.tsx) — Complete promo reference implementation
 - [rules/assets/tutorial-example.tsx](rules/assets/tutorial-example.tsx) — Complete tutorial reference implementation

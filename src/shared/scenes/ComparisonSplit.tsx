@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { ColorBorderCard } from "../components/ColorBorderCard";
 
 type ComparisonSide = {
   title: string;
@@ -15,11 +16,14 @@ type ComparisonSide = {
 };
 
 type EntranceStyle = "slide" | "spring" | "overshoot";
+type ComparisonVariant = "split" | "cards";
 
 type ComparisonSplitProps = {
   heading: string;
   left: ComparisonSide;
   right: ComparisonSide;
+  variant?: ComparisonVariant;
+  sectionColor?: string;
   colors?: { bg: string; text: string; muted: string };
   fontFamily?: string;
   entranceStyle?: EntranceStyle;
@@ -29,6 +33,8 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
   heading,
   left,
   right,
+  variant = "split",
+  sectionColor,
   colors = { bg: BRAND.bg, text: BRAND.text, muted: BRAND.textMuted },
   fontFamily = "Inter",
   entranceStyle = "slide",
@@ -72,6 +78,120 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
   const rightOpacity = interpolate(rightP, [0, 1], [0, 1], {
     extrapolateRight: "clamp",
   });
+
+  // Cards variant: each side in a ColorBorderCard
+  if (variant === "cards") {
+    const renderCardSide = (
+      side: ComparisonSide,
+      sideOpacity: number,
+      xOffset: number,
+      baseDelay: number
+    ) => (
+      <div style={{ flex: 1, opacity: sideOpacity, transform: `translateX(${xOffset}px)`, display: "flex" }}>
+        <ColorBorderCard
+          color={side.color}
+          delay={baseDelay}
+          fontFamily={fontFamily}
+        >
+          <div
+            style={{
+              fontFamily,
+              fontSize: 28,
+              fontWeight: 700,
+              color: side.color,
+              marginBottom: 4,
+            }}
+          >
+            {side.title}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            {side.items.map((item, i) => {
+              const itemP = spring({
+                frame: frame - baseDelay - 8 - i * SCENE_DEFAULTS.staggerDelay,
+                fps,
+                config: SCENE_DEFAULTS.springSilky,
+              });
+              const itemOpacity = interpolate(itemP, [0, 1], [0, 1], {
+                extrapolateRight: "clamp",
+              });
+              return (
+                <div
+                  key={i}
+                  style={{
+                    opacity: itemOpacity,
+                    fontFamily,
+                    fontSize: 24,
+                    color: colors.text,
+                    lineHeight: 1.4,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 7,
+                      height: 7,
+                      borderRadius: "50%",
+                      backgroundColor: side.color,
+                      flexShrink: 0,
+                    }}
+                  />
+                  {item}
+                </div>
+              );
+            })}
+          </div>
+        </ColorBorderCard>
+      </div>
+    );
+
+    return (
+      <AbsoluteFill
+        style={{
+          backgroundColor: colors.bg,
+          padding: 80,
+          gap: 32,
+        }}
+      >
+        <div
+          style={{
+            opacity: headOpacity,
+            fontFamily,
+            fontSize: 48,
+            fontWeight: 800,
+            color: colors.text,
+            textAlign: "center",
+          }}
+        >
+          {heading}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: 32,
+            flex: 1,
+            alignItems: "stretch",
+          }}
+        >
+          {renderCardSide(left, leftOpacity, leftX, 15)}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              fontFamily,
+              fontSize: 24,
+              fontWeight: 700,
+              color: colors.muted,
+            }}
+          >
+            VS
+          </div>
+          {renderCardSide(right, rightOpacity, rightX, 15)}
+        </div>
+      </AbsoluteFill>
+    );
+  }
 
   const renderSide = (
     side: ComparisonSide,

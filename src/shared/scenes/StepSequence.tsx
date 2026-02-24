@@ -8,15 +8,21 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { SectionBadge } from "../components/SectionBadge";
+import { ColorBorderCard } from "../components/ColorBorderCard";
 
 type Step = {
   title: string;
   description?: string;
+  icon?: string;
 };
+
+type StepSequenceVariant = "default" | "card";
 
 type StepSequenceProps = {
   heading: string;
   steps: Step[];
+  variant?: StepSequenceVariant;
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
 };
@@ -24,6 +30,8 @@ type StepSequenceProps = {
 export const StepSequence: React.FC<StepSequenceProps> = ({
   heading,
   steps,
+  variant = "default",
+  sectionColor,
   colors = {
     bg: BRAND.bg,
     text: BRAND.text,
@@ -32,6 +40,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
   },
   fontFamily = "Inter",
 }) => {
+  const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -84,6 +93,53 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
             extrapolateRight: "clamp",
           });
 
+          if (variant === "card") {
+            return (
+              <ColorBorderCard
+                key={i}
+                color={effectiveAccent}
+                delay={stepDelay}
+                variant="compact"
+                icon={step.icon}
+                fontFamily={fontFamily}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <SectionBadge
+                    number={i + 1}
+                    delay={stepDelay}
+                    color={effectiveAccent}
+                    size={40}
+                    fontFamily={fontFamily}
+                  />
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <div
+                      style={{
+                        fontFamily,
+                        fontSize: 28,
+                        fontWeight: 700,
+                        color: colors.text,
+                      }}
+                    >
+                      {step.title}
+                    </div>
+                    {step.description && (
+                      <div
+                        style={{
+                          fontFamily,
+                          fontSize: 20,
+                          color: colors.muted,
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        {step.description}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </ColorBorderCard>
+            );
+          }
+
           return (
             <div
               key={i}
@@ -98,7 +154,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
               <SectionBadge
                 number={i + 1}
                 delay={stepDelay}
-                color={colors.accent}
+                color={effectiveAccent}
                 size={48}
                 fontFamily={fontFamily}
               />

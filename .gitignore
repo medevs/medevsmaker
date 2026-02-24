@@ -10,3 +10,5 @@ out/
 
 # Generated voiceover audio (large, regenerable)
 public/vo/
+
+reference-content/*

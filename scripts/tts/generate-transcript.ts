@@ -68,7 +68,7 @@ if (!forceOverwrite && existsSync(transcriptPath)) {
   }
 }
 
-const voiceId = process.env.CARTESIA_VOICE_ID ?? process.env.EDGE_TTS_VOICE ?? "";
+const voiceId = process.env.ELEVENLABS_VOICE_ID ?? process.env.CARTESIA_VOICE_ID ?? process.env.EDGE_TTS_VOICE ?? "";
 
 const fps = manifest.fps;
 const scenes: SceneTranscript[] = [];
@@ -94,6 +94,8 @@ for (const section of manifest.sections) {
       transitionAfterFrames: transitionFrames,
       wordBudget: effectiveWordBudget(scene.durationSeconds, transitionFrames, fps),
       onScreenText: extractOnScreenText(scene.sceneType, scene.props),
+      narrationIntent: scene.narrationIntent ?? "",
+      narratorTone: scene.narratorTone ?? "",
       narration: existingNarration,
     });
   }
@@ -118,5 +120,5 @@ if (forceOverwrite) {
 
 console.log(`  ${scenes.length} scenes, voice ID: ${voiceId || "(not set)"}`);
 console.log(
-  "\nNext: Fill narration fields via /voiceover, then run generate-audio.ts",
+  "\nNext: Fill narration fields via /transcript, then run /voiceover to synthesize audio",
 );

@@ -22,11 +22,15 @@ type FlowConnection = {
   label?: string;
 };
 
+type DiagramFlowVariant = "boxes" | "pipeline";
+
 type DiagramFlowProps = {
   title: string;
   nodes: FlowNode[];
   connections: FlowConnection[];
   direction?: "horizontal" | "vertical";
+  variant?: DiagramFlowVariant;
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string };
   fontFamily?: string;
 };
@@ -36,9 +40,12 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
   nodes,
   connections,
   direction = "horizontal",
+  variant = "boxes",
+  sectionColor,
   colors = { bg: BRAND.bg, text: BRAND.text, accent: BRAND.indigo },
   fontFamily = "Inter",
 }) => {
+  const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -66,6 +73,121 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
       ? startY + boxH / 2
       : startY + i * (boxH + gap) + boxH / 2,
   }));
+
+  // Pipeline variant: horizontal rectangles with → text arrows
+  if (variant === "pipeline") {
+    const pipeW = 200;
+    const pipeGap = 80;
+    const totalPipeW = nodes.length * pipeW + (nodes.length - 1) * pipeGap;
+    const pipeStartX = (1920 - totalPipeW) / 2;
+    const pipeY = 460;
+
+    return (
+      <AbsoluteFill style={{ backgroundColor: colors.bg }}>
+        <div
+          style={{
+            position: "absolute",
+            top: 80,
+            left: 80,
+            right: 80,
+            opacity: titleOpacity,
+            transform: `translateY(${titleY}px)`,
+            fontFamily,
+            fontSize: 48,
+            fontWeight: 800,
+            color: colors.text,
+          }}
+        >
+          {title}
+        </div>
+
+        <div
+          style={{
+            position: "absolute",
+            left: pipeStartX,
+            top: pipeY,
+            display: "flex",
+            alignItems: "center",
+            gap: 0,
+          }}
+        >
+          {nodes.map((node, i) => {
+            const nodeDelay = 10 + i * SCENE_DEFAULTS.staggerDelaySlow;
+            const nodeP = spring({
+              frame: frame - nodeDelay,
+              fps,
+              config: SCENE_DEFAULTS.springSilky,
+            });
+            const nodeOpacity = interpolate(nodeP, [0, 1], [0, 1], {
+              extrapolateRight: "clamp",
+            });
+            const nodeScale = interpolate(nodeP, [0, 1], [0.9, 1], {
+              extrapolateRight: "clamp",
+            });
+
+            const nodeColor = node.color || effectiveAccent;
+
+            return (
+              <React.Fragment key={i}>
+                <div
+                  style={{
+                    opacity: nodeOpacity,
+                    transform: `scale(${nodeScale})`,
+                    width: pipeW,
+                    padding: "20px 16px",
+                    backgroundColor: `${nodeColor}12`,
+                    border: `2px solid ${nodeColor}44`,
+                    borderRadius: 12,
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily,
+                      fontSize: 22,
+                      fontWeight: 700,
+                      color: colors.text,
+                    }}
+                  >
+                    {node.label}
+                  </span>
+                  {node.sublabel && (
+                    <span
+                      style={{
+                        fontFamily,
+                        fontSize: 16,
+                        color: colors.text + "99",
+                      }}
+                    >
+                      {node.sublabel}
+                    </span>
+                  )}
+                </div>
+                {i < nodes.length - 1 && (
+                  <div
+                    style={{
+                      opacity: nodeOpacity,
+                      width: pipeGap,
+                      textAlign: "center",
+                      fontFamily,
+                      fontSize: 28,
+                      fontWeight: 700,
+                      color: effectiveAccent + "88",
+                    }}
+                  >
+                    →
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </AbsoluteFill>
+    );
+  }
 
   return (
     <AbsoluteFill style={{ backgroundColor: colors.bg }}>

@@ -1,5 +1,34 @@
 # Transcript Generation Rules
 
+## narrationIntent-First Writing Process
+
+Each scene in manifest.json includes a `narrationIntent` field written by the video director during scene planning. This is your primary creative input.
+
+### How to use narrationIntent
+
+1. **Read the intent** — understand what the narration should accomplish
+2. **Check onScreenText** — know what's already on screen (never repeat it)
+3. **Apply narratorTone** — match the emotional guidance
+4. **Write to word budget** — stay within the adaptive WPM budget
+5. **Apply scene-type patterns** — use the narration approach for this scene type
+
+### Example
+
+```
+narrationIntent: "Create urgency — everyone clicks links but nobody knows what happens"
+onScreenText: ["What actually happens when you click a link?"]
+narratorTone: "mysterious, slightly playful"
+wordBudget: 17
+```
+
+Result: "You click a link fifty times a day, but do you actually know what happens behind the scenes?"
+
+### Fallback (no narrationIntent)
+
+If a manifest doesn't include `narrationIntent` (older videos), fall back to writing narration from visual props alone — the current behavior. Check `onScreenText` from the transcript skeleton and apply scene-type patterns as usual.
+
+---
+
 ## Core Principles
 
 1. **Never read on-screen text verbatim** — narration complements the visuals, it doesn't duplicate them
@@ -136,7 +165,82 @@ wordBudget = floor(effectiveDuration × wpm / 60)
 
 ### ColdOpen
 - **Approach**: Dramatic, attention-grabbing delivery
+- **Don't**: Start slow or with context — jump straight into the statement
 - **Example**: "Right now, as you watch this, millions of invisible conversations are happening between your device and servers all over the world."
+
+### FeatureIntro
+- **Approach**: Build anticipation, then explain what this feature/concept is in your own words. Frame why it matters before defining it. The visual shows a card with the definition, so your narration should complement with context and enthusiasm.
+- **Don't**: Read the definition card verbatim. Don't read pill badge labels. Don't start with "so" or "now let's talk about."
+- **Example**: "This one is huge. Model Context Protocol, or MCP, gives AI tools a standard way to talk to external services. And it changes everything about how agents interact with the world."
+- **Variant note**: If the scene has a `breadcrumb` ("FEATURE 2 OF 5"), don't narrate the breadcrumb — the viewer can read it.
+
+### ProgressiveTerminal
+- **Approach**: Walk through the list conversationally, highlighting the 2-3 most interesting items. The visual reveals items one by one, so your narration should match the staggered pacing — start broad, then zoom into standout items.
+- **Don't**: Read every item verbatim. Don't use "first, second, third" pacing — the visual already shows the sequence.
+- **Example**: "It handles authentication, caching, rate limiting, and a whole lot more. But the one that really matters here is the built-in retry logic, because without it, one network hiccup takes down your entire pipeline."
+
+### DecisionTable
+- **Approach**: Frame the decision context first ("so when do you pick which one?"), then call out the most surprising or counterintuitive rows. The visual shows question/answer pairs with colored pill badges, so narrate the *reasoning* behind the answers, not the answers themselves.
+- **Don't**: Read every question/answer pair. Don't just list "if X then Y" for each row.
+- **Example**: "So when should you use each one? If you need real-time updates, WebSockets wins hands down. But here's the surprise, for most use cases, simple polling is actually good enough."
+
+### ThreeColumnCompare
+- **Approach**: Highlight what makes each option *distinct*, not what they have in common. The visual shows three cards side by side, so your narration should create a narrative arc — maybe start with the most common choice and contrast against the others.
+- **Don't**: Read all bullet items from all three columns. Don't treat it as three separate lists.
+- **Example**: "Three tools, three philosophies. Redis is pure speed, PostgreSQL is pure reliability, and MongoDB is pure flexibility. The one you pick depends entirely on what you're optimizing for."
+
+### FileTreeScene
+- **Approach**: Walk through the key structural decisions, not every file. Explain *why* the project is organized this way. The visual shows a directory tree with highlighted important files, so narrate the architecture reasoning.
+- **Don't**: Read the full directory tree. Don't say "and then we have" for each folder.
+- **Example**: "Here's how the project is organized. The src folder holds your components, the API routes live in app slash api, and your database schema sits in prisma. Everything has a clear home."
+
+### KeyRuleCard
+- **Approach**: Deliver the key insight with emphasis and conviction. This is a *statement* scene, not an explanation scene. The visual shows a large statement with gradient text on the key word, so your narration should match that weight — short, punchy, memorable.
+- **Don't**: Add extra context or qualifiers. Don't say "what I mean by that is." Let the statement breathe.
+- **Budget**: Usually 5-7s scene, so 12-16 words max. Keep it tight.
+- **Example**: "Here's the golden rule. Never trust the client. Always validate on the server. No exceptions."
+
+### ArchitectureDiagram
+- **Approach**: Start from the center hub and explain outward connections. The visual reveals the center node first, then satellites stagger in. Match this rhythm — introduce the center, then walk through 2-3 key connections.
+- **Don't**: List every satellite node. Don't describe the visual layout ("on the left we have...").
+- **Example**: "At the center is your API gateway, and everything flows through it. Your auth service, your database, your cache layer, your message queue, all connected through that single entry point."
+
+### Scene Variant Narration Notes
+
+Some existing scenes have new visual variants. The narration approach stays the same, but be aware of what the viewer sees:
+
+- **StepSequence `variant="card"`**: Steps appear in colored cards instead of plain list. Narration unchanged — walk through steps in order.
+- **DiagramFlow `variant="pipeline"`**: Horizontal rectangles with → arrows instead of SVG boxes. Narration unchanged — explain the flow left to right.
+- **ComparisonSplit `variant="cards"`**: Each side in a ColorBorderCard instead of plain panel. Narration unchanged — highlight the key difference.
+- **CodeDisplay `layout="annotated"`**: Annotations appear as small colored cards instead of plain text. Narration unchanged — explain what the code does.
+- **DataChart `variant="labeled"`**: Bars have colored pill badge labels (e.g. "CRITICAL", "LOW"). Mention the severity labels if they add meaning: "Notice how the top three are all marked critical."
+- **KeyTakeaway `variant="insight"`**: Shows gradient text instead of accent box. Narration should be shorter and punchier — the visual is more dramatic, so match the energy. Closer to KeyRuleCard style.
+
+## ElevenLabs-Ready Speech Patterns
+
+When writing narration optimized for premium TTS (ElevenLabs, Cartesia sonic-3):
+
+### Flowing Sentences
+- Prefer longer flowing sentences (10-15 words) over staccato fragments (3-5 words)
+- Use bridge phrases to connect ideas: "and that means", "which is why", "so what happens next is"
+- Avoid bullet-point delivery: "First this. Then this. Then this." — sounds robotic in TTS
+
+### Natural Rhythm
+- Vary sentence length: short (5-7 words) → medium (10-14 words) → short → long (15-18 words)
+- Use commas for natural pauses, not periods for every phrase
+- Contractions are essential: "it's", "you'll", "that's", "we're", "doesn't"
+
+### Emphasis Through Word Choice
+- TTS can't emphasize words, so choose impactful vocabulary: "crucial" not "important", "massive" not "big"
+- Front-load the interesting part of each sentence
+- Use concrete imagery: "your browser sprints to the server" not "the browser communicates with the server"
+
+### Narration-Visual Sync for New Components
+The new visual system uses persistent overlays (SectionTracker, FeatureCounter) and signature elements (ColorBorderCards, PillBadges, GradientText). Narration rules for these:
+- **Never narrate overlay text** — SectionTracker ("NOW COVERING: DNS") and FeatureCounter ("FEATURE 2 OF 5") are read by the viewer. Narrating them sounds redundant.
+- **Never read pill badge labels** — "REQUIRED", "OPTIONAL", "CRITICAL" etc. are visual labels. If they matter, weave the concept into your sentence naturally: "and this one is absolutely required" not "the badge says required."
+- **GradientText words are key phrases** — these are visually emphasized. Your narration should naturally emphasize the same concept through word choice, not by saying "notice the highlighted word."
+- **ColorBorderCard content is on-screen text** — standard rule applies: don't read it verbatim. Complement it.
 
 ## Tone Guidelines
 

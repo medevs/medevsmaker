@@ -133,3 +133,23 @@ Visuals explain, voiceover narrates — on-screen text is supplementary, not pri
 
 ### Scene Replacement Guidance
 If planning 3+ ConceptExplain in a row, replace the middle one(s) with DiagramFlow or VisualMetaphor. No two text-heavy scenes should be adjacent.
+
+## Humor + Polish Balance
+
+### Philosophy
+Polished visuals with light humor. The reference style (DIY Smart Code / Cole Medin) is zero humor, all polish. We keep the polish but add personality through script/narration, not visual gimmicks.
+
+- **Visuals**: Clean, polished, professional — ColorBorderCards, gradient text, monospace badges
+- **Humor**: Lives in the narration/script, not in flashy animations or meme graphics
+- **Tone**: "A little bit fun, not too funny" — dry wit, absurd analogies, developer relatability
+- **Balance**: 90% polished content delivery, 10% personality through word choice and analogies
+
+### Negative Space Rule
+
+Content should breathe. Don't fill every pixel.
+
+- **FeatureIntro**: Content in left 65%, right 35% is empty
+- **KeyRuleCard**: Generous padding (100px+ vertical, 160px+ horizontal)
+- **ColorBorderCards**: Internal padding tokens (sm/md/lg) provide consistent spacing
+- **Scene layouts**: Prefer 80px outer padding minimum
+- **Between elements**: Use 24-32px gaps, not cramped 8-12px

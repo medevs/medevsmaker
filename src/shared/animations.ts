@@ -65,6 +65,18 @@ export const entrances = {
       extrapolateRight: "clamp",
     })}px)`,
   }),
+  fadeUpSlow: (progress: number) => ({
+    opacity: progress,
+    transform: `translateY(${interpolate(progress, [0, 1], [20, 0], {
+      extrapolateRight: "clamp",
+    })}px)`,
+  }),
+  fadeLeftSlow: (progress: number) => ({
+    opacity: progress,
+    transform: `translateX(${interpolate(progress, [0, 1], [-25, 0], {
+      extrapolateRight: "clamp",
+    })}px)`,
+  }),
 } as const;
 
 export type EntranceName = keyof typeof entrances;

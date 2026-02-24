@@ -51,6 +51,20 @@ For educational type, also apply:
 - Scene types from `educational-scenes.md`
 - Architecture from `long-form-architecture.md`
 
+### Per-Section Color Assignment (Educational)
+
+Assign a color from `SECTION_THEMES` to each section:
+```
+Section 1 → BRAND.indigo (#6366f1)
+Section 2 → BRAND.cyan (#06b6d4)
+Section 3 → BRAND.amber (#f59e0b)
+Section 4 → BRAND.green (#10b981)
+Section 5 → BRAND.violet (#8b5cf6)
+Section 6 → BRAND.red (#ef4444)
+```
+
+Note the assigned color in each section's brief. All scenes within a section receive the section's color as `sectionColor` prop.
+
 ## Step 3: Generate Scene Breakdown
 
 ### Scene Structure Rules
@@ -167,7 +181,20 @@ Assign entrance props to scenes for visual variety:
 - ConceptExplain: use `fadeLeft` or `typewriter` occasionally
 - VisualMetaphor: rotate `iconEffect` between `pop`, `rotate`, `bounce`
 - StatHighlight: use `glow` or `gradient` emphasis for key stats
-- ComparisonSplit: use `overshoot` for dramatic comparisons
+- ComparisonSplit: use `overshoot` for dramatic comparisons, `cards` variant for polished look
+
+### Scene Type Selection Priorities (Educational)
+When planning scenes, prefer the new polished scene types:
+- **FeatureIntro over ConceptExplain** — when introducing/defining something for the first time
+- **DecisionTable over BulletRevealScene** — when content is question/answer or criteria pairs
+- **ThreeColumnCompare over ComparisonSplit** — when comparing 3 things
+- **ArchitectureDiagram over DiagramFlow** — for hub-spoke/radial relationships
+- **KeyRuleCard over KeyTakeaway** — for gradient-emphasis key insights
+- **FileTreeScene** — whenever showing project structure or file organization
+- **ProgressiveTerminal** — when listing capabilities that build on each other
+- **StepSequence variant="card"** — for polished step-by-step with card styling
+- **DiagramFlow variant="pipeline"** — for linear horizontal pipelines
+- **KeyTakeaway variant="insight"** — for gradient text takeaways
 
 ### Branding
 - Always add `<Watermark position="top-right">` in index.tsx
@@ -317,3 +344,10 @@ Before finalizing the brief, verify:
 - [ ] HookQuestion uses scale, blur, or fadeUp entrance (not typewriter)
 - [ ] TimelineScene horizontal has ≤5 nodes with short labels (≤2 words)
 - [ ] Two-panel scenes (BeforeAfter, ComparisonSplit) have balanced item counts per side (±1)
+- [ ] (Educational) Per-section color theming applied — each section has a distinct sectionColor
+- [ ] (Educational) FeatureIntro used for first-time definitions (not ConceptExplain)
+- [ ] (Educational) Content in left 60-65% of frame with breathing room on right (for FeatureIntro, KeyRuleCard)
+- [ ] Every scene has a `narrationIntent` (creative directive, not script)
+- [ ] Every scene has `onScreenText` extracted from props
+- [ ] `narratorTone` varies across scenes (not all "neutral")
+- [ ] Section `humorScene` is assigned (1 per section)

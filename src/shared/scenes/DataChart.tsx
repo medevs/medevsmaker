@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { PillBadge } from "../components/PillBadge";
 
 type DataBar = {
   label: string;
@@ -14,11 +15,15 @@ type DataBar = {
   color?: string;
 };
 
+type DataChartVariant = "bars" | "labeled";
+
 type DataChartProps = {
   heading: string;
   bars: DataBar[];
   maxValue?: number;
   suffix?: string;
+  variant?: DataChartVariant;
+  badgeLabels?: string[];
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
 };
@@ -28,6 +33,8 @@ export const DataChart: React.FC<DataChartProps> = ({
   bars,
   maxValue,
   suffix = "",
+  variant = "bars",
+  badgeLabels = [],
   colors = {
     bg: BRAND.bg,
     text: BRAND.text,
@@ -168,6 +175,16 @@ export const DataChart: React.FC<DataChartProps> = ({
                 {displayValue.toLocaleString()}
                 {suffix}
               </div>
+
+              {/* Badge label for labeled variant */}
+              {variant === "labeled" && badgeLabels[i] && (
+                <PillBadge
+                  label={badgeLabels[i]}
+                  color={barColor}
+                  delay={barDelay + 10}
+                  fontSize={12}
+                />
+              )}
             </div>
           );
         })}

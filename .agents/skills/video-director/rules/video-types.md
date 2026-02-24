@@ -87,8 +87,47 @@ See [audience-profile.md](audience-profile.md) for full audience definition and 
 - Mix transition types across sections (don't use only fade)
 - New scenes available: ColdOpen, BeforeAfter, TimelineScene, DataChart
 
+### Per-Section Color Theming
+
+Each section in an educational video gets its own accent color from `SECTION_THEMES`:
+
+```
+Section 1: indigo (#6366f1)
+Section 2: cyan (#06b6d4)
+Section 3: amber (#f59e0b)
+Section 4: green (#10b981)
+Section 5: violet (#8b5cf6)
+Section 6: red (#ef4444)
+(cycles back for 7+ sections)
+```
+
+Pass `sectionColor` prop to all scenes and components within a section. This creates visual coherence within sections and contrast between them. The section color is used for:
+- ColorBorderCard left borders
+- PillBadge colors
+- GradientText highlights
+- SectionTracker active dot and label
+
+### Persistent Overlays
+
+Educational videos use persistent overlays in `index.tsx`:
+- **SectionTracker** (bottom-right) — shows current section name + dot progress
+- **FeatureCounter** (top-left) — optional, shows "FEATURE X OF Y" for feature-focused videos
+- **Watermark** (top-right) — medevsmaker branding
+- **ProgressBar** (bottom) — video progress
+
+The SectionTracker's `currentIndex` is computed from the current frame using cumulative section durations.
+
+### Animation Style
+
+Default animation style for polished educational videos:
+- **Spring**: `springSilky` (damping: 200, stiffness: 90) for most elements — slower, smoother than default
+- **Stagger**: `staggerDelaySlow` (14 frames) between items — more deliberate pacing
+- **Element entry**: `elementEntrySlow` (28 frames) for content elements
+- **Entrances**: Prefer `fadeUpSlow` and `fadeLeftSlow` for subtler motion
+- **Scale**: Cards enter at 0.97→1.0 scale, not 0.8→1.0 — barely perceptible but polished
+
 ### Scene Catalog
-See [educational-scenes.md](educational-scenes.md) for all 20 reusable scene types with props, durations, and usage rules.
+See [educational-scenes.md](educational-scenes.md) for all 27 reusable scene types with props, durations, and usage rules.
 
 ### Architecture
 See [long-form-architecture.md](long-form-architecture.md) for the section-based file structure and code patterns.

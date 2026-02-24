@@ -36,7 +36,12 @@ Takes a simple idea and produces a complete Remotion video project.
 2. A **structured production brief** is generated with scenes, timing, sections, colors, and typography
 3. For educational videos: a **scene manifest** maps each scene to a reusable template type
 4. **Complete Remotion code** is generated — compositions, sections, scenes, components, and styles
-5. You get **rendering instructions** to preview and export the video
+5. **manifest.json** is generated alongside code — includes `narrationIntent`, `onScreenText`, and `narratorTone` per scene for the transcript pipeline
+6. You get **rendering instructions** to preview and export the video
+
+## After reviewing visuals
+
+Run `/transcript <VideoName>` to generate narration, then `/voiceover <VideoName>` to synthesize audio.
 
 ## Supported video types
 

@@ -24,6 +24,8 @@ export interface TTSProvider {
 
 // ─── Manifest Types ─────────────────────────────────────────
 // Structured scene data output by /video Phase 3.
+// Narration planning fields (narrationIntent, onScreenText, narratorTone)
+// are optional for backward compatibility with older manifests.
 
 export type SceneManifest = {
   sceneIndex: number;
@@ -31,6 +33,12 @@ export type SceneManifest = {
   durationSeconds: number;
   transitionAfter?: { type: string; frames: number };
   props: Record<string, unknown>;
+  /** Creative directive for the transcript writer (what the narration should accomplish) */
+  narrationIntent?: string;
+  /** Text strings visible on screen (narrator avoids reading these verbatim) */
+  onScreenText?: string[];
+  /** Emotional guidance for this specific scene */
+  narratorTone?: string;
 };
 
 export type SectionManifest = {
@@ -38,12 +46,23 @@ export type SectionManifest = {
   title: string;
   durationFrames: number;
   scenes: SceneManifest[];
+  /** Hex color from SECTION_THEMES */
+  sectionColor?: string;
+  /** Overall emotional arc for the section */
+  sectionTone?: string;
+  /** Which scene index (within section) carries the humor beat */
+  humorScene?: number;
 };
 
 export type VideoManifest = {
   videoName: string;
   fps: number;
   totalFrames: number;
+  meta?: {
+    learningObjectives?: string[];
+    audienceProfile?: string;
+    humorStyle?: string;
+  };
   sections: SectionManifest[];
 };
 
@@ -61,6 +80,10 @@ export type SceneTranscript = {
   transitionAfterFrames: number;
   wordBudget: number;
   onScreenText: string[];
+  /** Creative directive from /video scene planning (passed through from manifest) */
+  narrationIntent?: string;
+  /** Emotional guidance for this scene (passed through from manifest) */
+  narratorTone?: string;
   narration: string;
   /** Populated after TTS synthesis */
   audioFile?: string;

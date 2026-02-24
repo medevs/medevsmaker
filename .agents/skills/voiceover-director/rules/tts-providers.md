@@ -7,10 +7,19 @@ The TTS system is provider-agnostic. All providers implement the `TTSProvider` i
 ## Environment Variables
 
 ```bash
-# Provider selection (default: cartesia)
-TTS_PROVIDER=cartesia
+# Provider selection (default: elevenlabs)
+TTS_PROVIDER=elevenlabs
 
-# Cartesia config
+# ElevenLabs config
+ELEVENLABS_API_KEY=<your-api-key>
+ELEVENLABS_VOICE_ID=<voice-id-from-elevenlabs>
+ELEVENLABS_MODEL=eleven_multilingual_v2   # eleven_multilingual_v2 (default) | eleven_turbo_v2_5 | eleven_flash_v2_5
+ELEVENLABS_STABILITY=0.5                  # 0.0 to 1.0 (default: 0.5)
+ELEVENLABS_SIMILARITY=0.75                # 0.0 to 1.0 (default: 0.75)
+ELEVENLABS_STYLE=0.0                      # 0.0 to 1.0 (default: 0.0)
+ELEVENLABS_SPEED=1.0                      # 0.7 to 1.2 (default: 1.0)
+
+# Cartesia config (alternative provider: TTS_PROVIDER=cartesia)
 CARTESIA_API_KEY=<your-api-key>
 CARTESIA_VOICE_ID=<voice-id-from-cartesia>
 CARTESIA_MODEL=sonic-3       # sonic-3 (default) | sonic-2 | sonic
@@ -18,7 +27,66 @@ CARTESIA_SPEED=0.95          # sonic-3 only: 0.6 to 1.5 (default: 0.95)
 CARTESIA_EMOTION=neutral     # sonic-3 only: neutral | happy | sad | angry | surprise
 ```
 
-## Cartesia (Default)
+## ElevenLabs (Default)
+
+**API**: `POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}`
+
+### Setup
+
+1. Sign up at https://elevenlabs.io
+2. Get your API key from Profile → API Keys
+3. Add `ELEVENLABS_API_KEY=<key>` and `ELEVENLABS_VOICE_ID=<voice-id>` to `.env`
+
+### Models
+
+| Model | ID | Quality | Latency | Languages | Notes |
+|-------|----|---------|---------|-----------|-------|
+| Multilingual v2 | `eleven_multilingual_v2` | Highest | Normal | 29 | **Default** — best quality |
+| Turbo v2.5 | `eleven_turbo_v2_5` | High | ~3x faster | 31 | Good for iteration |
+| Flash v2.5 | `eleven_flash_v2_5` | Good | <75ms | 32 | Fastest, good for previews |
+
+### Voice Settings
+
+| Setting | Env Var | Default | Effect |
+|---------|---------|---------|--------|
+| Stability | `ELEVENLABS_STABILITY` | `0.5` | Higher = more consistent, lower = more expressive |
+| Similarity Boost | `ELEVENLABS_SIMILARITY` | `0.75` | Higher = closer to original voice, may amplify artifacts |
+| Style | `ELEVENLABS_STYLE` | `0.0` | Higher = more expressive, can reduce stability |
+| Speed | `ELEVENLABS_SPEED` | `1.0` | `0.7` to `1.2` — pace of speech |
+
+**Tips:**
+- Start with defaults — they work well for narration
+- Increase stability (0.7+) for educational narration that needs consistency
+- Lower stability (0.3) for more dramatic, expressive delivery
+- Keep similarity_boost at 0.75 for cloned voices
+- Style exaggeration above 0.5 may sound unnatural
+
+### Voice Cloning
+
+ElevenLabs supports instant voice cloning from audio samples.
+
+**Clone via dashboard:**
+1. Go to https://elevenlabs.io → Voices → Add Voice → Instant Voice Cloning
+2. Upload 1+ audio samples (10+ seconds recommended)
+3. Name your voice and create
+4. Copy the voice ID and add to `.env`: `ELEVENLABS_VOICE_ID=<voice-id>`
+
+**Clone via API:**
+```bash
+curl -X POST https://api.elevenlabs.io/v1/voices/add \
+  -H "xi-api-key: $ELEVENLABS_API_KEY" \
+  -F "name=My Voice" \
+  -F "files=@sample.mp3"
+```
+Returns `{ "voice_id": "<voice-id>" }`
+
+### Audio Format
+
+- Output: MP3 at 128kbps, 44.1kHz (`mp3_44100_128`)
+- **No silence padding needed** — ElevenLabs produces clean audio with proper leading silence natively
+- Files stored in `public/vo/<VideoName>/`
+
+## Cartesia
 
 **API**: `POST https://api.cartesia.ai/tts/bytes`
 

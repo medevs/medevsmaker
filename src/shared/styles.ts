@@ -82,10 +82,55 @@ export const SCENE_DEFAULTS = {
   transitionSlide: 20,
   transitionWipe: 18,
   staggerDelay: 8,
+  staggerDelaySlow: 14,
   elementEntry: 20,
+  elementEntrySlow: 28,
   springSmooth: { damping: 200 } as const,
+  springSilky: { damping: 200, stiffness: 90 } as const,
   springSnappy: { damping: 20, stiffness: 200 } as const,
   springBouncy: { damping: 8 } as const,
   springHeavy: { damping: 15, stiffness: 80, mass: 2 } as const,
   springGentle: { damping: 30, stiffness: 120 } as const,
+} as const;
+
+/**
+ * Per-section color theming — cycles through brand palette colors.
+ * Use SECTION_THEMES.get(index) to get a color for any section index.
+ */
+export const SECTION_THEMES = {
+  colors: [
+    BRAND.indigo,
+    BRAND.cyan,
+    BRAND.amber,
+    BRAND.green,
+    BRAND.violet,
+    BRAND.red,
+  ] as readonly string[],
+  get(index: number): string {
+    return this.colors[index % this.colors.length];
+  },
+} as const;
+
+/**
+ * Card design tokens — consistent card styling across components.
+ */
+export const CARD = {
+  bg: "rgba(255, 255, 255, 0.04)",
+  border: "rgba(255, 255, 255, 0.08)",
+  radius: 14,
+  borderWidth: 3,
+  padding: {
+    sm: "16px 20px",
+    md: "24px 28px",
+    lg: "32px 36px",
+  },
+} as const;
+
+/**
+ * Monospace typography tokens — for badges, labels, and technical text.
+ */
+export const MONO = {
+  fontFamily: "JetBrains Mono, monospace",
+  letterSpacing: 1.5,
+  textTransform: "uppercase" as const,
 } as const;

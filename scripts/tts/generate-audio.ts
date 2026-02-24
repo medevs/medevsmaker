@@ -16,6 +16,7 @@ import type { VideoManifest, Transcript, VoiceoverScene } from "./types.ts";
 
 // ─── Voice ID resolution per provider ────────────────────────
 const VOICE_ID_ENV: Record<string, { envVar: string; fallback: string }> = {
+  "elevenlabs": { envVar: "ELEVENLABS_VOICE_ID", fallback: "" },
   "cartesia": { envVar: "CARTESIA_VOICE_ID", fallback: "" },
   "edge-tts": { envVar: "EDGE_TTS_VOICE", fallback: "en-US-AndrewNeural" },
 };
