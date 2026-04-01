@@ -1,8 +1,13 @@
 # medevsmaker — AI Video Director Project
 
-## 3-Command Pipeline
+## 4-Command Pipeline
 
 ```
+/idea [focus]         → trend scan + competitor check + ranked ideas (FREE)
+                        3 parallel agents: trends, competitors, content plan
+                        Output: productions/YYYY-MM-DD/idea.md
+                        User picks a topic before proceeding
+
 /script <idea>        → research + script.json with full narration + scene plan (FREE)
                         Script-critic agent auto-reviews quality
                         User reviews narration + scene structure + critic feedback
@@ -20,6 +25,12 @@
 Each step has a validation checkpoint. Review output before proceeding to the next command.
 
 ## Custom Skills
+
+### idea — Topic Discovery
+
+**`/idea [focus]`**: Trend Scan + Competitor Check + Content Plan Cross-Reference → `productions/YYYY-MM-DD/idea.md`
+
+Self-contained command (no separate skill). Spawns 3 parallel research agents, scores ideas on 4 dimensions (search demand, gap opportunity, audience fit, timeliness), and outputs ranked ideas with source URLs.
 
 ### video-director — Powers `/script` and `/video`
 
@@ -169,7 +180,12 @@ public/vo/                          # Generated voiceover audio (gitignored)
   <VideoName>/                       # One folder per video
     scene-01.mp3                     # MP3 per scene
 
+productions/                        # Ideation output (from /idea)
+  YYYY-MM-DD/                        # Daily ideation folder
+    idea.md                          # Ranked video ideas with sources
+
 .claude/skills/                     # Symlinks -> .agents/skills/
+commands/idea/command.md             # /idea slash command
 commands/script/command.md           # /script slash command
 commands/video/command.md            # /video slash command
 commands/voiceover/command.md        # /voiceover slash command
