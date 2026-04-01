@@ -1,6 +1,6 @@
 ---
 name: video-director
-description: "AI Video Director: powers /script and /video commands. /script converts simple ideas into production scripts with full narration. /video reads a script and generates complete Remotion code with computed durations."
+description: "Converts video ideas into production-ready Remotion code via a script-first pipeline. Powers the /script command (6-phase: context gathering, web research, hook selection, scene planning, narration writing, quality review → script.json) and the /video command (duration calculation, code generation, manifest + transcript → working Remotion project). Use this skill whenever the user wants to create a video, generate a script, plan scenes, write narration, or produce Remotion animation code from a topic idea. Triggers on: /script, /video, 'make a video about', 'create a script for', 'generate video', 'scene plan', 'narration', video production workflows."
 metadata:
   tags: video, remotion, animation, director, script, code-generation, educational
 ---
@@ -10,131 +10,77 @@ metadata:
 You are an expert AI Video Director. This skill powers two commands in the script-first pipeline:
 
 ```
-/script <idea>        → Phase 1-3: Research, Scene Plan, Narration → script.json
-/video <VideoName>    → Phase 4-6: Duration Calc, Code Gen, Manifest + Transcript → Remotion code
+/script <idea>        → Phase 1-6: Context, Research, Hook, Scene Plan, Narration, Quality → script.json
+/video <VideoName>    → Phase 7-9: Duration Calc, Code Gen, Manifest + Transcript → Remotion code
 ```
 
 ---
 
-## /script MODE (Phases 1-3)
+## /script MODE (Phases 1-6)
 
 Triggered when the user runs `/script <idea>`. Takes a simple idea and produces a complete script.json with full narration.
 
-### PHASE 1: RESEARCH & EXPANSION
+### PHASE 1: CONTEXT GATHERING
 
-**Goal**: Transform a vague idea into a detailed, structured production brief.
+**Goal**: Parse input, detect video type, apply defaults, read prior `/idea` output.
 
-Full rules: [rules/prompt-expansion.md](rules/prompt-expansion.md)
+Full rules: [rules/context-gathering.md](rules/context-gathering.md)
 
-#### What to Generate
+1. Parse subject, type (news/explainer/tutorial), platform, style/duration hints
+2. Apply type defaults from [rules/video-types.md](rules/video-types.md) and audience from [rules/audience-profile.md](rules/audience-profile.md)
+3. If `--from-idea` provided, read `idea.md` and extract competitive gaps, sources, angles
 
-1. **Video Type** — Auto-detect: `news` | `explainer` | `tutorial` (historical alias: `educational` → `explainer`)
-2. **Content Source** — If the topic matches a content plan entry, extract its bullets and structure
-3. **Duration / FPS / Resolution** — From type defaults (see [rules/video-types.md](rules/video-types.md))
-4. **Learning Objectives** — For explainer/tutorial type: 3-5 outcomes the viewer will gain
-5. **Audience** — Target audience profile (see [rules/audience-profile.md](rules/audience-profile.md))
-6. **Section Breakdown** — For explainer/tutorial: 3-7 sections with topics; for news: 3-6 items
-7. **Typography System** — Font choices, sizes, weights for heading/body/accent
-8. **Color Palette** — Primary, secondary, accent, background, text (hex)
-9. **Background Style** — Gradient, solid, pattern, animated
-10. **Pacing Strategy** — Fast/medium/slow
+### PHASE 2: DEEP RESEARCH
 
-#### Auto-Improvement Rules
+**Goal**: Gather sourced facts to ground narration in real data.
 
-- Fix grammar and polish weak phrasing
-- Choose professional, modern defaults when user is vague
-- Prefer clarity over complexity — less is more
-- For news: 5-30 scenes. For explainer/tutorial: 15-60 scenes
-- No scene should have more than 3 animated elements simultaneously
-- Keep text concise: headings max 6 words, body max 15 words per line
+Full rules: [rules/research-integration.md](rules/research-integration.md)
 
-#### Type-Specific Defaults
+1. For `news`: research is **mandatory** — gather latest developments, key facts, sources
+2. For `explainer`/`tutorial`: research **when claims involve stats, benchmarks, or current tech state**
+3. Collect 5-10 sourced facts with claim, source name, URL, date
+4. Reuse idea.md sources if `--from-idea` was used — don't re-research
+5. Save findings to `productions/<date>-<slug>/research.md`
 
-Read: [rules/video-types.md](rules/video-types.md) — complete defaults, scene structures, creative rules, and palettes for all 3 active types (news, explainer, tutorial).
+### PHASE 3: ANGLE & HOOK
 
-#### Audience Profile
+**Goal**: Craft 3 hook variants using youtube hook frameworks, select the strongest.
 
-Read: [rules/audience-profile.md](rules/audience-profile.md) — channel identity, target audience, tone rules, content constraints.
+Full rules: [rules/hook-selection.md](rules/hook-selection.md)
 
-### PHASE 2: SCENE PLANNING
+1. Generate 3 variants: Shock/Contradiction, Curiosity-Gap, + one rotating archetype
+2. Map selected hook to HookQuestion (grab) + TitleIntro (promise)
+3. For nano channel / search-first: prefer Curiosity-Gap or Shock/Contradiction
+4. If `--from-idea`, use competitive gaps to differentiate from competitor hooks
 
-**Goal**: Convert the production brief into a concrete scene plan. **No durations** — durations will be computed from narration in Phase 4.
+### PHASE 4: SCENE PLANNING
 
-For **news videos** (1-4 min):
-- Short news (1-2 min): flat TransitionSeries, 5-15 scenes
-- Longer news (2-4 min): section-based, one section per news item
+**Goal**: Convert the production brief into a concrete scene plan. **No durations** — durations come from narration in Phase 7.
 
-For **explainer/tutorial videos** (3-10 min):
-- Section-based architecture: sections with 3-8 scenes each
-- Use the scene catalog: [rules/educational-scenes.md](rules/educational-scenes.md)
+Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (scene catalog + selection priorities + sequencing)
 
-#### Scene Plan Format (Educational)
+For **news** (1-4 min): flat TransitionSeries (5-15 scenes) or section-based (one per news item).
+For **explainer/tutorial** (3-10 min): section-based, 3-8 scenes per section.
 
+Scene plan format:
 ```
-## Scene Plan
-
-### Section 1: [Title] (N scenes)
+### Section N: [Title] (N scenes)
 | # | Scene Type | Content Summary | Visual Direction |
-|---|------------|-----------------|------------------|
-| 1 | HookQuestion | "What actually happens when..." | Big question on dark bg with particles |
-| 2 | TitleIntro | Title + 3 objectives | Centered with underline divider |
-| 3 | SectionTitle | "01 — The Client" | Badge pop-in + title fade |
-| 4 | FeatureIntro | Browser = client concept | Left-aligned card with pill badges |
-| 5 | VisualMetaphor | 📱 "You're always the client" | Large emoji + analogy text |
-| 6 | KeyTakeaway | Client sends requests summary | Accent box centered |
-
-### Section 2: [Title] (N scenes)
-...
-
-### Total: X scenes, Z sections
 ```
 
-**Note**: No duration column — durations come from narration word counts in Phase 4.
+### PHASE 5: NARRATION WRITING
 
-#### Scene Planning Rules
+**Goal**: Write natural voiceover narration for every scene.
 
-- **Every section starts with SectionTitle, ends with KeyTakeaway or KeyRuleCard**
-- **Video starts with HookQuestion → TitleIntro** (in Section 1)
-- **Video ends with SummaryRecap → EndScreen** (in last section — use EndScreen, not basic Outro)
-- **Never 3+ consecutive scenes of the same type**
-- **Alternate dense/light**: ConceptExplain → VisualMetaphor → DiagramFlow
-- **One concept per scene** — never stack ideas
-- **Every concept needs an analogy** (via ConceptExplain or VisualMetaphor)
+Full rules: [rules/narration-writing.md](rules/narration-writing.md) (patterns, TTS optimization, attribution, retention)
 
-#### Engagement & Retention Rules
+Key principles: write naturally (durations computed from word counts), never read on-screen text, conversational peer tone, vary rhythm, 1 humor beat per section, attribute sourced claims, forward hooks at section ends.
 
-- **Visual ratio**: 60%+ content scenes must be visual-heavy (DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter, TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen)
-- **No 2+ text-heavy scenes in a row** — always insert a visual scene between them
-- **Humor**: 1 light humor beat per section — absurd analogies, dev jokes, exaggerated consequences
-- **Pattern interrupts**: Break visual rhythm every 25-35 seconds (scene type change, humor, unexpected stat)
-- **Open loops**: Tease upcoming sections in TitleIntro and early scenes
-- **3-second hook**: Opening HookQuestion must create curiosity gap immediately
-- **Payoff cadence**: Deliver an "aha moment" every 60-90 seconds
+### PHASE 6: QUALITY REVIEW
 
-### PHASE 3: NARRATION WRITING
+**Goal**: Run script-critic agent on the generated script.json.
 
-**Goal**: Write natural voiceover narration for every scene in the plan.
-
-Full rules: [rules/narration-writing.md](rules/narration-writing.md)
-
-Key principles:
-- **Write naturally** — no word budgets. Durations are computed from your word counts.
-- **Never read on-screen text verbatim** — complement the visuals
-- **Conversational peer tone** — smart friend, not professor
-- **Vary sentence rhythm** — alternate short and medium sentences
-- **Humor**: 1 light beat per section, placed in the designated humor scene
-- **TTS optimization**: Use commas not em-dashes, contractions, spell out numbers
-
-#### Narration Quality Checks
-
-Before outputting script.json, verify:
-- [ ] Every scene has narration (SectionTitle: 4-8 words, EndScreen: 8-15 words)
-- [ ] No narration reads on-screen text verbatim
-- [ ] Sentence rhythm varies (no 3+ same-length sentences in a row)
-- [ ] At least 1 humor beat per section
-- [ ] Contractions used throughout ("it's", "you'll", "that's")
-- [ ] No em-dashes, no standalone ellipses, no exclamation marks
-- [ ] Numbers spelled out ("two hundred" not "200")
+The critic checks: unattributed claims, hook strength, pacing, missing visuals, tone, structure, source attribution, and retention patterns. Present findings alongside the script.
 
 ### script.json Output Format
 
@@ -147,7 +93,9 @@ Before outputting script.json, verify:
   "meta": {
     "learningObjectives": ["Understand client-server model", "Know how DNS works"],
     "audienceProfile": "vibe-coders",
-    "humorStyle": "dry-tech"
+    "humorStyle": "dry-tech",
+    "ideaSource": "productions/2026-04-01/idea.md",
+    "researchFile": "productions/2026-04-01-how-the-web-works/research.md"
   },
   "style": {
     "fontHeading": "Inter",
@@ -173,7 +121,15 @@ Before outputting script.json, verify:
           "props": {
             "question": "What actually happens when you click a link?",
             "subtext": "It's more complex than you think"
-          }
+          },
+          "sources": [
+            {
+              "claim": "1.1 trillion DNS queries per day",
+              "source": "Cloudflare Radar",
+              "url": "https://radar.cloudflare.com/",
+              "date": "2026-03-28"
+            }
+          ]
         }
       ]
     }
@@ -181,27 +137,23 @@ Before outputting script.json, verify:
 }
 ```
 
-**Key**: script.json has **no durations, no transitions**. Those are computed by `/video`.
+**Key**: script.json has **no durations, no transitions**. Those are computed by `/video`. The `sources` and `meta.ideaSource`/`meta.researchFile` fields are optional.
 
 ### /script Execution Flow
 
-1. **Research the topic** — Use web search to gather facts, sources, and current data:
-   - For `news`: Web research is **mandatory**. Gather latest developments, key announcements, sources.
-   - For `explainer`/`tutorial`: Research is **recommended** for any claims involving stats, benchmarks, or current tech state.
-   - Skip research only for purely conceptual topics where no external data is needed.
-   - Attribute all factual claims to sources.
-2. **Parse the user's idea** — Extract intent, platform hints, style preferences, detect video type (news/explainer/tutorial)
-3. **Research & Expand** (Phase 1) — Generate the production brief per [rules/prompt-expansion.md](rules/prompt-expansion.md), incorporating research findings
-4. **Plan Scenes** (Phase 2) — Create scene plan with types from [rules/educational-scenes.md](rules/educational-scenes.md)
-5. **Write Narration** (Phase 3) — Write natural narration for every scene per [rules/narration-writing.md](rules/narration-writing.md), grounding claims in researched sources
-6. **Output script.json** — Write to `src/<VideoName>/script.json`
-7. **Run script-critic** — Dispatch the `script-critic` agent on the generated script.json. Present its findings alongside the script.
-8. **Present for review** — Show the scene plan, key narration excerpts, and critic feedback
+1. **Context Gathering** (Phase 1) — Parse input, detect type, apply defaults, read idea.md if `--from-idea`
+2. **Deep Research** (Phase 2) — Gather sourced facts via web search, save to research.md
+3. **Angle & Hook** (Phase 3) — Generate 3 hook variants, select strongest for search-first
+4. **Scene Planning** (Phase 4) — Create scene plan from [rules/educational-scenes.md](rules/educational-scenes.md)
+5. **Narration Writing** (Phase 5) — Write narration per [rules/narration-writing.md](rules/narration-writing.md) with source attribution + retention patterns
+6. **Output script.json** — Write to `src/<VideoName>/script.json` (and copy to `productions/<date>-<slug>/`)
+7. **Quality Review** (Phase 6) — Dispatch `script-critic` agent, present findings alongside script
+8. **Present for review** — Show hook variants, scene plan, key narration excerpts, and critic feedback
 9. **Suggest next step**: "After reviewing, run `/video <VideoName>` to generate Remotion code."
 
 ---
 
-## /video MODE (Phases 4-6)
+## /video MODE (Phases 7-9)
 
 Triggered when the user runs `/video <VideoName>`. Reads script.json and generates complete Remotion code with computed durations.
 
@@ -210,7 +162,7 @@ Triggered when the user runs `/video <VideoName>`. Reads script.json and generat
 - `src/<VideoName>/script.json` must exist (generated by `/script`)
 - If no script.json exists, tell the user to run `/script` first
 
-### PHASE 4: DURATION CALCULATION
+### PHASE 7: DURATION CALCULATION
 
 **Goal**: Compute scene durations from narration word counts.
 
@@ -225,7 +177,7 @@ For each scene in script.json:
 6. Assign transitions between scenes (see duration-calculation.md)
 7. Calculate section frame totals and video total frames
 
-### PHASE 5: CODE GENERATION
+### PHASE 8: CODE GENERATION
 
 **Goal**: Generate clean, working Remotion code from the script + computed durations.
 
@@ -313,7 +265,7 @@ export const TIMING = {
 } as const;
 ```
 
-### PHASE 6: MANIFEST + TRANSCRIPT GENERATION
+### PHASE 9: MANIFEST + TRANSCRIPT GENERATION
 
 **Goal**: Output manifest.json (for voiceover pipeline) and transcript.json (pre-populated with narration from script).
 
@@ -415,10 +367,10 @@ The `narration` field is **pre-populated** from script.json — no need for a se
 ### /video Execution Flow
 
 1. **Read script.json** — Parse from `src/<VideoName>/script.json`
-2. **Compute durations** (Phase 4) — Apply WPM formula to each scene's narration
-3. **Assign transitions** (Phase 4) — Apply transition rules per duration-calculation.md
-4. **Generate Remotion code** (Phase 5) — Write all files: styles.ts → sections → index.tsx → Root.tsx update
-5. **Generate manifest.json + transcript.json** (Phase 6) — Pre-populated with narration
+2. **Compute durations** (Phase 7) — Apply WPM formula to each scene's narration
+3. **Assign transitions** (Phase 7) — Apply transition rules per duration-calculation.md
+4. **Generate Remotion code** (Phase 8) — Write all files: styles.ts → sections → index.tsx → Root.tsx update
+5. **Generate manifest.json + transcript.json** (Phase 9) — Pre-populated with narration
 6. **Provide rendering instructions**:
 
 ```bash
@@ -483,47 +435,39 @@ For Remotion-specific patterns (spring configs, interpolation, TransitionSeries,
 
 ---
 
-## IMPORTANT CONSTRAINTS
+## Remotion Code Generation Rules
 
-- NEVER use CSS animations, CSS transitions, or Tailwind animation classes
-- NEVER use `setTimeout`, `setInterval`, or any time-based JS APIs
-- ALL timing must be frame-based via Remotion's `useCurrentFrame()`
-- ALWAYS premount `<Sequence>` components
-- ALWAYS use `@remotion/google-fonts` — never `@import` or `<link>`
-- ALWAYS use `<AbsoluteFill>` + flexbox — not `position: absolute` with manual coords
-- ALWAYS calculate `durationInFrames` as `seconds * fps`
-- Keep component files under 150 lines — split into smaller components
-- Use descriptive names: `HeroScene`, `FeatureShowcase`, `ClosingCTA`
-- Use `frame - delayFrames` for delayed springs inside Sequences (not the `delay` param)
-- Explainer/tutorial videos: max 60 scenes, max 7 sections
-- News videos: max 30 scenes, max 6 sections
-- All videos: use shared scene components — don't re-implement
-- Explainer/tutorial: every concept needs an analogy
-- Use `<Watermark position="top-right">` in index.tsx — top-right avoids ProgressBar overlap
-- Use `<Background overlay="particles">` for visual depth
-- Use `EndScreen` instead of basic `Outro` for polished end cards
-- Use `<SectionTracker>` (bottom-right) for persistent section progress in explainer/tutorial videos
-- Use `<FeatureCounter>` (top-left) optionally for feature-focused explainer/tutorial videos
-- Use per-section color theming via `SECTION_THEMES.get(sectionIndex)` — pass as `sectionColor` to all scenes
-- Visual ratio: 60%+ content scenes must be visual-heavy, max 40% text-heavy
-- Humor: 1 beat per section — place in VisualMetaphor or WarningCallout
-- Pattern interrupts every 25-35 seconds
-- Vary transitions: import from `src/shared/transitions.ts` (fade, slideLeft, slideRight, slideUp, wipeRight, clockWipe, springFade)
-- Use visual polish props on components: `glow`, `gradient`, `entrance`, `emphasis`, `iconEffect`
-- New spring configs: `springBouncy` (damping: 8), `springHeavy` (damping: 15, stiffness: 80, mass: 2), `springGentle` (damping: 30, stiffness: 120)
-- Use entrance variety on scenes: HookQuestion(`fadeUp`/`scale`/`blur`), TitleIntro(`scaleRotate`/`splitReveal`), SectionTitle(`slideLeft`/`scaleBlur`), etc.
-- HookQuestion entrance: use `scale`, `blur`, or `fadeUp` — never `typewriter` (too slow for hooks)
-- Two-panel scenes (BeforeAfter, ComparisonSplit): balance item counts per side (±1 max)
-- TimelineScene horizontal: max 5 nodes, labels ≤2 words. Use vertical for 6+
+These apply to `/video` (Phases 8-9). For `/script` rules, see each phase's linked rule file.
+
+### Why frame-based animation matters
+Remotion renders each frame independently — CSS animations and `setTimeout` break because they depend on real-time playback. Use `useCurrentFrame()` + `interpolate()`/`spring()` for all motion. Add `extrapolateRight: 'clamp'` to prevent values from overshooting, and `premountFor` on `<Sequence>` so components initialize before they appear.
+
+### Layout and fonts
+Use `<AbsoluteFill>` + flexbox for layout (not manual `position: absolute`) because Remotion compositions need deterministic sizing. Load fonts via `@remotion/google-fonts` — CSS `@import` fails in server-side rendering.
+
+### Component architecture
+- Keep files under 150 lines — extract sub-components to stay readable
+- Import shared scenes from `src/shared/scenes/` rather than re-implementing — consistency across videos matters more than customization
+- Use `frame - delayFrames` for staggered springs inside Sequences (not the `delay` param, which counts from composition start)
+
+### Visual consistency
+- `EndScreen` over basic `Outro` — gradient text + glow CTA looks polished
+- `<Watermark position="top-right">` — avoids ProgressBar overlap at bottom
+- `<Background overlay="particles">` — adds visual depth
+- Per-section color via `SECTION_THEMES.get(sectionIndex)` → `sectionColor` prop
+- Vary transitions: import presets from `src/shared/transitions.ts`
+- Scene constraints: see `educational-scenes.md` for selection priorities and sequencing rules
 
 ## Reference Files
 
-- [rules/prompt-expansion.md](rules/prompt-expansion.md) — Phase 1 expansion engine
+- [rules/context-gathering.md](rules/context-gathering.md) — Phase 1: input parsing, type detection, idea.md integration
+- [rules/research-integration.md](rules/research-integration.md) — Phase 2: research skill integration, source tagging
+- [rules/hook-selection.md](rules/hook-selection.md) — Phase 3: youtube hook frameworks, variant selection
 - [rules/video-types.md](rules/video-types.md) — 3 active video types (news, explainer, tutorial) with defaults, scenes, rules, palettes
-- [rules/audience-profile.md](rules/audience-profile.md) — Target audience and tone rules
-- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene type catalog (27 types)
+- [rules/audience-profile.md](rules/audience-profile.md) — Target audience, tone rules, retention engineering
+- [rules/educational-scenes.md](rules/educational-scenes.md) — Scene catalog (27 types), selection priorities, sequencing
+- [rules/narration-writing.md](rules/narration-writing.md) — Narration writing, source attribution, retention patterns
 - [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for explainer/tutorial videos
-- [rules/narration-writing.md](rules/narration-writing.md) — Narration writing rules for /script Phase 3
 - [rules/duration-calculation.md](rules/duration-calculation.md) — Duration calculation from narration
 - [rules/assets/promo-example.tsx](rules/assets/promo-example.tsx) — Complete promo reference implementation
 - [rules/assets/tutorial-example.tsx](rules/assets/tutorial-example.tsx) — Complete tutorial reference implementation

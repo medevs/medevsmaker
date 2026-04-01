@@ -1,6 +1,6 @@
 ---
 name: voiceover-director
-description: "Voiceover Director: synthesizes TTS audio from pre-populated transcripts and integrates voiceover into Remotion videos. Use when the user invokes /voiceover."
+description: "Synthesizes TTS voiceover audio from pre-populated transcripts and integrates it into Remotion videos. Powers the /voiceover command: reads transcript.json, calls ElevenLabs/Cartesia/Edge TTS to generate MP3 per scene, then wires audio into the Remotion project via VoiceoverLayer. Use this skill whenever the user wants to add voiceover, generate speech, synthesize audio, or run TTS on a video. Triggers on: /voiceover, 'add voiceover', 'generate speech', 'TTS', 'synthesize audio', 'voice for video'."
 metadata:
   tags: voiceover, tts, audio, elevenlabs, cartesia
 ---

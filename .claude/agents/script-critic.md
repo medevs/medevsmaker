@@ -82,6 +82,40 @@ Check narration across all scenes for:
 
 **Output**: List any structural issues.
 
+### 7. Source Attribution
+
+Check the quality of source attribution across all scenes:
+
+- **Count scenes with `sources` arrays** — how many sourced claims exist?
+- **Flag bare statistics** — any numbers, percentages, or benchmarks in narration without a named source
+- **Flag vague attribution** — "studies show", "research suggests", "experts say", "most developers"
+- **Check source completeness** — each source entry should have `claim`, `source`, and ideally `url` and `date`
+- **Verify narration matches sources** — do the attributed claims in narration match the `sources` array entries?
+
+**Rating**:
+- **Complete**: 80%+ factual claims have named sources, no vague attribution
+- **Partial**: Some claims sourced but gaps remain, or vague attributions present
+- **Missing**: No `sources` arrays, or widespread unattributed claims
+
+**Output**: List each unattributed claim with section/scene index. Note any vague attributions.
+
+### 8. Retention Patterns
+
+Evaluate retention engineering across the script:
+
+- **Forward hooks**: Does at least 1 content scene per section end with a tease of what's next? ("But here's where it gets interesting...", "That sets up the real question...")
+- **Re-hook at ~60% mark**: Is there a stronger narration beat around the 60% point of the video? (Restated stakes, unexpected fact, or "the best part is coming up")
+- **Open loops in TitleIntro**: Do the objectives tease later content? ("You'll be surprised by #3")
+- **Hook structure**: Does Scene 1 create a clear curiosity gap or provoke a reaction within the first sentence?
+- **Energy oscillation**: Does narration energy vary (short punchy sentences alternating with measured explanatory ones)?
+
+**Rating**:
+- **Strong**: Forward hooks in most sections, clear re-hook at 60%, open loops present
+- **Partial**: Some forward hooks but inconsistent, weak or missing re-hook
+- **Missing**: No retention patterns, flat energy throughout
+
+**Output**: Note which sections lack forward hooks. Flag if 60% re-hook is missing.
+
 ## Output Format
 
 ```markdown
@@ -91,6 +125,8 @@ Check narration across all scenes for:
 - **Overall quality**: Good / Needs Work / Major Issues
 - **Total issues**: N
 - **Visual ratio**: X% visual-heavy (target: 60%+)
+- **Source attribution**: Complete / Partial / Missing
+- **Retention patterns**: Strong / Partial / Missing
 
 ## Issues
 
@@ -112,10 +148,19 @@ Check narration across all scenes for:
 
 ### [STRUCTURE] Structure (N issues)
 - Missing SectionTitle at start of Section X
+
+### [SOURCES] Source Attribution: Complete/Partial/Missing
+- Section X, Scene Y: "ninety percent of developers..." — no source. Add source or rephrase as opinion.
+- Section X, Scene Y: "Research suggests..." — vague. Name the specific research.
+
+### [RETENTION] Retention Patterns: Strong/Partial/Missing
+- Sections missing forward hooks: [list]
+- 60% re-hook: present/missing
+- Open loops in TitleIntro: present/missing
 ```
 
 ## Scoring Guide
 
-- **Good**: 0-3 minor issues, no claims problems, strong hook, good visual ratio
-- **Needs Work**: 4-8 issues, or 1+ claims problem, or weak hook
-- **Major Issues**: 9+ issues, or multiple claims problems, or missing structure
+- **Good**: 0-3 minor issues, no claims problems, strong hook, good visual ratio, sources complete/partial, retention strong/partial
+- **Needs Work**: 4-8 issues, or 1+ claims problem, or weak hook, or missing sources
+- **Major Issues**: 9+ issues, or multiple claims problems, or missing structure, or missing sources + missing retention

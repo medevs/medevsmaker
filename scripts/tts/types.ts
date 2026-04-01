@@ -107,6 +107,13 @@ export type ScriptScene = {
   visualDirection: string;
   onScreenText: string[];
   props: Record<string, unknown>;
+  /** Sourced facts referenced in this scene's narration */
+  sources?: Array<{
+    claim: string;
+    source: string;
+    url?: string;
+    date?: string;
+  }>;
 };
 
 export type ScriptSection = {
@@ -127,6 +134,10 @@ export type VideoScript = {
     learningObjectives?: string[];
     audienceProfile?: string;
     humorStyle?: string;
+    /** Path to idea.md if script was generated with --from-idea */
+    ideaSource?: string;
+    /** Path to research.md generated during /script Phase 2 */
+    researchFile?: string;
   };
   style?: {
     fontHeading?: string;

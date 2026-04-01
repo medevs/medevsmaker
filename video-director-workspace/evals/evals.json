@@ -1,0 +1,35 @@
+{
+  "skill_name": "video-director",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/script How MCP Servers Actually Work — I want a deep dive explainer covering the protocol, transport layers, and real-world use cases with Claude Desktop",
+      "expected_output": "Generates script.json with 6-phase pipeline output including research, hook variants, scene plan, and full narration",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/video HowMCPWorks — the script.json is already in src/HowMCPWorks/script.json, generate the Remotion code",
+      "expected_output": "Reads script.json, computes durations, generates Remotion code + manifest.json + transcript.json",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "make a video about the latest AI agent frameworks this week, cover CrewAI, AutoGen, and LangGraph",
+      "expected_output": "Triggers video-director in /script mode, detects 'news' type, runs research phase",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "I need a script for a tutorial on setting up a Next.js 15 project with App Router, I want it to be around 5 minutes with code examples",
+      "expected_output": "Triggers video-director in /script mode, detects 'tutorial' type",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "/script --from-idea 2026-04-01 Claude Code vs Cursor — use the competitive analysis from my idea.md to angle the hook",
+      "expected_output": "Reads idea.md from productions/2026-04-01/, carries forward sources and gaps",
+      "files": []
+    }
+  ]
+}

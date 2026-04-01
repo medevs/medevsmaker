@@ -1,0 +1,82 @@
+[
+  {
+    "query": "/script How MCP Servers Actually Work — I want a deep dive explainer covering the protocol, transport layers, and real-world use cases with Claude Desktop",
+    "should_trigger": true
+  },
+  {
+    "query": "/video HowMCPWorks — the script.json is already in src/HowMCPWorks/script.json, generate the Remotion code and manifest",
+    "should_trigger": true
+  },
+  {
+    "query": "make a video about the latest AI agent frameworks this week, cover CrewAI, AutoGen, and LangGraph — news style, 2-3 minutes",
+    "should_trigger": true
+  },
+  {
+    "query": "I need a script for a tutorial on setting up Next.js 15 with App Router, about 5 minutes with code examples and diagrams",
+    "should_trigger": true
+  },
+  {
+    "query": "/script --from-idea 2026-04-01 Claude Code vs Cursor — use the competitive analysis from my idea.md to differentiate the hook",
+    "should_trigger": true
+  },
+  {
+    "query": "can you create a scene plan for an explainer about how databases work? I want DiagramFlow scenes and visual metaphors, Fireship style",
+    "should_trigger": true
+  },
+  {
+    "query": "generate the narration for all scenes in my video about Kubernetes — make it conversational and TTS-optimized",
+    "should_trigger": true
+  },
+  {
+    "query": "I have a video idea about 'What is Docker'. Can you turn it into a full production script with hook variants and research?",
+    "should_trigger": true
+  },
+  {
+    "query": "take this script.json in src/WhatIsDocker/ and generate all the Remotion components, sections, index.tsx, and update Root.tsx",
+    "should_trigger": true
+  },
+  {
+    "query": "create a 4-minute explainer video about how DNS resolution works, with animated diagrams and a FeatureIntro scene for each concept",
+    "should_trigger": true
+  },
+  {
+    "query": "/voiceover HowMCPWorks — I need you to synthesize the TTS audio from the transcript.json and integrate it into the Remotion project",
+    "should_trigger": false
+  },
+  {
+    "query": "can you add voiceover audio to my video? the transcript is already in src/HowMCPWorks/transcript.json, use ElevenLabs",
+    "should_trigger": false
+  },
+  {
+    "query": "/idea AI coding tools — do a trend scan and competitor check, find gaps in existing YouTube coverage",
+    "should_trigger": false
+  },
+  {
+    "query": "fix the TypeScript error in src/shared/scenes/DiagramFlow.tsx — the spring config type is wrong on line 45",
+    "should_trigger": false
+  },
+  {
+    "query": "help me debug why my Remotion composition isn't rendering, I'm getting a white screen when I run npx remotion studio",
+    "should_trigger": false
+  },
+  {
+    "query": "write a blog post about how AI is changing software development, about 2000 words with subheadings",
+    "should_trigger": false
+  },
+  {
+    "query": "do some YouTube SEO research for my channel — what keywords should I target for AI tutorials? check competitor channels too",
+    "should_trigger": false
+  },
+  {
+    "query": "research the current state of WebAssembly adoption — I need stats and sources for an article I'm writing, not a video",
+    "should_trigger": false
+  },
+  {
+    "query": "can you refactor the AnimatedText component to use the new spring config? also update the imports in all scenes that use it",
+    "should_trigger": false
+  },
+  {
+    "query": "I want to build a dashboard that shows my YouTube analytics — subscriber growth, watch time, CTR over the last 90 days",
+    "should_trigger": false
+  }
+]
