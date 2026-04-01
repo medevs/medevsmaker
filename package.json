@@ -10,7 +10,8 @@
     "upgrade": "remotion upgrade",
     "manifest": "node --experimental-strip-types scripts/tts/generate-manifest.ts",
     "transcript": "node --experimental-strip-types --env-file=.env scripts/tts/generate-transcript.ts",
-    "voiceover": "node --experimental-strip-types --env-file=.env scripts/tts/generate-audio.ts"
+    "voiceover": "node --experimental-strip-types --env-file=.env scripts/tts/generate-audio.ts",
+    "music": "node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts"
   },
   "dependencies": {
     "@remotion/captions": "^4.0.427",

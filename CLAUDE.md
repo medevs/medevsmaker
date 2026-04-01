@@ -1,6 +1,6 @@
 # medevsmaker — AI Video Director Project
 
-## 4-Command Pipeline
+## 5-Command Pipeline
 
 ```
 /idea [focus]         → trend scan + competitor check + ranked ideas (FREE)
@@ -20,7 +20,11 @@
 /voiceover <VideoName> → TTS synthesis + audio integration ($$)
                         User reviews final video with audio
 
-/sfx <VideoName>      → Sound effects + background music (FUTURE)
+/music <VideoName>    → Background music + voiceover ducking ($$)
+                        ElevenLabs Music API or manual MP3
+                        User reviews music vibe + ducking levels
+
+/sfx <VideoName>      → Sound effects (FUTURE)
 ```
 
 Each step has a validation checkpoint. Review output before proceeding to the next command.
@@ -45,6 +49,12 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 **`/voiceover <VideoName>`**: TTS Synthesis → Audio Integration
 
 **Provider**: ElevenLabs (default), Cartesia, Edge TTS — switch via `TTS_PROVIDER` env var
+
+### music-director — Powers `/music`
+
+**`/music <VideoName>`**: Mood Analysis → Music Generation → Ducking Integration
+
+**Provider**: ElevenLabs Music API (default), manual MP3 via `--manual` flag
 
 ### youtube — YouTube Research & Strategy (installed)
 
@@ -76,18 +86,20 @@ src/
     transitions.ts                  # TRANSITIONS presets (fade, slide, wipe, clockWipe)
     components/                     # AnimatedText, Background, CodeBlock, ColorBorderCard, etc.
     scenes/                         # HookQuestion, TitleIntro, DiagramFlow, EndScreen, etc.
-  <VideoName>/                      # Per-video: index.tsx, script.json, manifest.json, styles.ts
+  <VideoName>/                      # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
 
 .agents/skills/video-director/      # Powers /script (6 phases) and /video (3 phases)
   rules/                            # context-gathering, research-integration, hook-selection,
                                     # video-types, audience-profile, educational-scenes,
                                     # narration-writing, long-form-architecture, duration-calculation
 .agents/skills/voiceover-director/  # Powers /voiceover (TTS + audio integration)
+.agents/skills/music-director/      # Powers /music (music generation + ducking)
 .claude/agents/script-critic.md     # Read-only quality reviewer (8 checks)
 
 scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio
+scripts/music/                      # Music pipeline: types, generate-music
 productions/                        # /idea output + /script research.md + script.json
-commands/                           # /idea, /script, /video, /voiceover slash commands
+commands/                           # /idea, /script, /video, /voiceover, /music slash commands
 ```
 
 ## Remotion Conventions
@@ -107,6 +119,8 @@ commands/                           # /idea, /script, /video, /voiceover slash c
 - `/video` outputs `manifest.json` + `transcript.json` (pre-populated with narration from script.json)
 - Voiceover: `<Audio>` from `@remotion/media`, placed inside `<Sequence>` via `VoiceoverLayer`
 - Audio files in `public/vo/<VideoName>/`, referenced via `staticFile()`
+- Background music: `<Audio>` with volume callback for ducking, placed via `BackgroundMusicLayer`
+- Music files in `public/music/<VideoName>/`, referenced via `staticFile()`
 - Per-section color theming: use `SECTION_THEMES.get(index)` for section accent colors
 - Persistent overlays: `SectionTracker` (bottom-right), `FeatureCounter` (top-left, optional)
 - Prefer `springSilky` + `fadeUpSlow`/`fadeLeftSlow` for polished, slower animations
