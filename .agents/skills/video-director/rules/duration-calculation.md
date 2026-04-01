@@ -39,9 +39,18 @@ Some scene types need minimum time regardless of narration length (for animation
 | CodeDisplay | 8s | Typewriter reveal |
 | TimelineScene | 8s | Node pop-ins + line draw |
 | ArchitectureDiagram | 8s | Center + satellite stagger |
+| AnimatedDiagram | 8s | Curved bezier draw-on + node stagger |
 | ThreeColumnCompare | 8s | Three cards + items stagger |
 | FileTreeScene | 8s | Tree items stagger + annotation |
+| ProcessAnimation | 8s | Stage stagger + item animation |
+| SplitCodeComparison | 8s | Two code panels + VS divider |
+| MetricDashboard | 6s | Multiple counter animations |
+| QuoteCard | 4s | Glass card entrance + quote |
 | (default) | 3s | Minimum for any scene |
+
+### Overlay Duration Rules
+
+Light leak overlays (`OVERLAYS.lightLeak`, `OVERLAYS.lightLeakBlue`) do NOT subtract from total timeline duration. Only `<TransitionSeries.Transition>` presentations subtract. Overlays are layered on top and render alongside the scenes.
 
 ### Example Calculations
 

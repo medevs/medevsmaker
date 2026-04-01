@@ -77,6 +77,29 @@ export const entrances = {
       extrapolateRight: "clamp",
     })}px)`,
   }),
+  slideAndFade: (progress: number) => ({
+    opacity: progress,
+    transform: `translateX(${interpolate(progress, [0, 1], [50, 0], {
+      extrapolateRight: "clamp",
+    })}px)`,
+  }),
+  dropBounce: (progress: number) => ({
+    opacity: interpolate(progress, [0, 0.3], [0, 1], {
+      extrapolateRight: "clamp",
+    }),
+    transform: `translateY(${interpolate(progress, [0, 1], [-50, 0], {
+      extrapolateRight: "clamp",
+    })}px)`,
+  }),
+  zoomBlur: (progress: number) => ({
+    opacity: progress,
+    transform: `scale(${interpolate(progress, [0, 1], [1.3, 1], {
+      extrapolateRight: "clamp",
+    })})`,
+    filter: `blur(${interpolate(progress, [0, 1], [15, 0], {
+      extrapolateRight: "clamp",
+    })}px)`,
+  }),
 } as const;
 
 export type EntranceName = keyof typeof entrances;
@@ -91,6 +114,40 @@ export const pulse = (
   amplitude: number = 1
 ): number => {
   return Math.sin((frame / period) * Math.PI * 2) * amplitude;
+};
+
+/**
+ * Animated boxShadow string for pulsing glow effect.
+ */
+/**
+ * Gentle up/down floating oscillation. Returns translateY offset in pixels.
+ */
+export const float = (
+  frame: number,
+  amplitude: number = 6,
+  period: number = 90
+): number => {
+  return Math.sin((frame / period) * Math.PI * 2) * amplitude;
+};
+
+/**
+ * Shimmer value oscillating 0-1 for sparkle/highlight timing.
+ */
+export const shimmer = (frame: number, period: number = 45): number => {
+  return 0.5 + 0.5 * Math.sin((frame / period) * Math.PI * 2);
+};
+
+/**
+ * Smooth scale oscillation between min and max.
+ */
+export const breathe = (
+  frame: number,
+  minScale: number = 0.98,
+  maxScale: number = 1.02,
+  period: number = 90
+): number => {
+  const t = 0.5 + 0.5 * Math.sin((frame / period) * Math.PI * 2);
+  return minScale + t * (maxScale - minScale);
 };
 
 /**

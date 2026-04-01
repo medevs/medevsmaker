@@ -222,11 +222,11 @@ Architecture details: [rules/long-form-architecture.md](rules/long-form-architec
 
 All video types use shared building-block components from `src/shared/`:
 
-**Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern, VoiceoverLayer, ColorBorderCard, PillBadge, SectionTracker, FeatureCounter, FileTree, GradientText
+**Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern, VoiceoverLayer, ColorBorderCard, PillBadge, SectionTracker, FeatureCounter, FileTree, GradientText, GlassCard, TextEffect, CaptionOverlay
 
-**Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram
+**Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram, QuoteCard, AnimatedDiagram, MetricDashboard, ProcessAnimation, SplitCodeComparison
 
-**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow, pulse, glowPulse), transitions.ts (TRANSITIONS presets), styles.ts (SHADOWS, GRADIENTS, SECTION_THEMES, CARD, MONO, spring configs incl. springSilky)
+**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow/slideAndFade/dropBounce/zoomBlur, pulse, glowPulse, float, shimmer, breathe), transitions.ts (TRANSITIONS presets incl. flip + OVERLAYS for light leaks), styles.ts (SHADOWS incl. deepGlow, GRADIENTS incl. aurora, SECTION_THEMES, CARD, GLASS, MONO, SCENE_ALTERNATION, spring configs incl. springSilky)
 
 Import these instead of re-implementing. See [rules/educational-scenes.md](rules/educational-scenes.md) for full prop documentation.
 
@@ -453,9 +453,14 @@ Use `<AbsoluteFill>` + flexbox for layout (not manual `position: absolute`) beca
 ### Visual consistency
 - `EndScreen` over basic `Outro` — gradient text + glow CTA looks polished
 - `<Watermark position="top-right">` — avoids ProgressBar overlap at bottom
-- `<Background overlay="particles">` — adds visual depth
+- `<Background variant="aurora">` for opening sections, `"noiseField"` for technical sections, `"solidWithOrbs"` for data-heavy sections
+- `<Background overlay="lightLeak">` for cinematic polish (use sparingly)
+- Use `GlassCard` for key insight scenes (QuoteCard, KeyRuleCard) — frosted glass with `backdropFilter`
+- Use `TextEffect` for hook variety: `"scramble"` on ColdOpen, `"neon"` on StatHighlight, `"glitch"` on WarningCallout
 - Per-section color via `SECTION_THEMES.get(sectionIndex)` → `sectionColor` prop
-- Vary transitions: import presets from `src/shared/transitions.ts`
+- Vary transitions: import presets from `src/shared/transitions.ts` — use `flip` for dramatic changes, light leak overlays for major section breaks (1-2 per video max)
+- `DataChart` variants: `"bars"` (default), `"pie"`/`"donut"` for proportions, `"line"` for trends, `"gauge"` for single metrics
+- `DiagramArrow curved` prop for organic-feeling flow diagrams
 - Scene constraints: see `educational-scenes.md` for selection priorities and sequencing rules
 
 ## Reference Files

@@ -13,9 +13,15 @@
     "voiceover": "node --experimental-strip-types --env-file=.env scripts/tts/generate-audio.ts"
   },
   "dependencies": {
+    "@remotion/captions": "^4.0.427",
     "@remotion/cli": "4.0.427",
     "@remotion/google-fonts": "4.0.427",
+    "@remotion/light-leaks": "^4.0.427",
     "@remotion/media": "4.0.427",
+    "@remotion/motion-blur": "^4.0.427",
+    "@remotion/noise": "^4.0.427",
+    "@remotion/paths": "^4.0.427",
+    "@remotion/shapes": "^4.0.427",
     "@remotion/transitions": "4.0.427",
     "edge-tts-universal": "^1.3.3",
     "msedge-tts": "^2.0.4",

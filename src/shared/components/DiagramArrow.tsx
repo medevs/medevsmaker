@@ -5,6 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
+import { evolvePath } from "@remotion/paths";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 
 type DiagramArrowProps = {
@@ -16,6 +17,8 @@ type DiagramArrowProps = {
   label?: string;
   fontFamily?: string;
   glow?: boolean;
+  /** Use a curved quadratic bezier path instead of a straight line */
+  curved?: boolean;
 };
 
 export const DiagramArrow: React.FC<DiagramArrowProps> = ({
@@ -27,6 +30,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
   label,
   fontFamily = "Inter",
   glow = false,
+  curved = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -41,29 +45,55 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
     extrapolateRight: "clamp",
   });
 
+  // Trailing glow lags behind the main stroke
+  const glowProgress = interpolate(progress, [0, 1], [-0.15, 0.85], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
   const dx = to.x - from.x;
   const dy = to.y - from.y;
-  const length = Math.sqrt(dx * dx + dy * dy);
   const angle = Math.atan2(dy, dx);
 
-  // Arrow head
+  // Build the SVG path — straight line or curved bezier
+  const pathD = curved
+    ? (() => {
+        // Control point offset perpendicular to the line
+        const midX = (from.x + to.x) / 2;
+        const midY = (from.y + to.y) / 2;
+        const perpX = -(to.y - from.y) * 0.25;
+        const perpY = (to.x - from.x) * 0.25;
+        return `M ${from.x} ${from.y} Q ${midX + perpX} ${midY + perpY} ${to.x} ${to.y}`;
+      })()
+    : `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+
+  // Use evolvePath for smooth draw-on animation
+  const evolved = evolvePath(drawProgress, pathD);
+
+  // Arrow head at the tip
   const headSize = 12;
   const headAngle = Math.PI / 6;
-  const endX = from.x + dx * drawProgress;
-  const endY = from.y + dy * drawProgress;
+  // For the arrow head position, interpolate along the line
+  const tipX = from.x + (to.x - from.x) * Math.min(drawProgress, 1);
+  const tipY = from.y + (to.y - from.y) * Math.min(drawProgress, 1);
+  // For curved paths, approximate the angle at the tip
+  const tipAngle = curved
+    ? Math.atan2(to.y - tipY + dy * 0.1, to.x - tipX + dx * 0.1)
+    : angle;
 
   const arrowL = {
-    x: endX - headSize * Math.cos(angle - headAngle),
-    y: endY - headSize * Math.sin(angle - headAngle),
+    x: tipX - headSize * Math.cos(tipAngle - headAngle),
+    y: tipY - headSize * Math.sin(tipAngle - headAngle),
   };
   const arrowR = {
-    x: endX - headSize * Math.cos(angle + headAngle),
-    y: endY - headSize * Math.sin(angle + headAngle),
+    x: tipX - headSize * Math.cos(tipAngle + headAngle),
+    y: tipY - headSize * Math.sin(tipAngle + headAngle),
   };
 
-  // Label position at midpoint
-  const midX = from.x + dx * 0.5;
-  const midY = from.y + dy * 0.5;
+  // Label at midpoint
+  const midX = (from.x + to.x) / 2;
+  const midY = (from.y + to.y) / 2;
+  const labelOffset = curved ? -25 : -12;
 
   const labelOpacity = interpolate(progress, [0.5, 1], [0, 1], {
     extrapolateLeft: "clamp",
@@ -94,32 +124,47 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
           </filter>
         </defs>
       )}
-      {/* Line */}
-      <line
-        x1={from.x}
-        y1={from.y}
-        x2={endX}
-        y2={endY}
+
+      {/* Trailing glow stroke — wider, softer, lags behind */}
+      {glow && glowProgress > 0 && (
+        <path
+          d={pathD}
+          fill="none"
+          stroke={color}
+          strokeWidth={strokeWidth + 6}
+          strokeLinecap="round"
+          opacity={0.15}
+          {...evolvePath(Math.max(0, glowProgress), pathD)}
+          filter={`url(#${filterId})`}
+        />
+      )}
+
+      {/* Main stroke with evolvePath draw-on */}
+      <path
+        d={pathD}
+        fill="none"
         stroke={color}
         strokeWidth={strokeWidth}
-        strokeDasharray={length}
-        strokeDashoffset={length * (1 - drawProgress)}
+        strokeLinecap="round"
+        {...evolved}
         filter={glow ? `url(#${filterId})` : undefined}
       />
+
       {/* Arrow head */}
       {drawProgress > 0.1 && (
         <polygon
-          points={`${endX},${endY} ${arrowL.x},${arrowL.y} ${arrowR.x},${arrowR.y}`}
+          points={`${tipX},${tipY} ${arrowL.x},${arrowL.y} ${arrowR.x},${arrowR.y}`}
           fill={color}
           opacity={drawProgress}
           filter={glow ? `url(#${filterId})` : undefined}
         />
       )}
+
       {/* Label */}
       {label && (
         <text
           x={midX}
-          y={midY - 12}
+          y={midY + labelOffset}
           textAnchor="middle"
           fill={BRAND.textMuted}
           fontFamily={fontFamily}

@@ -33,14 +33,14 @@ Scenes are divided into two tiers. For daily production, prefer **Core** scenes.
 | SummaryRecap | Structural | Numbered recap |
 | EndScreen | Structural | End card with CTA |
 
-### Advanced (14) — Use for variety
+### Advanced (19) — Use for variety
 
 | Scene | Category | Purpose |
 |-------|----------|---------|
 | ColdOpen | Visual | Dramatic opening statement |
 | BeforeAfter | Visual | Before/after wipe reveal |
 | TimelineScene | Visual | Horizontal/vertical timeline |
-| DataChart | Visual | Animated bar chart |
+| DataChart | Visual | Animated charts (bars, pie, donut, line, gauge) |
 | FeatureIntro | Visual | Feature with breadcrumb + pills |
 | ProgressiveTerminal | Text | Terminal-style reveal |
 | DecisionTable | Visual | Decision matrix |
@@ -50,6 +50,11 @@ Scenes are divided into two tiers. For daily production, prefer **Core** scenes.
 | ArchitectureDiagram | Visual | Hub-spoke layout |
 | WarningCallout | Text | Danger callout |
 | StepSequence | Visual | Numbered steps |
+| QuoteCard | Visual | Glass morphism quote card with attribution |
+| AnimatedDiagram | Visual | Curved bezier connections + data flow particles |
+| MetricDashboard | Visual | 2-4 stat cards grid with mini charts |
+| ProcessAnimation | Visual | Items moving through stages |
+| SplitCodeComparison | Text | Side-by-side code comparison (before/after) |
 | Outro | Structural | Basic channel branding (**deprecated** — use EndScreen) |
 
 ### Scene Selection Rule
@@ -63,10 +68,12 @@ Scenes are divided into two tiers. For daily production, prefer **Core** scenes.
 ```
 VISUAL-HEAVY (target 60%+ of content scenes):
   DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter,
-  TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen
+  TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen,
+  AnimatedDiagram, MetricDashboard, ProcessAnimation, QuoteCard
 
 TEXT-HEAVY (target 40% max of content scenes):
-  ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout
+  ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout,
+  SplitCodeComparison
 
 STRUCTURAL (don't count toward ratio):
   HookQuestion, TitleIntro, SectionTitle, KeyTakeaway,

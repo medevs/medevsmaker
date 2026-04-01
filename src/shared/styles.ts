@@ -57,6 +57,8 @@ export const SHADOWS = {
   glow: (color: string) => `0 0 20px ${color}66, 0 0 40px ${color}33`,
   glowStrong: (color: string) =>
     `0 0 20px ${color}88, 0 0 40px ${color}55, 0 0 60px ${color}33`,
+  deepGlow: (color: string) =>
+    `0 0 10px ${color}aa, 0 0 30px ${color}66, 0 0 80px ${color}22`,
 } as const;
 
 /**
@@ -72,6 +74,14 @@ export const GRADIENTS = {
   /** Subtle gradient for cards */
   cardGradient: (color: string) =>
     `linear-gradient(135deg, ${color}15 0%, ${color}05 100%)`,
+  /** Aurora-style multi-color background (pass 3-4 brand colors) */
+  aurora: (colors: string[]) =>
+    colors
+      .map(
+        (c, i) =>
+          `radial-gradient(ellipse at ${20 + i * 25}% ${30 + ((i * 20) % 50)}%, ${c}44 0%, transparent 60%)`
+      )
+      .join(", ") + `, linear-gradient(135deg, ${BRAND.bg}, ${BRAND.bgLight})`,
 } as const;
 
 /**
@@ -133,4 +143,27 @@ export const MONO = {
   fontFamily: "JetBrains Mono, monospace",
   letterSpacing: 1.5,
   textTransform: "uppercase" as const,
+} as const;
+
+/**
+ * Glass morphism tokens — frosted glass card styling.
+ */
+export const GLASS = {
+  bg: "rgba(255, 255, 255, 0.05)",
+  border: "rgba(255, 255, 255, 0.1)",
+  blur: 12,
+  radius: 20,
+  borderWidth: 1,
+} as const;
+
+/**
+ * Scene background alternation — creates visual rhythm by alternating
+ * dark/light backgrounds on odd/even scene indices.
+ */
+export const SCENE_ALTERNATION = {
+  dark: BRAND.bg,
+  light: "#141428",
+  get(index: number): string {
+    return index % 2 === 0 ? this.dark : this.light;
+  },
 } as const;
