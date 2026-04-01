@@ -31,6 +31,11 @@
       "sourceType": "github",
       "computedHash": "ca1e62cf3c250c39bbfda421f7d9e2b18eeac69fc43afe2dc6b73bfe6cb3da5f"
     },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "57f470f512f45bdac598e302bc72fd62bf2b649fc7fad032efe97720149cde4d"
+    },
     "video-director": {
       "source": "local",
       "sourceType": "local"
