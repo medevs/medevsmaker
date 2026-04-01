@@ -25,6 +25,10 @@ CARTESIA_VOICE_ID=<voice-id-from-cartesia>
 CARTESIA_MODEL=sonic-3       # sonic-3 (default) | sonic-2 | sonic
 CARTESIA_SPEED=0.95          # sonic-3 only: 0.6 to 1.5 (default: 0.95)
 CARTESIA_EMOTION=neutral     # sonic-3 only: neutral | happy | sad | angry | surprise
+
+# Word-level timestamps (for animated captions)
+ELEVENLABS_TIMESTAMPS=true          # default: true — uses /with-timestamps endpoint
+CARTESIA_TIMESTAMPS=true            # default: true — uses WebSocket API for word timestamps
 ```
 
 ## ElevenLabs (Default)
@@ -213,6 +217,31 @@ EDGE_TTS_SPEED=1.0
 - No voice cloning — limited to Microsoft's preset voices
 - Quality is good but not as natural as Cartesia
 - Best used as a fallback or for testing
+
+## Word-Level Timestamps
+
+Both ElevenLabs and Cartesia support word-level timestamps for animated captions.
+
+- **ElevenLabs**: Uses `/with-timestamps` endpoint. Returns character-level alignment that is grouped into words. Controlled by `ELEVENLABS_TIMESTAMPS` env var (default: `true`).
+- **Cartesia**: Uses WebSocket API with `word_timestamps: true`. Returns native word-level timestamps. Requires ffmpeg for PCM→MP3 conversion. Falls back to HTTP (no timestamps) on failure. Controlled by `CARTESIA_TIMESTAMPS` env var.
+- **Edge TTS**: Does not support word timestamps. Captions will not be generated.
+
+When timestamps are enabled, `generate-audio.ts` produces:
+- `public/vo/<VideoName>/captions.json` — Combined Caption[] for all scenes (Remotion format)
+- `CAPTIONS_FILE` export in `voiceover.ts` — Path to captions file
+
+## Timing Auto-Sync
+
+Run `generate-audio.ts` with `--auto-sync` to automatically extend scene durations when audio overflows:
+
+```bash
+node --env-file=.env --strip-types scripts/tts/generate-audio.ts <VideoName> --auto-sync
+```
+
+- Extends scenes where audio overflows by >0.3 seconds
+- Updates `manifest.json` with new durations
+- Reports all adjustments
+- Large gaps (>2s) are reported but not auto-shrunk (may be intentional)
 
 ## Adding a New Provider
 

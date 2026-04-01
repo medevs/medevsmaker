@@ -11,8 +11,9 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { createProvider } from "./providers/index.ts";
-import { getAudioDuration, buildVoiceoverScenes } from "./utils.ts";
-import type { VideoManifest, Transcript, VoiceoverScene } from "./types.ts";
+import { getAudioDuration, buildVoiceoverScenes, computeFrameOffsets, wordTimestampsToCaptions, syncTimings } from "./utils.ts";
+import type { VideoManifest, Transcript, VoiceoverScene, WordTimestamp } from "./types.ts";
+import type { CaptionEntry } from "./utils.ts";
 
 // ─── Voice ID resolution per provider ────────────────────────
 const VOICE_ID_ENV: Record<string, { envVar: string; fallback: string }> = {
@@ -33,9 +34,11 @@ type SceneDiag = {
 };
 
 async function main() {
-  const videoName = process.argv[2];
+  const args = process.argv.slice(2);
+  const autoSync = args.includes("--auto-sync");
+  const videoName = args.find((a) => !a.startsWith("--"));
   if (!videoName) {
-    console.error("Usage: generate-audio <VideoName>");
+    console.error("Usage: generate-audio <VideoName> [--auto-sync]");
     process.exit(1);
   }
 
@@ -137,6 +140,9 @@ async function main() {
 
     scene.audioFile = relativePath;
     scene.actualDurationSeconds = actualDuration;
+    if (result.wordTimestamps && result.wordTimestamps.length > 0) {
+      scene.wordTimestamps = result.wordTimestamps;
+    }
     synthesized++;
 
     diagnostics.push({
@@ -163,13 +169,50 @@ async function main() {
     await new Promise((r) => setTimeout(r, 300));
   }
 
-  // Update transcript with audio file paths
+  // ─── Auto-sync: extend scenes where audio overflows ───────
+  if (autoSync) {
+    const { adjustedCount, report } = syncTimings(transcript.scenes, manifest);
+    if (adjustedCount > 0) {
+      writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+      console.log(`\n─── Auto-Sync ───`);
+      console.log(`  Extended ${adjustedCount} scene(s) to fit audio:`);
+      for (const line of report) console.log(line);
+      console.log(`  manifest.json updated.`);
+    } else {
+      console.log(`\n  Auto-sync: no adjustments needed.`);
+    }
+  }
+
+  // Update transcript with audio file paths + word timestamps
   writeFileSync(transcriptPath, JSON.stringify(transcript, null, 2));
   console.log(`\nTranscript updated with audio paths.`);
 
+  // ─── Caption generation from word timestamps ─────────────
+  const frameOffsets = computeFrameOffsets(manifest);
+  const fps = manifest.fps;
+  const allCaptions: CaptionEntry[] = [];
+  let captionSceneCount = 0;
+
+  for (let i = 0; i < transcript.scenes.length; i++) {
+    const scene = transcript.scenes[i];
+    if (!scene.wordTimestamps || scene.wordTimestamps.length === 0) continue;
+
+    const sceneOffsetMs = (frameOffsets[i] / fps) * 1000;
+    const sceneCaptions = wordTimestampsToCaptions(scene.wordTimestamps, sceneOffsetMs);
+    allCaptions.push(...sceneCaptions);
+    captionSceneCount++;
+  }
+
+  if (allCaptions.length > 0) {
+    const captionsPath = join(audioDir, "captions.json");
+    writeFileSync(captionsPath, JSON.stringify(allCaptions, null, 2));
+    console.log(`Captions written: ${captionsPath} (${allCaptions.length} words from ${captionSceneCount} scenes)`);
+  }
+
   // Generate voiceover.ts
   const voiceoverScenes = buildVoiceoverScenes(transcript.scenes, manifest);
-  const voiceoverCode = generateVoiceoverModule(voiceoverScenes);
+  const captionsRelativePath = allCaptions.length > 0 ? `vo/${videoName}/captions.json` : null;
+  const voiceoverCode = generateVoiceoverModule(voiceoverScenes, captionsRelativePath);
   const voiceoverPath = join(videoDir, "voiceover.ts");
   writeFileSync(voiceoverPath, voiceoverCode);
 
@@ -215,7 +258,7 @@ async function main() {
   console.log(`\nNext: Add VoiceoverLayer to ${videoName}/index.tsx`);
 }
 
-function generateVoiceoverModule(scenes: VoiceoverScene[]): string {
+function generateVoiceoverModule(scenes: VoiceoverScene[], captionsFile: string | null): string {
   const lines = [
     `import type { VoiceoverScene } from "../shared/components/VoiceoverLayer";`,
     ``,
@@ -231,6 +274,13 @@ function generateVoiceoverModule(scenes: VoiceoverScene[]): string {
   }
 
   lines.push(`];`);
+
+  if (captionsFile) {
+    lines.push(``);
+    lines.push(`/** Path to word-level captions JSON for CaptionOverlay (relative to public/) */`);
+    lines.push(`export const CAPTIONS_FILE = "${captionsFile}";`);
+  }
+
   lines.push(``);
 
   return lines.join("\n");

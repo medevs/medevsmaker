@@ -96,3 +96,52 @@ npx remotion render src/index.ts <VideoName> out/<VideoName>.mp4
 ```
 
 Remotion automatically mixes all `<Audio>` elements into the final render.
+
+## CaptionOverlay Integration
+
+When word-level timestamps are available (ElevenLabs or Cartesia with timestamps enabled), `generate-audio.ts` produces a `captions.json` file and exports `CAPTIONS_FILE` from `voiceover.ts`.
+
+### Adding Captions to a Video
+
+```tsx
+import { CaptionOverlay } from "../shared/components/CaptionOverlay";
+import { VOICEOVER_SCENES, CAPTIONS_FILE } from "./voiceover";
+import { staticFile } from "remotion";
+import { useState, useEffect } from "react";
+import { delayRender, continueRender } from "remotion";
+import type { Caption } from "@remotion/captions";
+
+// Load captions
+const [captions, setCaptions] = useState<Caption[]>([]);
+const [handle] = useState(() => delayRender());
+
+useEffect(() => {
+  fetch(staticFile(CAPTIONS_FILE))
+    .then((r) => r.json())
+    .then((data) => {
+      setCaptions(data);
+      continueRender(handle);
+    });
+}, []);
+
+// In the composition:
+<AbsoluteFill>
+  <Background ... />
+  <Series>{/* sections */}</Series>
+  <Watermark ... />
+  <VoiceoverLayer scenes={VOICEOVER_SCENES} />
+  {captions.length > 0 && <CaptionOverlay captions={captions} style="karaoke" />}
+</AbsoluteFill>
+```
+
+### Caption Styles
+
+| Style | Description | Best For |
+|-------|-------------|----------|
+| `minimal` | Semi-transparent dark bg, subtle highlight | Clean look, readability |
+| `bold` | Large text, centered, scale on active | High impact, YouTube Shorts |
+| `karaoke` | Word-by-word color highlight + scale | Engagement, TikTok-style |
+| `pop` | Bouncy spring scale on each word | Fun, energetic content |
+| `highlight` | Colored background bar behind active word | Emphasis, accessibility |
+
+Captions are optional — if `CAPTIONS_FILE` is not exported (Edge TTS or timestamps disabled), skip the CaptionOverlay.

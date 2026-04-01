@@ -34,15 +34,19 @@ You are an expert Voiceover Director. This skill powers the `/voiceover` command
 ### Steps
 
 1. **Check transcript** — Read `transcript.json` and verify narration fields are populated
-2. **Run synthesis** — Execute `node --env-file=.env --strip-types scripts/tts/generate-audio.ts <VideoName>`
+2. **Run synthesis** — Execute `node --env-file=.env --strip-types scripts/tts/generate-audio.ts <VideoName> --auto-sync`
 3. **Verify output** — Check that MP3 files were created in `public/vo/<VideoName>/`
 4. **Check durations** — Ensure audio durations roughly match scene durations (±1 second)
 5. **Report results** — Show the user a summary of generated files and durations
+6. **Caption integration** — If word timestamps are available (ElevenLabs/Cartesia), add `CaptionOverlay` to the composition using the generated `captions.json`. See [rules/audio-integration.md](rules/audio-integration.md) for the integration pattern.
 
 The script automatically:
 - Generates MP3 files to `public/vo/<VideoName>/`
 - Updates `transcript.json` with `audioFile` and `actualDurationSeconds`
 - Creates `src/<VideoName>/voiceover.ts` with the `VOICEOVER_SCENES` array
+- Generates `captions.json` to `public/vo/<VideoName>/` (when word timestamps available)
+- Exports `CAPTIONS_FILE` from voiceover.ts (when captions generated)
+- Auto-syncs scene durations to match audio (with --auto-sync flag)
 
 ---
 
@@ -104,3 +108,4 @@ If no `manifest.json` exists (older videos without script.json), generate one by
 - [rules/tts-providers.md](rules/tts-providers.md) — Provider configuration guide
 - [rules/audio-integration.md](rules/audio-integration.md) — Remotion audio patterns
 - [rules/transcript-generation.md](rules/transcript-generation.md) — Historical reference (narration rules now in video-director)
+- [rules/voice-catalog.md](rules/voice-catalog.md) — Voice selection guide (cross-platform)

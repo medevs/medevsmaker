@@ -56,4 +56,29 @@ ELEVENLABS_API_KEY=<key>            # required
 ELEVENLABS_VOICE_ID=<voice-id>     # required — your cloned voice
 ELEVENLABS_MODEL=eleven_multilingual_v2  # default (highest quality)
 ELEVENLABS_SPEED=1.0                # speech speed multiplier
+ELEVENLABS_TIMESTAMPS=true          # word-level timestamps for captions (default: true)
+
+# Alternative providers
+TTS_PROVIDER=cartesia
+CARTESIA_API_KEY=<key>
+CARTESIA_VOICE_ID=<voice-id>
+CARTESIA_TIMESTAMPS=true            # word-level timestamps for captions (default: true)
+
+TTS_PROVIDER=edge-tts               # free, no API key needed
+EDGE_TTS_VOICE=en-US-AndrewNeural
 ```
+
+## Flags
+
+```
+/voiceover <VideoName> --auto-sync    # extend scene durations to match audio
+```
+
+## Animated captions
+
+When using ElevenLabs or Cartesia, word-level timestamps are captured automatically. After synthesis:
+- `captions.json` is generated in `public/vo/<VideoName>/`
+- `CAPTIONS_FILE` is exported from `voiceover.ts`
+- Add `<CaptionOverlay>` to the video for karaoke-style animated captions
+
+5 caption styles available: minimal, bold, karaoke, pop, highlight.

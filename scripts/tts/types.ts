@@ -11,9 +11,17 @@ export type TTSRequest = {
   emotion?: string | null;
 };
 
+export type WordTimestamp = {
+  word: string;
+  startMs: number;
+  endMs: number;
+};
+
 export type TTSResult = {
   audioBuffer: Buffer;
   durationSeconds: number;
+  /** Word-level timestamps from TTS provider (for animated captions) */
+  wordTimestamps?: WordTimestamp[];
 };
 
 export interface TTSProvider {
@@ -88,6 +96,8 @@ export type SceneTranscript = {
   /** Populated after TTS synthesis */
   audioFile?: string;
   actualDurationSeconds?: number;
+  /** Word-level timestamps from TTS provider (for animated captions) */
+  wordTimestamps?: WordTimestamp[];
 };
 
 export type Transcript = {

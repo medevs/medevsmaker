@@ -14,7 +14,7 @@ import {
 } from "@remotion/captions";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 
-type CaptionStyle = "minimal" | "bold" | "karaoke";
+type CaptionStyle = "minimal" | "bold" | "karaoke" | "pop" | "highlight";
 
 type CaptionOverlayProps = {
   captions: Caption[];
@@ -23,6 +23,8 @@ type CaptionOverlayProps = {
   /** Milliseconds to group words together (lower = more word-by-word) */
   combineMs?: number;
   fontFamily?: string;
+  /** Toggle caption visibility without unmounting */
+  visible?: boolean;
 };
 
 export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
@@ -31,6 +33,7 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
   accentColor = BRAND.cyan,
   combineMs = 800,
   fontFamily = "Inter",
+  visible = true,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -40,6 +43,8 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
     captions,
     combineTokensWithinMilliseconds: combineMs,
   });
+
+  if (!visible) return null;
 
   // Find the current page
   const currentPage = pages.find(
@@ -53,8 +58,10 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
   const isMinimal = captionStyle === "minimal";
   const isBold = captionStyle === "bold";
   const isKaraoke = captionStyle === "karaoke";
+  const isPop = captionStyle === "pop";
+  const isHighlight = captionStyle === "highlight";
 
-  const fontSize = isMinimal ? 32 : isBold ? 52 : 40;
+  const fontSize = isMinimal ? 32 : isBold ? 52 : isPop ? 44 : 40;
   const bottom = isMinimal ? 140 : isBold ? "45%" : 160;
 
   return (
@@ -81,7 +88,7 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
           style={{
             fontFamily,
             fontSize,
-            fontWeight: isBold ? 900 : 700,
+            fontWeight: isBold || isPop ? 900 : 700,
             lineHeight: 1.4,
             display: "flex",
             flexWrap: "wrap",
@@ -94,9 +101,12 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
               currentTimeMs >= token.fromMs && currentTimeMs < token.toMs;
             const isPast = currentTimeMs >= token.toMs;
 
-            let wordColor = BRAND.text;
+            let wordColor: string = BRAND.text;
             let wordScale = 1;
             let wordOpacity = 1;
+            let bgColor = "transparent";
+            let padding = "0";
+            let borderRadius = "0";
 
             if (isKaraoke) {
               wordColor = isActive ? accentColor : isPast ? BRAND.text : BRAND.textMuted;
@@ -105,6 +115,22 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
             } else if (isBold) {
               wordColor = isActive ? accentColor : BRAND.text;
               wordScale = isActive ? 1.05 : 1;
+            } else if (isPop) {
+              // Pop: bouncy scale on active word using spring from word start
+              wordColor = isActive ? accentColor : BRAND.text;
+              const wordStartFrame = Math.round((token.fromMs / 1000) * fps);
+              const popProgress = isActive
+                ? spring({ frame: frame - wordStartFrame, fps, config: { damping: 8, stiffness: 200 }, durationInFrames: 10 })
+                : 0;
+              wordScale = isActive ? 1 + popProgress * 0.3 : isPast ? 1 : 0.95;
+              wordOpacity = isActive ? 1 : isPast ? 0.8 : 0.5;
+            } else if (isHighlight) {
+              // Highlight: colored background bar behind active word
+              wordColor = isActive ? "#000000" : BRAND.text;
+              bgColor = isActive ? accentColor : "transparent";
+              padding = "2px 6px";
+              borderRadius = "4px";
+              wordOpacity = isActive ? 1 : isPast ? 0.9 : 0.5;
             } else {
               wordColor = isActive ? accentColor : BRAND.text;
             }
@@ -117,7 +143,10 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
                   transform: `scale(${wordScale})`,
                   opacity: wordOpacity,
                   display: "inline-block",
-                  textShadow: isActive
+                  backgroundColor: bgColor,
+                  padding,
+                  borderRadius,
+                  textShadow: isActive && !isHighlight
                     ? `0 0 20px ${accentColor}66`
                     : isBold
                       ? "0 2px 8px rgba(0,0,0,0.5)"

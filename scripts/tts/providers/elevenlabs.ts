@@ -1,4 +1,4 @@
-import type { TTSProvider, TTSRequest, TTSResult } from "../types.ts";
+import type { TTSProvider, TTSRequest, TTSResult, WordTimestamp } from "../types.ts";
 import { getAudioDuration } from "../utils.ts";
 import { readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
@@ -14,6 +14,7 @@ export class ElevenLabsProvider implements TTSProvider {
   private similarityBoost: number;
   private style: number;
   private speed: number;
+  private useTimestamps: boolean;
 
   constructor() {
     const key = process.env.ELEVENLABS_API_KEY;
@@ -24,6 +25,8 @@ export class ElevenLabsProvider implements TTSProvider {
     this.similarityBoost = parseFloat(process.env.ELEVENLABS_SIMILARITY ?? "0.75");
     this.style = parseFloat(process.env.ELEVENLABS_STYLE ?? "0.0");
     this.speed = parseFloat(process.env.ELEVENLABS_SPEED ?? "1.0");
+    this.useTimestamps =
+      (process.env.ELEVENLABS_TIMESTAMPS ?? "true").toLowerCase() === "true";
   }
 
   async synthesize(request: TTSRequest): Promise<TTSResult> {
@@ -46,7 +49,11 @@ export class ElevenLabsProvider implements TTSProvider {
       },
     };
 
-    const response = await fetch(`${API_BASE}/text-to-speech/${voiceId}`, {
+    const url = this.useTimestamps
+      ? `${API_BASE}/text-to-speech/${voiceId}/with-timestamps`
+      : `${API_BASE}/text-to-speech/${voiceId}`;
+
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "xi-api-key": this.apiKey,
@@ -62,8 +69,24 @@ export class ElevenLabsProvider implements TTSProvider {
       );
     }
 
-    const arrayBuffer = await response.arrayBuffer();
-    const audioBuffer = Buffer.from(arrayBuffer);
+    let audioBuffer: Buffer;
+    let wordTimestamps: WordTimestamp[] | undefined;
+
+    if (this.useTimestamps) {
+      const data = (await response.json()) as {
+        audio_base64: string;
+        alignment: {
+          characters: string[];
+          character_start_times_seconds: number[];
+          character_end_times_seconds: number[];
+        };
+      };
+      audioBuffer = Buffer.from(data.audio_base64, "base64");
+      wordTimestamps = this.parseCharacterAlignment(data.alignment);
+    } else {
+      const arrayBuffer = await response.arrayBuffer();
+      audioBuffer = Buffer.from(arrayBuffer);
+    }
 
     // Validate minimum response size (empty/error responses are tiny)
     if (audioBuffer.byteLength < 1000) {
@@ -87,7 +110,44 @@ export class ElevenLabsProvider implements TTSProvider {
       );
     }
 
-    return { audioBuffer, durationSeconds };
+    return { audioBuffer, durationSeconds, wordTimestamps };
+  }
+
+  private parseCharacterAlignment(alignment: {
+    characters: string[];
+    character_start_times_seconds: number[];
+    character_end_times_seconds: number[];
+  }): WordTimestamp[] {
+    const words: WordTimestamp[] = [];
+    let currentWord = "";
+    let wordStartMs = 0;
+    let wordEndMs = 0;
+
+    for (let i = 0; i < alignment.characters.length; i++) {
+      const char = alignment.characters[i];
+      const charStartMs = alignment.character_start_times_seconds[i] * 1000;
+      const charEndMs = alignment.character_end_times_seconds[i] * 1000;
+
+      if (char === " ") {
+        if (currentWord.length > 0) {
+          words.push({ word: currentWord, startMs: wordStartMs, endMs: wordEndMs });
+          currentWord = "";
+        }
+      } else {
+        if (currentWord.length === 0) {
+          wordStartMs = charStartMs;
+        }
+        currentWord += char;
+        wordEndMs = charEndMs;
+      }
+    }
+
+    // Push the last word if any
+    if (currentWord.length > 0) {
+      words.push({ word: currentWord, startMs: wordStartMs, endMs: wordEndMs });
+    }
+
+    return words;
   }
 
   async cloneVoice(audioFilePath: string, name: string): Promise<string> {

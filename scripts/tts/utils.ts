@@ -1,6 +1,16 @@
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import type { VideoManifest, VoiceoverScene, SceneTranscript } from "./types.ts";
+import type { VideoManifest, VoiceoverScene, SceneTranscript, WordTimestamp } from "./types.ts";
+
+// ─── Caption Types (Remotion @remotion/captions format) ─────
+
+export type CaptionEntry = {
+  text: string;
+  startMs: number;
+  endMs: number;
+  timestampMs: number;
+  confidence: number;
+};
 
 // ─── Duration Calculation (script-first pipeline) ──────────
 
@@ -255,4 +265,88 @@ export function extractOnScreenText(
   }
 
   return texts;
+}
+
+// ─── Caption Generation ─────────────────────────────────────
+
+/**
+ * Convert word-level timestamps from TTS providers into Remotion Caption[] format.
+ * Each word becomes a Caption entry with absolute timing (scene offset applied).
+ *
+ * @param words       Word timestamps from TTS provider (relative to scene start)
+ * @param sceneOffsetMs  Absolute start time of this scene in the video (milliseconds)
+ * @returns Caption entries ready for @remotion/captions
+ */
+export function wordTimestampsToCaptions(
+  words: WordTimestamp[],
+  sceneOffsetMs: number,
+): CaptionEntry[] {
+  return words.map((w) => ({
+    text: " " + w.word,
+    startMs: sceneOffsetMs + w.startMs,
+    endMs: sceneOffsetMs + w.endMs,
+    timestampMs: sceneOffsetMs + w.startMs,
+    confidence: 1.0,
+  }));
+}
+
+/**
+ * Sync scene durations to match actual TTS audio lengths.
+ * Extends scenes where audio overflows by more than the threshold.
+ * Returns the number of adjustments made.
+ */
+export function syncTimings(
+  scenes: SceneTranscript[],
+  manifest: VideoManifest,
+  options: { maxDriftSeconds?: number } = {},
+): { adjustedCount: number; report: string[] } {
+  const maxDrift = options.maxDriftSeconds ?? 0.3;
+  const fps = manifest.fps;
+  const report: string[] = [];
+  let adjustedCount = 0;
+
+  // Flatten manifest scenes for direct access
+  const manifestScenes = manifest.sections.flatMap((s) => s.scenes);
+
+  for (const scene of scenes) {
+    if (!scene.actualDurationSeconds || !scene.narration) continue;
+
+    const overflow = scene.actualDurationSeconds - scene.effectiveDurationSeconds;
+    if (overflow > maxDrift) {
+      // Extend scene duration to fit audio + 0.5s breathing room
+      const newDuration = scene.actualDurationSeconds + 0.5;
+      const oldDuration = scene.durationSeconds;
+      const deltaSeconds = newDuration - oldDuration;
+      const deltaFrames = Math.round(deltaSeconds * fps);
+
+      // Update manifest scene
+      const mScene = manifestScenes.find((ms) => ms.sceneIndex === scene.sceneIndex);
+      if (mScene) {
+        mScene.durationSeconds = newDuration;
+      }
+
+      // Update section durationFrames
+      for (const section of manifest.sections) {
+        const sScene = section.scenes.find((s) => s.sceneIndex === scene.sceneIndex);
+        if (sScene) {
+          section.durationFrames += deltaFrames;
+          manifest.totalFrames += deltaFrames;
+          break;
+        }
+      }
+
+      // Update transcript scene
+      scene.durationSeconds = newDuration;
+      const transitionOverlap = scene.transitionAfterFrames / fps;
+      scene.effectiveDurationSeconds = newDuration - transitionOverlap;
+
+      report.push(
+        `  Scene ${scene.sceneIndex} (${scene.sceneType}): extended ${oldDuration.toFixed(1)}s → ${newDuration.toFixed(1)}s ` +
+        `(audio was ${scene.actualDurationSeconds.toFixed(1)}s, overflow ${overflow.toFixed(1)}s)`,
+      );
+      adjustedCount++;
+    }
+  }
+
+  return { adjustedCount, report };
 }
