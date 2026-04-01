@@ -18,23 +18,29 @@ Takes a simple idea and produces a complete production script with full narratio
 ## Examples
 
 ```
+/script Latest AI agent frameworks this week
 /script How the Web Actually Works
 /script What is an API and why should you care
 /script The AI Stack Explained: Models, APIs, and Agents
-/script Understanding databases for non-technical founders
-/script Promo for AI note-taking app
 /script Tutorial: how to set up a Next.js project
-/script Instagram reel announcing our new dashboard feature
+/script Claude Code vs Cursor — which AI coding tool wins?
 ```
 
 ## What happens
 
-1. Your idea is analyzed — type detection, audience matching, and content plan lookup
-2. A **structured production brief** is generated with sections, scene types, colors, and typography
-3. A **scene plan** maps every scene to a reusable template type with visual direction
-4. **Full narration** is written for every scene — natural, conversational voiceover text
-5. Everything is saved to `src/<VideoName>/script.json`
-6. You review the scene plan and narration before proceeding
+1. **Research** (if topic requires it):
+   - For **news** topics: Web search is mandatory — gather latest developments, key facts, and sources
+   - For **explainer/tutorial** topics: Web search recommended for claims involving statistics, benchmarks, or current tech state
+   - Skip research only for purely conceptual topics where no external data is needed
+   - Goal: 3-5 key facts/sources to ground narration in real data
+
+2. Your idea is analyzed — type detection (news/explainer/tutorial), audience matching, and content plan lookup
+3. A **structured production brief** is generated with sections, scene types, colors, and typography
+4. A **scene plan** maps every scene to a reusable template type with visual direction
+5. **Full narration** is written for every scene — natural, conversational voiceover text
+6. Everything is saved to `src/<VideoName>/script.json`
+7. **Script review**: The `script-critic` agent reviews the generated script for quality issues (unattributed claims, weak hooks, pacing, tone)
+8. You review the scene plan, narration, and critic feedback before proceeding
 
 ## After reviewing
 
@@ -44,15 +50,11 @@ Run `/video <VideoName>` to generate Remotion code with durations computed from 
 
 | Type | Auto-detected when you say... | Typical length |
 |------|-------------------------------|---------------|
-| Educational | conceptual topics, "how X works", "understanding Y" | 3-10 min |
-| Promo | "promo", "ad", "marketing", "launch" | 15-30s |
-| Tutorial | "tutorial", "how to", "guide", "walkthrough" | 60-120s |
-| Explainer | "explainer", "explain", "how it works" | 30-60s |
-| Social Clip | "reel", "tiktok", "shorts", "clip" | 15-30s |
-| Announcement | "announcing", "announcement", "new feature" | 15-30s |
-| Demo | "demo", "showcase", "preview" | 30-60s |
+| News | daily, roundup, coverage, latest, trending, this week | 1-4 min |
+| Explainer | conceptual topics, "how X works", "understanding Y", deep dive | 3-8 min |
+| Tutorial | "tutorial", "how to", "guide", "walkthrough" | 3-10 min |
 
-Educational is auto-detected for conceptual/learning topics even without explicit keywords.
+Explainer is the default for conceptual/learning topics even without explicit keywords.
 
 ## Platform detection
 

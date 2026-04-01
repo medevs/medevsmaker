@@ -23,17 +23,13 @@ Extract from the user's text:
 
 | Keywords | Detected Type |
 |----------|--------------|
-| promo, ad, marketing, launch, promote, advertise | `promo` |
-| tutorial, how to, guide, walkthrough, step by step, learn | `tutorial` |
-| explainer, explain, how it works, what is, introduction | `explainer` |
-| reel, tiktok, shorts, clip, social, viral | `social-clip` |
-| announcing, announcement, new feature, release, update | `announcement` |
-| demo, showcase, preview, product tour, walkthrough | `demo` |
-| educational, teach, lesson, course, deep dive, understand, concepts, fundamentals | `educational` |
+| news, daily, roundup, coverage, weekly, digest, latest, trending, today, this week | `news` |
+| tutorial, how to, guide, walkthrough, step by step, learn, build, setup, install | `tutorial` |
+| everything else — conceptual topics, "how X works", "understanding Y", explain, deep dive, educational, fundamentals | `explainer` |
 
-**Educational auto-detection**: If the topic is a conceptual subject (how something works, fundamentals of X, understanding Y) and no other type is explicitly mentioned, default to `educational` instead of `promo`.
+**Default**: If no type is detected, default to `explainer` for conceptual/learning topics, `news` for current events and announcements.
 
-If no type is detected, default to `promo` for product/service topics, `educational` for conceptual/learning topics.
+> **Historical alias**: `educational` maps to `explainer`. The two are treated identically.
 
 ### Content Plan Lookup
 
@@ -46,12 +42,14 @@ If a `youtube-content-plan.md` file exists in the project root, check if the use
 
 After detecting the type, apply defaults from `video-types.md`.
 
-For educational type, also apply:
+For `explainer` and `tutorial` types (section-based), also apply:
 - Audience profile from `audience-profile.md`
 - Scene types from `educational-scenes.md`
 - Architecture from `long-form-architecture.md`
 
-### Per-Section Color Assignment (Educational)
+For `news` type, also apply audience profile but use flat or section-based structure depending on length.
+
+### Per-Section Color Assignment (Explainer / Tutorial)
 
 Assign a color from `SECTION_THEMES` to each section:
 ```
@@ -85,13 +83,10 @@ Scene [N]: [Name]
 
 | Video Duration | Scene Count | Type |
 |---------------|-------------|------|
-| 5-15s | 2-4 scenes | Short-form |
-| 15-30s | 3-6 scenes | Short-form |
-| 30-60s | 5-8 scenes | Short-form |
-| 60-120s | 8-12 scenes | Short-form / Tutorial |
-| 120-240s | 15-30 scenes | Educational |
-| 240-420s | 25-45 scenes | Educational |
-| 420-600s | 40-60 scenes | Educational |
+| 60-120s | 5-15 scenes | News (short) |
+| 120-240s | 15-30 scenes | News / Tutorial / Explainer |
+| 240-420s | 25-45 scenes | Explainer / Tutorial |
+| 420-600s | 40-60 scenes | Explainer / Tutorial |
 
 ### Scene Pacing Rules
 
@@ -136,19 +131,15 @@ Generate a 5-color palette:
 
 Default to dark background unless the subject implies light (e.g., healthcare, children's content).
 
-For educational videos, use the medevsmaker-educational palette by default (see video-types.md).
+For explainer and news videos, use the medevsmaker palette by default (see video-types.md).
 
 ### Background Style Decision
 
 | Video Type | Default Background |
 |-----------|-------------------|
-| Promo | Gradient (primary → secondary, diagonal) |
-| Tutorial | Solid dark with subtle grid pattern |
-| Explainer | Animated gradient (slow hue shift) |
-| Social Clip | Bold solid or gradient |
-| Announcement | Gradient with subtle radial glow |
-| Demo | Clean solid with accent border |
-| Educational | Gradient (bg → bgLight, subtle) |
+| News | Gradient (bg → bgLight, subtle) with particle overlay |
+| Explainer | Gradient (bg → bgLight, subtle) with particle overlay |
+| Tutorial | Solid dark with subtle grid overlay |
 
 ## Step 5: Visual Effects
 
@@ -157,13 +148,9 @@ Choose visual polish settings for the production brief:
 ### Background Overlay
 | Video Type | Default Overlay |
 |-----------|----------------|
-| Promo | radialGlow |
-| Tutorial | grid |
+| News | particles |
 | Explainer | particles |
-| Social Clip | none |
-| Announcement | radialGlow |
-| Demo | grid |
-| Educational | particles |
+| Tutorial | grid |
 
 ### Transition Variety
 Plan 2-3 different transition types per video to avoid monotony:
@@ -183,7 +170,7 @@ Assign entrance props to scenes for visual variety:
 - StatHighlight: use `glow` or `gradient` emphasis for key stats
 - ComparisonSplit: use `overshoot` for dramatic comparisons, `cards` variant for polished look
 
-### Scene Type Selection Priorities (Educational)
+### Scene Type Selection Priorities (Explainer/Tutorial)
 When planning scenes, prefer the new polished scene types:
 - **FeatureIntro over ConceptExplain** — when introducing/defining something for the first time
 - **DecisionTable over BulletRevealScene** — when content is question/answer or criteria pairs
@@ -198,11 +185,11 @@ When planning scenes, prefer the new polished scene types:
 
 ### Branding
 - Always add `<Watermark position="top-right">` in index.tsx
-- Use `EndScreen` instead of basic `Outro` for educational videos
+- Use `EndScreen` instead of basic `Outro` for all video types
 
 ## Step 5.5: Engagement Planning
 
-For educational videos, plan engagement hooks alongside the scene manifest:
+For explainer/tutorial/news videos, plan engagement hooks alongside the scene manifest:
 
 ### Humor Beats
 - Plan 1 humor beat per section (assign to a specific scene — usually VisualMetaphor or WarningCallout)
@@ -226,7 +213,7 @@ For educational videos, plan engagement hooks alongside the scene manifest:
 
 Animation selection is handled in Phase 2/3. The brief only needs to note the pacing strategy (fast/medium/slow) — the code generator picks specific springs and timings.
 
-### Short-Form Brief Format
+### News Brief Format
 
 Present the brief in this exact format:
 
@@ -264,12 +251,12 @@ Present the brief in this exact format:
 [Pacing strategy description]
 ```
 
-### Educational Brief Format (Extended)
+### Explainer / Tutorial Brief Format (Extended)
 
 ```markdown
 ## Production Brief
 
-**Video Type**: educational
+**Video Type**: explainer
 **Content Source**: [Content plan match or "Original topic"]
 **Duration**: [total seconds]s ([total frames] frames)
 **FPS**: 30
@@ -329,24 +316,24 @@ Before finalizing the script output, verify:
 - [ ] Color palette has sufficient contrast (text on background)
 - [ ] Font choices are available in Google Fonts
 - [ ] Scene flow tells a coherent story
-- [ ] CTA is included for promo/announcement types
+- [ ] CTA is included via EndScreen
 - [ ] Pacing feels natural — no abrupt jumps or dragging sections
-- [ ] (Educational) Every concept has an analogy
-- [ ] (Educational) Sections start with SectionTitle, end with KeyTakeaway
-- [ ] (Educational) No 3+ consecutive same scene type
-- [ ] (Educational) Dense/light alternation is maintained
-- [ ] (Educational) Visual-heavy ratio: 60%+ content scenes are visual (diagram, metaphor, comparison, chart, timeline)
-- [ ] (Educational) No 2+ consecutive text-heavy scenes
-- [ ] (Educational) At least 1 humor beat per section
-- [ ] (Educational) Hook creates curiosity gap in under 3 seconds
-- [ ] (Educational) Pattern interrupt every 25-35 seconds
-- [ ] (Educational) EndScreen used instead of basic Outro
+- [ ] (Explainer/Tutorial) Every concept has an analogy
+- [ ] (Explainer/Tutorial) Sections start with SectionTitle, end with KeyTakeaway
+- [ ] (Explainer/Tutorial) No 3+ consecutive same scene type
+- [ ] (Explainer/Tutorial) Dense/light alternation is maintained
+- [ ] (Explainer/Tutorial) Visual-heavy ratio: 60%+ content scenes are visual (diagram, metaphor, comparison, chart, timeline)
+- [ ] (Explainer/Tutorial) No 2+ consecutive text-heavy scenes
+- [ ] (Explainer/Tutorial) At least 1 humor beat per section
+- [ ] (Explainer/Tutorial) Hook creates curiosity gap in under 3 seconds
+- [ ] (Explainer/Tutorial) Pattern interrupt every 25-35 seconds
+- [ ] (Explainer/Tutorial) EndScreen used instead of basic Outro
 - [ ] HookQuestion uses scale, blur, or fadeUp entrance (not typewriter)
 - [ ] TimelineScene horizontal has ≤5 nodes with short labels (≤2 words)
 - [ ] Two-panel scenes (BeforeAfter, ComparisonSplit) have balanced item counts per side (±1)
-- [ ] (Educational) Per-section color theming applied — each section has a distinct sectionColor
-- [ ] (Educational) FeatureIntro used for first-time definitions (not ConceptExplain)
-- [ ] (Educational) Content in left 60-65% of frame with breathing room on right (for FeatureIntro, KeyRuleCard)
+- [ ] (Explainer/Tutorial) Per-section color theming applied — each section has a distinct sectionColor
+- [ ] (Explainer/Tutorial) FeatureIntro used for first-time definitions (not ConceptExplain)
+- [ ] (Explainer/Tutorial) Content in left 60-65% of frame with breathing room on right (for FeatureIntro, KeyRuleCard)
 - [ ] Every scene has narration that complements (not duplicates) on-screen text
 - [ ] `narratorTone` varies across scenes (not all "neutral")
 - [ ] Section `humorScene` is assigned (1 per section)

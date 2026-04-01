@@ -5,11 +5,58 @@ metadata:
   tags: scenes, educational, catalog, templates
 ---
 
-# Educational Scene Catalog
+# Scene Catalog
 
-All scene types available for educational videos. Each scene is a reusable React component in `src/shared/scenes/`.
+All scene types available for video production. Each scene is a reusable React component in `src/shared/scenes/`.
 
 > **Note**: Duration ranges listed below are **minimum animation times** — the time needed for entrance animations to complete. Actual scene durations are computed from narration word counts (see `duration-calculation.md`). Write narration naturally; the duration will follow.
+
+## Scene Tiers
+
+Scenes are divided into two tiers. For daily production, prefer **Core** scenes. Use **Advanced** scenes for variety and specialized content.
+
+### Core (12) — Use by default
+
+| Scene | Category | Purpose |
+|-------|----------|---------|
+| HookQuestion | Structural | Opening hook |
+| TitleIntro | Structural | Title + objectives |
+| SectionTitle | Structural | Chapter marker |
+| ConceptExplain | Text | Heading + body + analogy (the workhorse) |
+| DiagramFlow | Visual | Animated process flow |
+| CodeDisplay | Text | Code with annotations |
+| ComparisonSplit | Visual | A vs B comparison |
+| StatHighlight | Visual | Big animated number |
+| BulletRevealScene | Text | Progressive bullet list |
+| VisualMetaphor | Visual | Icon + analogy |
+| SummaryRecap | Structural | Numbered recap |
+| EndScreen | Structural | End card with CTA |
+
+### Advanced (15) — Use for variety
+
+| Scene | Category | Purpose |
+|-------|----------|---------|
+| ColdOpen | Visual | Dramatic opening statement |
+| BeforeAfter | Visual | Before/after wipe reveal |
+| TimelineScene | Visual | Horizontal/vertical timeline |
+| DataChart | Visual | Animated bar chart |
+| FeatureIntro | Visual | Feature with breadcrumb + pills |
+| ProgressiveTerminal | Text | Terminal-style reveal |
+| DecisionTable | Visual | Decision matrix |
+| ThreeColumnCompare | Visual | Three-way comparison |
+| FileTreeScene | Visual | Directory structure |
+| KeyRuleCard | Visual | Key insight with gradient |
+| ArchitectureDiagram | Visual | Hub-spoke layout |
+| KeyTakeaway | Structural | Section summary |
+| WarningCallout | Text | Danger callout |
+| StepSequence | Visual | Numbered steps |
+| Outro | Structural | Basic channel branding |
+
+### Scene Selection Rule
+
+**Core-first**: For daily production, compose videos primarily from Core scenes. Use Advanced scenes for variety (max 30% of content scenes) unless the content specifically demands them (e.g., ArchitectureDiagram for architecture topics, TimelineScene for historical timelines).
+
+---
 
 ## Scene Visual Classification
 
@@ -31,6 +78,7 @@ STRUCTURAL (don't count toward ratio):
 ## 1. HookQuestion
 
 **Purpose**: Provocative opening to grab attention. Always Scene 1.
+**Tier**: Core
 **Duration**: 4-5s (120-150 frames at 30fps)
 **Layout**: Centered hero
 **Animation**: Spring scale-in (0.9→1) + opacity fade
@@ -56,6 +104,7 @@ subtext: "It's more complex than you think"
 ## 2. TitleIntro
 
 **Purpose**: Video title + learning objectives. Always Scene 2.
+**Tier**: Core
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Centered with underline divider
 **Animation**: Title fade-up → underline expand → objectives stagger-in
@@ -75,6 +124,7 @@ subtext: "It's more complex than you think"
 ## 3. SectionTitle
 
 **Purpose**: Chapter marker at the start of each section.
+**Tier**: Core
 **Duration**: 3-4s (90-120 frames)
 **Layout**: Centered with section badge
 **Animation**: Badge pop-in → title fade-up → subtitle fade
@@ -93,6 +143,7 @@ subtext: "It's more complex than you think"
 ## 4. ConceptExplain
 
 **Purpose**: Core teaching scene — heading + body text + optional analogy.
+**Tier**: Core
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Left-aligned with padding
 **Animation**: Head fade-up → body fade-up (12f delay) → analogy fade (25f delay)
@@ -112,6 +163,7 @@ subtext: "It's more complex than you think"
 ## 5. DiagramFlow
 
 **Purpose**: Animated boxes + arrows showing processes/flows.
+**Tier**: Core
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Title top, diagram centered
 **Animation**: Nodes scale-in staggered → arrows draw-in between them
@@ -132,6 +184,7 @@ subtext: "It's more complex than you think"
 ## 6. CodeDisplay
 
 **Purpose**: Code block with typewriter reveal and optional annotations.
+**Tier**: Core
 **Duration**: 8-15s (240-450 frames)
 **Layout**: Title top, code left, annotations right
 **Animation**: Title fade-up → code typewriter → annotations stagger-in
@@ -152,6 +205,7 @@ subtext: "It's more complex than you think"
 ## 7. ComparisonSplit
 
 **Purpose**: Two-column A vs B comparison.
+**Tier**: Core
 **Duration**: 6-10s (180-300 frames)
 **Layout**: Heading top, two equal columns with VS divider
 **Animation**: Heading fade → left slide-in-from-left → right slide-in-from-right → items stagger
@@ -171,6 +225,7 @@ subtext: "It's more complex than you think"
 ## 8. StatHighlight
 
 **Purpose**: Big animated number with context.
+**Tier**: Core
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered hero
 **Animation**: Number counts from 0 → target with spring scale → label fade-up → context fade
@@ -191,6 +246,7 @@ subtext: "It's more complex than you think"
 ## 9. BulletRevealScene
 
 **Purpose**: Progressive list of items.
+**Tier**: Core
 **Duration**: 5-10s (150-300 frames)
 **Layout**: Heading top, bullets stacked below
 **Animation**: Heading fade-up → bullets stagger-in from left
@@ -210,6 +266,7 @@ subtext: "It's more complex than you think"
 ## 10. VisualMetaphor
 
 **Purpose**: Large emoji/icon + analogy text for abstract concepts.
+**Tier**: Core
 **Duration**: 5-8s (150-240 frames)
 **Layout**: Centered — icon on top, heading middle, analogy below
 **Animation**: Icon pop-in (snappy spring) → heading fade-up → analogy fade
@@ -230,6 +287,7 @@ subtext: "It's more complex than you think"
 ## 11. KeyTakeaway
 
 **Purpose**: End-of-section summary in an accent box.
+**Tier**: Advanced
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered with accent box
 **Animation**: Heading fade-up → accent box scale-in
@@ -248,6 +306,7 @@ subtext: "It's more complex than you think"
 ## 12. SummaryRecap
 
 **Purpose**: Numbered recap of everything covered.
+**Tier**: Core
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, numbered list stacked
 **Animation**: Heading fade-up → items stagger-in with number badges
@@ -267,6 +326,7 @@ subtext: "It's more complex than you think"
 ## 13. Outro
 
 **Purpose**: Channel branding + CTA.
+**Tier**: Advanced
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered — logo top, CTA button middle, tagline bottom
 **Animation**: Logo pop-in (snappy) → CTA button fade-up → tagline fade
@@ -285,6 +345,7 @@ subtext: "It's more complex than you think"
 ## 14. WarningCallout
 
 **Purpose**: Red/amber callout for common mistakes or dangers.
+**Tier**: Advanced
 **Duration**: 5-7s (150-210 frames)
 **Layout**: Centered with accent box
 **Animation**: Heading fade-up with subtle pulse → accent box scale-in
@@ -304,6 +365,7 @@ subtext: "It's more complex than you think"
 ## 15. StepSequence
 
 **Purpose**: Numbered steps with badges for how-to content.
+**Tier**: Advanced
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, steps stacked with section badges
 **Animation**: Heading fade-up → steps stagger-in with badge pop-ins
@@ -324,6 +386,7 @@ subtext: "It's more complex than you think"
 ## 16. EndScreen
 
 **Purpose**: Polished end card with gradient text, animated CTA, and optional social links. Replaces basic Outro.
+**Tier**: Core
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered — channel name + underline + CTA button + tagline + social links
 **Animation**: Channel name bouncy spring → underline expand → CTA fade-up with glow pulse → tagline fade → social links stagger
@@ -343,6 +406,7 @@ subtext: "It's more complex than you think"
 ## 17. ColdOpen
 
 **Purpose**: Dramatic opening with bold statement, glow/gradient effects, and particle background.
+**Tier**: Advanced
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered hero
 **Animation**: Heavy spring entrance with glow pulse or gradient text
@@ -361,6 +425,7 @@ subtext: "It's more complex than you think"
 ## 18. BeforeAfter
 
 **Purpose**: Before/after comparison with animated wipe or split reveal.
+**Tier**: Advanced
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, two panels side by side
 **Animation**: Before panel slides in → after panel wipe-reveals or slides in
@@ -379,6 +444,7 @@ subtext: "It's more complex than you think"
 ## 19. TimelineScene
 
 **Purpose**: Horizontal or vertical timeline with progressively drawn line and node pop-ins.
+**Tier**: Advanced
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, timeline centered
 **Animation**: Nodes pop-in staggered with connecting lines drawing between them
@@ -399,6 +465,7 @@ subtext: "It's more complex than you think"
 ## 20. DataChart
 
 **Purpose**: Animated bar chart with staggered spring-animated bars and value labels.
+**Tier**: Advanced
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, bars stacked vertically
 **Animation**: Heading fade → bars grow with spring + value counter
@@ -420,6 +487,7 @@ subtext: "It's more complex than you think"
 ## 21. FeatureIntro
 
 **Purpose**: Polished feature introduction with left-aligned content, breadcrumb counter, and pill badges.
+**Tier**: Advanced
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Content in left 65% of frame (negative space on right), breadcrumb top-left
 **Animation**: Heading fadeUpSlow → ColorBorderCard scale-in → PillBadge row stagger
@@ -440,6 +508,7 @@ subtext: "It's more complex than you think"
 ## 22. ProgressiveTerminal
 
 **Purpose**: Terminal-style progressive reveal of items inside a single card.
+**Tier**: Advanced
 **Duration**: 6-10s (180-300 frames)
 **Layout**: Heading top, single large ColorBorderCard with items appearing one by one
 **Animation**: Heading fadeUpSlow → card scale-in → items stagger with fadeLeftSlow (14f delay)
@@ -459,6 +528,7 @@ subtext: "It's more complex than you think"
 ## 23. DecisionTable
 
 **Purpose**: Decision matrix with question/answer rows using pill badges.
+**Tier**: Advanced
 **Duration**: 6-10s (180-300 frames)
 **Layout**: Heading centered, stacked ColorBorderCard rows
 **Animation**: Heading fade → rows stagger in (14f delay), each row: question left + PillBadge answer right
@@ -479,6 +549,7 @@ subtext: "It's more complex than you think"
 ## 24. ThreeColumnCompare
 
 **Purpose**: Three-way comparison with colored cards side by side.
+**Tier**: Advanced
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, three equal ColorBorderCards (gap 24px)
 **Animation**: Heading fade → cards stagger in → items stagger within each card
@@ -498,6 +569,7 @@ subtext: "It's more complex than you think"
 ## 25. FileTreeScene
 
 **Purpose**: Directory/file structure visualization with annotations.
+**Tier**: Advanced
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, FileTree left (2/3), optional annotation card right (1/3)
 **Animation**: Heading fadeUpSlow → tree items stagger with fadeLeftSlow → annotation card fades in last
@@ -518,6 +590,7 @@ subtext: "It's more complex than you think"
 ## 26. KeyRuleCard
 
 **Purpose**: Key insight/rule with gradient text emphasis and optional detail cards.
+**Tier**: Advanced
 **Duration**: 5-7s (150-210 frames)
 **Layout**: Centered — preLabel (monospace caps) → large statement with gradient highlight → subtitle → optional detail cards
 **Animation**: Labels fade → statement with gradient text glow → subtitle fade → cards stagger
@@ -539,6 +612,7 @@ subtext: "It's more complex than you think"
 ## 27. ArchitectureDiagram
 
 **Purpose**: Hub-spoke architecture layout with central node and satellites.
+**Tier**: Advanced
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, central ColorBorderCard with glow, satellite cards arranged in circle, SVG dashed connection lines
 **Animation**: Heading fade → center node scale-in → connection lines fade → satellites stagger in (14f delay)

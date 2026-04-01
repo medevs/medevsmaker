@@ -1,11 +1,24 @@
 ---
 name: audience-profile
-description: Target audience definition and content tone rules for medevsmaker educational videos
+description: Channel identity and target audience definition for medevsmaker videos
 metadata:
-  tags: audience, tone, content, educational
+  tags: audience, tone, content, channel-identity
 ---
 
 # Audience Profile
+
+## Channel Identity
+
+**Channel**: medevsmaker
+**Focus**: AI news, AI agents, coding tutorials, developer tools, software engineering
+**Style**: Fireship-inspired — fast, visual, conversational, polished
+**Default audience**: Developers and vibe coders
+**Tone**: Peer-to-peer, confident, slightly irreverent, dry tech humor
+**Format**: Script-first animated explainers (Remotion)
+
+This identity is hardcoded. All videos use this profile — it is not configurable per video.
+
+---
 
 ## Who They Are
 

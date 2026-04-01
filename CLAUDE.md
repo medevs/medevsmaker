@@ -3,8 +3,9 @@
 ## 3-Command Pipeline
 
 ```
-/script <idea>        → script.json with full narration + scene plan (FREE)
-                        User reviews narration + scene structure
+/script <idea>        → research + script.json with full narration + scene plan (FREE)
+                        Script-critic agent auto-reviews quality
+                        User reviews narration + scene structure + critic feedback
 
 /video <VideoName>    → Remotion code + manifest.json + transcript.json (FREE)
                         Durations computed from narration word counts
@@ -22,16 +23,34 @@ Each step has a validation checkpoint. Review output before proceeding to the ne
 
 ### video-director — Powers `/script` and `/video`
 
-**`/script <idea>`**: Research & Expand → Scene Planning → Narration Writing → `script.json`
+**`/script <idea>`**: Research → Expand → Scene Planning → Narration Writing → Script Critic Review → `script.json`
 **`/video <VideoName>`**: Duration Calc → Code Generation → manifest.json + transcript.json (pre-populated)
 
-**Supported video types**: educational, promo, tutorial, explainer, social-clip, announcement, demo
+**Supported video types**: news, explainer, tutorial (historical alias: `educational` → `explainer`)
 
 ### voiceover-director — Powers `/voiceover`
 
 **`/voiceover <VideoName>`**: TTS Synthesis → Audio Integration
 
 **Provider**: ElevenLabs (default), Cartesia, Edge TTS — switch via `TTS_PROVIDER` env var
+
+### youtube — YouTube Research & Strategy (installed)
+
+YouTube-specific research: hooks, retention strategies, SEO, competitor analysis, content calendars.
+Used internally by `/script` for research phase.
+
+### research — Web Research (installed)
+
+Structured web research with human-in-the-loop control. 5 modes: `/research`, `/research-add-items`, `/research-add-fields`, `/research-deep`, `/research-report`.
+Used internally by `/script` for news topics and fact verification.
+
+## Sub-Agents
+
+### script-critic — Script Quality Reviewer
+
+Read-only agent that reviews `script.json` after `/script` generation.
+Checks: unattributed claims, weak hooks, pacing problems, missing visuals, tone consistency.
+Located at `.claude/agents/script-critic.md`.
 
 ## Project Structure
 
@@ -64,7 +83,8 @@ src/                                # Remotion project
       FeatureCounter.tsx            # Top-left feature breadcrumb
       FileTree.tsx                  # Directory structure visualization
       GradientText.tsx              # Inline gradient text with backgroundClip
-    scenes/                         # 27 reusable scene templates
+    scenes/                         # 27 scene templates (12 Core + 15 Advanced)
+      # Core scenes (daily production):
       HookQuestion.tsx              # Opening question
       TitleIntro.tsx                # Title + objectives
       SectionTitle.tsx              # Chapter marker
@@ -75,12 +95,9 @@ src/                                # Remotion project
       StatHighlight.tsx             # Big number
       BulletRevealScene.tsx         # Progressive list
       VisualMetaphor.tsx            # Icon + analogy
-      KeyTakeaway.tsx               # Section summary (+ insight variant)
       SummaryRecap.tsx              # Numbered recap
-      Outro.tsx                     # Channel branding
       EndScreen.tsx                 # Polished end card with gradient text + glow CTA
-      WarningCallout.tsx            # Danger callout
-      StepSequence.tsx              # Numbered steps (+ card variant)
+      # Advanced scenes (variety):
       ColdOpen.tsx                  # Dramatic opening statement
       BeforeAfter.tsx               # Before/after comparison with wipe reveal
       TimelineScene.tsx             # Horizontal/vertical timeline with node pop-ins
@@ -92,6 +109,10 @@ src/                                # Remotion project
       FileTreeScene.tsx             # Directory structure scene
       KeyRuleCard.tsx               # Key insight with gradient emphasis
       ArchitectureDiagram.tsx       # Hub-spoke architecture layout
+      KeyTakeaway.tsx               # Section summary (+ insight variant)
+      WarningCallout.tsx            # Danger callout
+      StepSequence.tsx              # Numbered steps (+ card variant)
+      Outro.tsx                     # Channel branding
   <VideoName>/                      # One folder per generated video
     index.tsx                        # Main composition
     script.json                      # Production script with narration (from /script)
@@ -99,18 +120,27 @@ src/                                # Remotion project
     styles.ts                        # Design tokens
     voiceover.ts                     # Generated: VOICEOVER_SCENES array
     transcript.json                  # Generated: narration pre-populated from script
-    sections/                        # Section files (educational)
-    scenes/                          # Scene files (short-form)
+    sections/                        # Section files (explainer/tutorial)
+    scenes/                          # Scene files (news/short-form)
+
+.claude/agents/                     # Sub-agents
+  script-critic.md                   # Read-only script quality reviewer
 
 .agents/skills/                     # Skills (managed by npx skills)
   remotion-best-practices/           # Remotion API knowledge (from GitHub)
+  youtube/                           # YouTube research, hooks, retention, SEO (from GitHub)
+  research/                          # Structured web research (from GitHub)
+  research-deep/                     # Deep research mode
+  research-add-items/                # Add items to research
+  research-add-fields/               # Add fields to research
+  research-report/                   # Generate research report
   video-director/                    # Powers /script and /video commands
     SKILL.md                         # Dual-mode workflow definition
     rules/
       prompt-expansion.md            # Phase 1 rules
-      video-types.md                 # 7 video types with defaults
-      audience-profile.md            # Target audience + tone + humor + engagement
-      educational-scenes.md          # 27 scene type catalog
+      video-types.md                 # 3 active types (news, explainer, tutorial) + archived
+      audience-profile.md            # Channel identity + target audience + tone
+      educational-scenes.md          # 27 scene types (12 Core + 15 Advanced)
       long-form-architecture.md      # Section-based architecture
       narration-writing.md           # Narration writing rules (Phase 3)
       duration-calculation.md        # WPM formula + transition rules (Phase 4)
@@ -151,10 +181,10 @@ commands/voiceover/command.md        # /voiceover slash command
 - Always `extrapolateRight: 'clamp'` on interpolations
 - Use `<AbsoluteFill>` + flexbox for layout
 - Use `<TransitionSeries>` for scene sequencing within sections
-- Use `<Series>` for chaining sections in educational videos
+- Use `<Series>` for chaining sections in explainer/tutorial videos
 - Load fonts via `@remotion/google-fonts`
 - Calculate `durationInFrames = seconds * fps`
-- Educational videos import shared scenes from `src/shared/scenes/`
+- All videos import shared scenes from `src/shared/scenes/`
 - Watermark position: `"top-right"` (avoids ProgressBar overlap)
 - Visual-first: 60%+ content scenes should be visual-heavy
 - Use `EndScreen` instead of basic `Outro` for polished end cards

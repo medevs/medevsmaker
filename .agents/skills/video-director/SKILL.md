@@ -28,12 +28,12 @@ Full rules: [rules/prompt-expansion.md](rules/prompt-expansion.md)
 
 #### What to Generate
 
-1. **Video Type** — Auto-detect: `promo` | `tutorial` | `explainer` | `social-clip` | `announcement` | `demo` | `educational`
+1. **Video Type** — Auto-detect: `news` | `explainer` | `tutorial` (historical alias: `educational` → `explainer`)
 2. **Content Source** — If the topic matches a content plan entry, extract its bullets and structure
 3. **Duration / FPS / Resolution** — From type defaults (see [rules/video-types.md](rules/video-types.md))
-4. **Learning Objectives** — For educational type: 3-5 outcomes the viewer will gain
+4. **Learning Objectives** — For explainer/tutorial type: 3-5 outcomes the viewer will gain
 5. **Audience** — Target audience profile (see [rules/audience-profile.md](rules/audience-profile.md))
-6. **Section Breakdown** — For educational: 3-7 sections with topics
+6. **Section Breakdown** — For explainer/tutorial: 3-7 sections with topics; for news: 3-6 items
 7. **Typography System** — Font choices, sizes, weights for heading/body/accent
 8. **Color Palette** — Primary, secondary, accent, background, text (hex)
 9. **Background Style** — Gradient, solid, pattern, animated
@@ -44,27 +44,28 @@ Full rules: [rules/prompt-expansion.md](rules/prompt-expansion.md)
 - Fix grammar and polish weak phrasing
 - Choose professional, modern defaults when user is vague
 - Prefer clarity over complexity — less is more
-- For short videos: 3-12 scenes. For educational: 15-60 scenes
+- For news: 5-30 scenes. For explainer/tutorial: 15-60 scenes
 - No scene should have more than 3 animated elements simultaneously
 - Keep text concise: headings max 6 words, body max 15 words per line
 
 #### Type-Specific Defaults
 
-Read: [rules/video-types.md](rules/video-types.md) — complete defaults, scene structures, creative rules, and palettes for all 7 types.
+Read: [rules/video-types.md](rules/video-types.md) — complete defaults, scene structures, creative rules, and palettes for all 3 active types (news, explainer, tutorial).
 
 #### Audience Profile
 
-Read: [rules/audience-profile.md](rules/audience-profile.md) — target audience, tone rules, content constraints for educational videos.
+Read: [rules/audience-profile.md](rules/audience-profile.md) — channel identity, target audience, tone rules, content constraints.
 
 ### PHASE 2: SCENE PLANNING
 
 **Goal**: Convert the production brief into a concrete scene plan. **No durations** — durations will be computed from narration in Phase 4.
 
-For **short-form videos** (promo, social, announcement, demo, explainer, tutorial up to 90s):
-- Plan scenes directly from the brief — 3-12 scenes in a flat TransitionSeries
+For **news videos** (1-4 min):
+- Short news (1-2 min): flat TransitionSeries, 5-15 scenes
+- Longer news (2-4 min): section-based, one section per news item
 
-For **educational videos** (3-10 min):
-- Plan sections first, then scenes within each section
+For **explainer/tutorial videos** (3-10 min):
+- Section-based architecture: sections with 3-8 scenes each
 - Use the scene catalog: [rules/educational-scenes.md](rules/educational-scenes.md)
 
 #### Scene Plan Format (Educational)
@@ -184,13 +185,19 @@ Before outputting script.json, verify:
 
 ### /script Execution Flow
 
-1. **Parse the user's idea** — Extract intent, platform hints, style preferences, detect video type
-2. **Research & Expand** (Phase 1) — Generate the production brief per [rules/prompt-expansion.md](rules/prompt-expansion.md)
-3. **Plan Scenes** (Phase 2) — Create scene plan with types from [rules/educational-scenes.md](rules/educational-scenes.md)
-4. **Write Narration** (Phase 3) — Write natural narration for every scene per [rules/narration-writing.md](rules/narration-writing.md)
-5. **Output script.json** — Write to `src/<VideoName>/script.json`
-6. **Present for review** — Show the scene plan and key narration excerpts
-7. **Suggest next step**: "After reviewing, run `/video <VideoName>` to generate Remotion code."
+1. **Research the topic** — Use web search to gather facts, sources, and current data:
+   - For `news`: Web research is **mandatory**. Gather latest developments, key announcements, sources.
+   - For `explainer`/`tutorial`: Research is **recommended** for any claims involving stats, benchmarks, or current tech state.
+   - Skip research only for purely conceptual topics where no external data is needed.
+   - Attribute all factual claims to sources.
+2. **Parse the user's idea** — Extract intent, platform hints, style preferences, detect video type (news/explainer/tutorial)
+3. **Research & Expand** (Phase 1) — Generate the production brief per [rules/prompt-expansion.md](rules/prompt-expansion.md), incorporating research findings
+4. **Plan Scenes** (Phase 2) — Create scene plan with types from [rules/educational-scenes.md](rules/educational-scenes.md)
+5. **Write Narration** (Phase 3) — Write natural narration for every scene per [rules/narration-writing.md](rules/narration-writing.md), grounding claims in researched sources
+6. **Output script.json** — Write to `src/<VideoName>/script.json`
+7. **Run script-critic** — Dispatch the `script-critic` agent on the generated script.json. Present its findings alongside the script.
+8. **Present for review** — Show the scene plan, key narration excerpts, and critic feedback
+9. **Suggest next step**: "After reviewing, run `/video <VideoName>` to generate Remotion code."
 
 ---
 
@@ -239,7 +246,7 @@ src/
   Root.tsx                 # Updated with new Composition entry
 ```
 
-#### Output File Structure — Educational (Long-Form)
+#### Output File Structure — Explainer/Tutorial (Long-Form)
 
 ```
 src/
@@ -259,9 +266,9 @@ src/
 
 Architecture details: [rules/long-form-architecture.md](rules/long-form-architecture.md)
 
-#### Shared Components (Educational)
+#### Shared Components
 
-Educational videos use shared building-block components from `src/shared/`:
+All video types use shared building-block components from `src/shared/`:
 
 **Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern, VoiceoverLayer, ColorBorderCard, PillBadge, SectionTracker, FeatureCounter, FileTree, GradientText
 
@@ -394,14 +401,14 @@ The `narration` field is **pre-populated** from script.json — no need for a se
 - [ ] All animations use `useCurrentFrame()` + `interpolate()` or `spring()` — NEVER CSS transitions
 - [ ] `<AbsoluteFill>` as root layout for every scene
 - [ ] `<TransitionSeries>` for scene sequencing within sections
-- [ ] `<Series>` for chaining sections in educational videos
+- [ ] `<Series>` for chaining sections in explainer/tutorial videos
 - [ ] `<Sequence>` with `premountFor` for element timing within scenes
 - [ ] `extrapolateRight: 'clamp'` on all interpolations
 - [ ] Fonts loaded via `@remotion/google-fonts`
 - [ ] `type` declarations for props (not `interface`)
 - [ ] `durationInFrames = seconds * fps` calculated from narration-derived durations
 - [ ] TransitionSeries total = sum(scene durations) - sum(transition durations)
-- [ ] Educational videos: ProgressBar overlay on each Series.Sequence
+- [ ] Explainer/tutorial videos: ProgressBar overlay on each Series.Sequence
 - [ ] `manifest.json` generated from script.json + computed durations
 - [ ] `transcript.json` generated with narration pre-populated from script.json
 
@@ -488,14 +495,15 @@ For Remotion-specific patterns (spring configs, interpolation, TransitionSeries,
 - Keep component files under 150 lines — split into smaller components
 - Use descriptive names: `HeroScene`, `FeatureShowcase`, `ClosingCTA`
 - Use `frame - delayFrames` for delayed springs inside Sequences (not the `delay` param)
-- Educational videos: max 60 scenes, max 7 sections
-- Educational videos: use shared scene components — don't re-implement
-- Educational videos: every concept needs an analogy
+- Explainer/tutorial videos: max 60 scenes, max 7 sections
+- News videos: max 30 scenes, max 6 sections
+- All videos: use shared scene components — don't re-implement
+- Explainer/tutorial: every concept needs an analogy
 - Use `<Watermark position="top-right">` in index.tsx — top-right avoids ProgressBar overlap
 - Use `<Background overlay="particles">` for visual depth
 - Use `EndScreen` instead of basic `Outro` for polished end cards
-- Use `<SectionTracker>` (bottom-right) for persistent section progress in educational videos
-- Use `<FeatureCounter>` (top-left) optionally for feature-focused educational videos
+- Use `<SectionTracker>` (bottom-right) for persistent section progress in explainer/tutorial videos
+- Use `<FeatureCounter>` (top-left) optionally for feature-focused explainer/tutorial videos
 - Use per-section color theming via `SECTION_THEMES.get(sectionIndex)` — pass as `sectionColor` to all scenes
 - Visual ratio: 60%+ content scenes must be visual-heavy, max 40% text-heavy
 - Humor: 1 beat per section — place in VisualMetaphor or WarningCallout
@@ -511,10 +519,10 @@ For Remotion-specific patterns (spring configs, interpolation, TransitionSeries,
 ## Reference Files
 
 - [rules/prompt-expansion.md](rules/prompt-expansion.md) — Phase 1 expansion engine
-- [rules/video-types.md](rules/video-types.md) — All 7 video types with defaults, scenes, rules, palettes
+- [rules/video-types.md](rules/video-types.md) — 3 active video types (news, explainer, tutorial) with defaults, scenes, rules, palettes
 - [rules/audience-profile.md](rules/audience-profile.md) — Target audience and tone rules
 - [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene type catalog (27 types)
-- [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for educational videos
+- [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for explainer/tutorial videos
 - [rules/narration-writing.md](rules/narration-writing.md) — Narration writing rules for /script Phase 3
 - [rules/duration-calculation.md](rules/duration-calculation.md) — Duration calculation from narration
 - [rules/assets/promo-example.tsx](rules/assets/promo-example.tsx) — Complete promo reference implementation
