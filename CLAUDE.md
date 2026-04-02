@@ -1,6 +1,6 @@
 # medevsmaker — AI Video Director Project
 
-## 8-Command Pipeline
+## 9-Command Pipeline
 
 ```
 /idea [focus]         → trend scan + competitor check + ranked ideas (FREE)
@@ -35,6 +35,11 @@
                         Identifies standalone moments, rewrites hooks for vertical
                         Output: src/<VideoName>Short1-5/script.json
                         User reviews clips, then runs /video for each
+
+/distribute <VideoName> → Cross-platform content cascade (FREE)
+                        Blog post, Twitter thread, LinkedIn, email, community post
+                        Output: productions/<date>-<slug>/distribute/ + distribute-status.json
+                        User reviews content, then posts following the schedule
 
 /sfx <VideoName>      → Sound effects (FUTURE)
 ```
@@ -74,6 +79,12 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 **`/assets <VideoName>`**: Context Gathering → Titles (5 variants, scored) → Description + Tags + Chapters → Thumbnail Brief + A/B Variants → Optional AI Thumbnail Generation → `assets.md`
 
 Self-contained command (no separate skill). Leverages youtube skill's sub-skills (seo, metadata, thumbnail) internally. Auto-generates chapter timestamps from manifest.json. Thumbnail generation via Replicate MCP (Flux 1.1 Pro) + Remotion `renderStill()` compositing.
+
+### distribute — Content Cascade
+
+**`/distribute <VideoName>`**: Context Gathering → Blog Post → Twitter Thread → LinkedIn Post → Email Newsletter → Community Post → Schedule → `distribute/`
+
+Self-contained command (no separate skill). Reads script.json + assets.md + research.md, leverages youtube skill's repurpose sub-skill knowledge. Generates platform-native content (not transcript paste). Outputs to `productions/<date>-<slug>/distribute/` with `distribute-status.json` tracking.
 
 ### youtube — YouTube Research & Strategy (installed)
 
@@ -119,8 +130,8 @@ src/
 
 scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio
 scripts/music/                      # Music pipeline: types, generate-music
-productions/                        # /idea output + /script research.md + script.json + /assets assets.md
-commands/                           # /idea, /script, /video, /voiceover, /music, /assets, /repurpose
+productions/                        # /idea output + /script research.md + script.json + /assets assets.md + /distribute distribute/
+commands/                           # /idea, /script, /video, /voiceover, /music, /assets, /repurpose, /distribute
 public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets)
 ```
 

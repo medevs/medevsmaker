@@ -338,17 +338,27 @@ public/music/<VideoName>/          # Phase 5 output: background music
 
 ### Phase 9: Distribution + Content Cascade
 
-**Status**: Does not exist. YouTube skill has a repurpose sub-skill that generates distribution content but doesn't post.
+**Status**: Built. `/distribute` command generates cross-platform content from completed videos.
 
-**What to figure out**:
-- Blog post generation from video script (for SEO)
-- Twitter/X thread generation from video content
-- LinkedIn post generation
-- Automation level: generate the text, or also auto-post?
-- Do we need a `/distribute` command or is this manual for now?
-- Chase's content cascade: 1 video → 6 platforms. How much of this do we automate?
+**What was built**:
+- `/distribute <VideoName>` command at `commands/distribute/command.md`
+- 8-phase pipeline: context gathering → blog → twitter → linkedin → email → community → schedule → assembly
+- Outputs 6 platform-native files to `productions/<date>-<slug>/distribute/`
+- `distribute-status.json` tracks generated/posted status per platform
+- Blog: 1500-2000 word SEO article (not transcript paste), YouTube embeds with timestamps, Article JSON-LD
+- Twitter: hook + 4-6 insight tweets + CTA, each <280 chars
+- LinkedIn: professional 200-300 word post with 3 takeaways
+- Email: A/B subject lines + 200-word distillation
+- Community: poll-first (2-3x engagement), same-day publish
+- Cross-posting schedule with shorts integration (if `/repurpose` was run)
 
-**Session goal**: Generate distribution content for a real video. Evaluate quality. Decide what to automate vs keep manual.
+**Decisions made**:
+- Content generation only, no API posting (V1) — keeps it simple, user reviews everything
+- Self-contained command (no separate skill) — same pattern as `/assets`
+- Leverages youtube repurpose sub-skill knowledge internally
+- Future V2: API posting via flags (--post-twitter, etc.), Buffer/Zernio scheduling
+
+**Session goal**: ~~Generate distribution content for a real video. Evaluate quality. Decide what to automate vs keep manual.~~ Done.
 
 ---
 
@@ -364,7 +374,7 @@ public/music/<VideoName>/          # Phase 5 output: background music
 | 6 | `/assets` — Title, description, thumbnail | Built | [x] |
 | 7 | End-to-end test | Full pipeline test | [ ] |
 | 8 | Short-form pipeline | Design + build | [x] |
-| 9 | Distribution + content cascade | Design + build | [ ] |
+| 9 | Distribution + content cascade | Built | [x] |
 
 ---
 
