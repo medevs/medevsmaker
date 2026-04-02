@@ -5,6 +5,15 @@ import { clockWipe } from "@remotion/transitions/clock-wipe";
 import { flip } from "@remotion/transitions/flip";
 
 /**
+ * Create a clockWipe transition for the given dimensions.
+ * Use this for non-standard resolutions (e.g., portrait 1080x1920).
+ */
+export const createClockWipe = (width: number, height: number) => ({
+  durationInFrames: 25,
+  presentation: clockWipe({ width, height }),
+});
+
+/**
  * Centralized transition presets.
  *
  * Usage with TransitionSeries:
@@ -45,6 +54,11 @@ export const TRANSITIONS = {
   /** Spring-timed fade with longer duration for smooth feel */
   springFade: {
     durationInFrames: 25,
+    presentation: fade(),
+  },
+  /** Short fade for shorts — preserves content time */
+  shortFade: {
+    durationInFrames: 8,
     presentation: fade(),
   },
   /** Dramatic 3D flip transition for major scene changes */

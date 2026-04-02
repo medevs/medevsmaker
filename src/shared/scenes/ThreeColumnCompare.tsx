@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { ColorBorderCard } from "../components/ColorBorderCard";
+import { useLayoutMode } from "../formats";
 
 type CompareColumn = {
   title: string;
@@ -31,6 +32,7 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, contentPadding, fontScale, maxItems } = useLayoutMode();
 
   const headP = spring({
     frame,
@@ -45,15 +47,15 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
     <AbsoluteFill
       style={{
         backgroundColor: colors.bg,
-        padding: 80,
-        gap: 32,
+        padding: contentPadding,
+        gap: isVertical ? 20 : 32,
       }}
     >
       <div
         style={{
           opacity: headOpacity,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
@@ -65,7 +67,8 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
       <div
         style={{
           display: "flex",
-          gap: 24,
+          flexDirection: isVertical ? "column" : "row",
+          gap: isVertical ? 12 : 24,
           flex: 1,
           alignItems: "stretch",
         }}
@@ -106,7 +109,7 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
                   gap: 12,
                 }}
               >
-                {col.items.map((item, itemIdx) => {
+                {col.items.slice(0, isVertical ? 2 : undefined).map((item, itemIdx) => {
                   const itemDelay =
                     SCENE_DEFAULTS.elementEntrySlow +
                     colIdx * 10 +

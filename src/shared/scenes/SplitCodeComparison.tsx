@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { CodeBlock } from "../components/CodeBlock";
+import { useLayoutMode } from "../formats";
 
 type CodePanel = {
   title: string;
@@ -35,6 +36,7 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSilky });
   const leftP = spring({
@@ -61,13 +63,13 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
   });
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: 80, gap: 32 }}>
+    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: contentPadding, gap: isVertical ? 16 : 32 }}>
       {heading && (
         <div
           style={{
             opacity: headP,
             fontFamily,
-            fontSize: 44,
+            fontSize: Math.round(44 * fontScale),
             fontWeight: 800,
             color: colors.text,
             textAlign: "center",
@@ -81,8 +83,9 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
         style={{
           flex: 1,
           display: "flex",
+          flexDirection: isVertical ? "column" : "row",
           alignItems: "stretch",
-          gap: 32,
+          gap: isVertical ? 12 : 32,
         }}
       >
         {/* Left panel */}
@@ -122,7 +125,7 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: isVertical ? "row" : "column",
             alignItems: "center",
             justifyContent: "center",
             gap: 12,
@@ -130,8 +133,9 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
         >
           <div
             style={{
-              width: 2,
-              flex: 1,
+              ...(isVertical
+                ? { height: 2, flex: 1 }
+                : { width: 2, flex: 1 }),
               backgroundColor: `${colors.muted}33`,
             }}
           />
@@ -152,8 +156,9 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
           </div>
           <div
             style={{
-              width: 2,
-              flex: 1,
+              ...(isVertical
+                ? { height: 2, flex: 1 }
+                : { width: 2, flex: 1 }),
               backgroundColor: `${colors.muted}33`,
             }}
           />

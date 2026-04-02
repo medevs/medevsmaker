@@ -26,9 +26,11 @@ Triggered when the user runs `/script <idea>`. Takes a simple idea and produces 
 
 Full rules: [rules/context-gathering.md](rules/context-gathering.md)
 
-1. Parse subject, type (news/explainer/tutorial), platform, style/duration hints
-2. Apply type defaults from [rules/video-types.md](rules/video-types.md) and audience from [rules/audience-profile.md](rules/audience-profile.md)
-3. If `--from-idea` provided, read `idea.md` and extract competitive gaps, sources, angles
+1. Parse subject, type (short/news/explainer/tutorial), platform, style/duration hints
+2. Detect `--format short` flag or auto-detect from platform/duration mentions (see [rules/context-gathering.md](rules/context-gathering.md))
+3. Apply type defaults from [rules/video-types.md](rules/video-types.md) and audience from [rules/audience-profile.md](rules/audience-profile.md)
+4. If `type: "short"`, load [rules/short-form.md](rules/short-form.md) for pacing, structure, and scene constraints
+5. If `--from-idea` provided, read `idea.md` and extract competitive gaps, sources, angles
 
 ### PHASE 2: DEEP RESEARCH
 
@@ -59,6 +61,7 @@ Full rules: [rules/hook-selection.md](rules/hook-selection.md)
 
 Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (scene catalog + selection priorities + sequencing)
 
+For **short** (10-90s): flat TransitionSeries (3-8 scenes), single section, see [rules/short-form.md](rules/short-form.md).
 For **news** (1-4 min): flat TransitionSeries (5-15 scenes) or section-based (one per news item).
 For **explainer/tutorial** (3-10 min): section-based, 3-8 scenes per section.
 
@@ -139,6 +142,8 @@ The critic checks: unattributed claims, hook strength, pacing, missing visuals, 
 
 **Key**: script.json has **no durations, no transitions**. Those are computed by `/video`. The `sources` and `meta.ideaSource`/`meta.researchFile` fields are optional.
 
+For short-form script.json format, see [rules/short-form.md](rules/short-form.md). Key differences: `type: "short"`, `resolution: { width: 1080, height: 1920 }`, single section titled "Main", short-specific meta fields (`targetDuration`, `loopSetup`, `hookStrategy`, `shortGoal`).
+
 ### /script Execution Flow
 
 1. **Context Gathering** (Phase 1) — Parse input, detect type, apply defaults, read idea.md if `--from-idea`
@@ -170,18 +175,41 @@ Full rules: [rules/duration-calculation.md](rules/duration-calculation.md)
 
 For each scene in script.json:
 1. Count words in `narration`
-2. Apply the WPM formula: `baseDuration = (wordCount / 155) * 60`
-3. Add 0.5s padding: `paddedDuration = baseDuration + 0.5`
-4. Round up to nearest 0.5s: `rounded = Math.ceil(paddedDuration * 2) / 2`
-5. Apply minimum: `finalDuration = max(rounded, MIN_DURATIONS[sceneType])`
-6. Assign transitions between scenes (see duration-calculation.md)
-7. Calculate section frame totals and video total frames
+2. Apply the WPM formula:
+   - Long-form (news/explainer/tutorial): `baseDuration = (wordCount / 155) * 60`, padding 0.5s
+   - Short-form (short): `baseDuration = (wordCount / 170) * 60`, padding 0.3s, clamp 3-8s
+3. Round up to nearest 0.5s: `rounded = Math.ceil(paddedDuration * 2) / 2`
+4. Apply minimum: `finalDuration = max(rounded, MIN_DURATIONS[sceneType])`
+5. Assign transitions between scenes (see duration-calculation.md — use `shortFade` for shorts)
+6. Calculate section frame totals and video total frames
 
 ### PHASE 8: CODE GENERATION
 
 **Goal**: Generate clean, working Remotion code from the script + computed durations.
 
-#### Output File Structure — Short-Form
+#### Output File Structure — Short-Form (type: "short")
+
+```
+src/
+  VideoName/
+    index.tsx              # Flat TransitionSeries — no sections/, no section files
+    manifest.json          # Flat scene list with computed durations
+    transcript.json        # Pre-populated with narration from script
+    styles.ts              # Colors, fonts, tokens
+  Root.tsx                 # Updated with Composition: width=1080, height=1920
+```
+
+**Short-form code generation rules:**
+- Register Composition in Root.tsx with `width={1080} height={1920} fps={30}`
+- Generate flat `TransitionSeries` (no `<Series>` section wrapper)
+- Always include `<CaptionOverlay captions={[]} />` (populated by `/voiceover`)
+- Always include `<Background overlay="particles" />`
+- Use `shortFade` (8 frames) transitions between scenes
+- NO ProgressBar, SectionTracker, FeatureCounter, or Watermark overlays
+- All scenes get padding via `useLayoutMode().contentPadding` (safe zone aware)
+- Import scenes from `src/shared/scenes/` — do NOT create video-specific scene files
+
+#### Output File Structure — News/Promo (Short-Duration Long-Form)
 
 ```
 src/
@@ -190,10 +218,7 @@ src/
     manifest.json          # Structured scene data for voiceover pipeline
     transcript.json        # Pre-populated with narration from script
     scenes/
-      HeroScene.tsx        # One file per scene
-      ContentScene.tsx
-      CTAScene.tsx
-    components/            # Video-specific components (if needed)
+      HeroScene.tsx        # One file per scene (if custom needed)
     styles.ts              # All constants: colors, fonts, sizes, timing
   Root.tsx                 # Updated with new Composition entry
 ```
@@ -226,7 +251,7 @@ All video types use shared building-block components from `src/shared/`:
 
 **Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram, QuoteCard, AnimatedDiagram, MetricDashboard, ProcessAnimation, SplitCodeComparison
 
-**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow/slideAndFade/dropBounce/zoomBlur, pulse, glowPulse, float, shimmer, breathe), transitions.ts (TRANSITIONS presets incl. flip + OVERLAYS for light leaks), styles.ts (SHADOWS incl. deepGlow, GRADIENTS incl. aurora, SECTION_THEMES, CARD, GLASS, MONO, SCENE_ALTERNATION, spring configs incl. springSilky)
+**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow/slideAndFade/dropBounce/zoomBlur, pulse, glowPulse, float, shimmer, breathe), transitions.ts (TRANSITIONS presets incl. flip, shortFade + OVERLAYS for light leaks), styles.ts (SHADOWS incl. deepGlow, GRADIENTS incl. aurora, SECTION_THEMES, CARD, GLASS, MONO, SCENE_ALTERNATION, spring configs incl. springSilky), formats.ts (FORMAT_PRESETS, SAFE_ZONES, useLayoutMode hook for responsive scenes)
 
 Import these instead of re-implementing. See [rules/educational-scenes.md](rules/educational-scenes.md) for full prop documentation.
 

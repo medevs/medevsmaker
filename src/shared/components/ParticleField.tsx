@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from "remotion";
 
 type ParticleConfig = {
   count?: number;
@@ -32,6 +32,7 @@ export const ParticleField: React.FC<ParticleFieldProps> = ({
   direction = "up",
 }) => {
   const frame = useCurrentFrame();
+  const { width: W, height: H } = useVideoConfig();
 
   const particles = Array.from({ length: count }, (_, i) => {
     const r1 = seededRandom(i);
@@ -40,8 +41,8 @@ export const ParticleField: React.FC<ParticleFieldProps> = ({
     const r4 = seededRandom(i + 300);
 
     const size = minSize + r3 * (maxSize - minSize);
-    const baseX = r1 * 1920;
-    const baseY = r2 * 1080;
+    const baseX = r1 * W;
+    const baseY = r2 * H;
     const particleSpeed = speed * (0.5 + r4 * 0.5);
     const drift = frame * particleSpeed;
 
@@ -49,16 +50,16 @@ export const ParticleField: React.FC<ParticleFieldProps> = ({
     let y = baseY;
 
     if (direction === "up") {
-      y = ((baseY - drift) % 1080 + 1080) % 1080;
+      y = ((baseY - drift) % H + H) % H;
       x = baseX + Math.sin(frame * 0.02 + i) * 20;
     } else if (direction === "down") {
-      y = (baseY + drift) % 1080;
+      y = (baseY + drift) % H;
       x = baseX + Math.sin(frame * 0.02 + i) * 20;
     } else if (direction === "left") {
-      x = ((baseX - drift) % 1920 + 1920) % 1920;
+      x = ((baseX - drift) % W + W) % W;
       y = baseY + Math.sin(frame * 0.02 + i) * 20;
     } else {
-      x = (baseX + drift) % 1920;
+      x = (baseX + drift) % W;
       y = baseY + Math.sin(frame * 0.02 + i) * 20;
     }
 

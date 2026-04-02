@@ -26,6 +26,23 @@ finalDuration = max(rounded, MIN_DURATIONS[sceneType])
 - The 0.5s padding adds visual breathing room after narration ends
 - Rounding up to 0.5s keeps frame math clean (multiples of 15 at 30fps)
 
+### Short-Form Override (type: "short")
+
+Shorts use faster pacing:
+
+```
+wordCount = narration.split(/\s+/).filter(Boolean).length
+baseDuration = (wordCount / 170) * 60      // 170 WPM for shorts (faster)
+paddedDuration = baseDuration + 0.3         // less padding (0.3s vs 0.5s)
+rounded = Math.ceil(paddedDuration * 2) / 2
+finalDuration = clamp(rounded, 3, 8)        // 3s min, 8s max per scene
+```
+
+- **170 WPM** — faster delivery matches shorts audience expectations
+- **0.3s padding** — tighter pacing, less dead air
+- **Max 8s per scene** — prevents visual stagnation (visual change every 3s rule)
+- **Min 3s per scene** — enough for one visual beat
+
 ### Minimum Scene Durations
 
 Some scene types need minimum time regardless of narration length (for animations to complete):
@@ -79,8 +96,19 @@ After computing scene durations, assign transitions between scenes within each s
 
 - **Last scene in section**: no transition (sections are chained via `<Series>`)
 - **Vary transitions**: don't use the same type 3+ times in a row within a section
-- **Import from** `src/shared/transitions.ts`: fade, slideLeft, slideRight, slideUp, wipeRight, clockWipe, springFade
+- **Import from** `src/shared/transitions.ts`: fade, slideLeft, slideRight, slideUp, wipeRight, clockWipe, springFade, shortFade
 - **Total section frames** = sum(scene duration frames) - sum(transition frames within section)
+
+### Short-Form Transitions (type: "short")
+
+| Context | Transition | Frames | Duration |
+|---------|-----------|--------|----------|
+| Default between scenes | shortFade | 8 | 0.27s |
+| Reveal/emphasis | slideUp | 12 | 0.4s |
+| Gentle emphasis | fade | 10 | 0.33s |
+
+Do NOT use clockWipe (25f), springFade (25f), or flip (20f) in shorts — too long, eats content time.
+Last scene: no transition (loop back to start).
 
 ### Section Duration Formula
 

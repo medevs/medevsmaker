@@ -13,6 +13,7 @@ import {
   type TikTokToken,
 } from "@remotion/captions";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { useLayoutMode } from "../formats";
 
 type CaptionStyle = "minimal" | "bold" | "karaoke" | "pop" | "highlight";
 
@@ -29,19 +30,24 @@ type CaptionOverlayProps = {
 
 export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
   captions,
-  style: captionStyle = "minimal",
+  style: captionStyle,
   accentColor = BRAND.cyan,
-  combineMs = 800,
+  combineMs,
   fontFamily = "Inter",
   visible = true,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, fontScale } = useLayoutMode();
   const currentTimeMs = (frame / fps) * 1000;
+
+  // Vertical defaults: bold style, more word-by-word grouping
+  const effectiveStyle = captionStyle ?? (isVertical ? "bold" : "minimal");
+  const effectiveCombineMs = combineMs ?? (isVertical ? 400 : 800);
 
   const { pages } = createTikTokStyleCaptions({
     captions,
-    combineTokensWithinMilliseconds: combineMs,
+    combineTokensWithinMilliseconds: effectiveCombineMs,
   });
 
   if (!visible) return null;
@@ -55,14 +61,20 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
 
   if (!currentPage) return null;
 
-  const isMinimal = captionStyle === "minimal";
-  const isBold = captionStyle === "bold";
-  const isKaraoke = captionStyle === "karaoke";
-  const isPop = captionStyle === "pop";
-  const isHighlight = captionStyle === "highlight";
+  const isMinimal = effectiveStyle === "minimal";
+  const isBold = effectiveStyle === "bold";
+  const isKaraoke = effectiveStyle === "karaoke";
+  const isPop = effectiveStyle === "pop";
+  const isHighlight = effectiveStyle === "highlight";
 
-  const fontSize = isMinimal ? 32 : isBold ? 52 : isPop ? 44 : 40;
-  const bottom = isMinimal ? 140 : isBold ? "45%" : 160;
+  const baseFontSize = isMinimal ? 32 : isBold ? 52 : isPop ? 44 : 40;
+  const fontSize = Math.round(baseFontSize * (isVertical ? 1.3 : 1));
+  // Portrait: position above 350px bottom safe zone
+  const bottom = isMinimal
+    ? (isVertical ? 380 : 140)
+    : isBold
+      ? "45%"
+      : (isVertical ? 380 : 160);
 
   return (
     <AbsoluteFill
@@ -77,7 +89,7 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
         style={{
           position: isBold ? "relative" : "absolute",
           bottom: isBold ? undefined : bottom,
-          maxWidth: isMinimal ? 900 : 1100,
+          maxWidth: isVertical ? 900 : (isMinimal ? 900 : 1100),
           textAlign: "center",
           padding: "12px 24px",
           borderRadius: 12,

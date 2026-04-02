@@ -20,10 +20,22 @@ Extract from the user's text:
 - **Content source**: Check if the topic matches a content plan entry
 - **Idea reference**: Check for `--from-idea` flag
 
+### Format Flag Detection
+
+If the user provides `--format short`, set `type: "short"` and apply short-form defaults from `video-types.md` and `short-form.md`.
+
+Auto-detect `short` from:
+- **Platform mentions**: "YouTube Short", "Shorts", "TikTok", "Reel", "Instagram Reel", "vertical"
+- **Duration hints**: "13 second", "15 second", "30 second", "60 second", "short video", "quick clip"
+- **Explicit flag**: `--format short`
+
+When `short` is detected, override resolution to 1080x1920 and apply short-form rules.
+
 ### Type Detection Table
 
 | Keywords | Detected Type |
 |----------|--------------|
+| --format short, Short, TikTok, Reel, vertical, "quick clip" | `short` |
 | news, daily, roundup, coverage, weekly, digest, latest, trending, today, this week | `news` |
 | tutorial, how to, guide, walkthrough, step by step, learn, build, setup, install | `tutorial` |
 | everything else — conceptual topics, "how X works", "understanding Y", explain, deep dive, educational, fundamentals | `explainer` |

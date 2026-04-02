@@ -48,11 +48,13 @@ Read these files automatically — do NOT ask the user for this information:
 
 Extract and note:
 - **Primary topic/keyword** from script.json meta or first section narration
-- **Video type** (news/explainer/tutorial) from script.json meta
+- **Video type** (short/news/explainer/tutorial) from script.json meta
 - **Key concepts** — the 3-5 main ideas covered
 - **Section names + durations** from manifest.json (needed for chapters)
 - **Total video duration** in MM:SS
 - **Sources mentioned** in script.json scenes (for description links)
+
+**If `type: "short"`**, switch to short-form metadata mode (see Short-Form Assets section below). Skip Phases C-E and generate simplified assets instead.
 
 ### Phase B: TITLES (5 variants, scored)
 
@@ -356,6 +358,56 @@ Generated: YYYY-MM-DD
 - [ ] A/B title test configured in YouTube Studio (optional)
 - [ ] Share link ready for social posts
 ```
+
+## Short-Form Assets (type: "short")
+
+When script.json has `type: "short"`, generate simplified metadata optimized for YouTube Shorts / TikTok / Reels:
+
+### Title (5 variants, scored differently)
+
+| Dimension | Scoring for Shorts |
+|-----------|-------------------|
+| **Keyword position** | 10 = keyword in first 15 chars (title truncates at ~40 chars) |
+| **Length** | 10 = 20-40 chars. 6 = 40-60 chars. 2 = >60 chars (truncated in feed) |
+| **Scroll-stop** | 10 = would make you stop scrolling. 5 = mildly interesting. 1 = generic. |
+| **Hashtag readiness** | 10 = title works as a hashtag-style discovery phrase. |
+| **Pattern match** | 10 = matches proven Shorts title format. |
+
+Title rules: **4-6 words, 20-40 characters, keyword front-loaded.** Shorter is better — Shorts titles truncate aggressively.
+
+### Description
+
+- **First 125 characters are everything** — this is visible in the feed
+- Primary keyword + hook in first 125 chars
+- No chapters (Shorts are single segments)
+- 3-5 hashtags appended (more important for Shorts discovery than tags)
+- Total: 200-300 characters max
+
+### What to SKIP for Shorts
+
+- **Chapters** — not applicable (single segment)
+- **Thumbnail** — irrelevant (Shorts auto-play in feed, thumbnails not shown)
+- **VideoObject schema** — not used for Shorts
+- **Cards & end screens** — not supported in Shorts
+- **Tags** — hashtags in description are more effective
+- **Detailed description body** — keep it under 300 chars
+
+### Music Monetization Warning
+
+If the video uses background music, include:
+```
+⚠️ MUSIC REVENUE IMPACT
+- 1 music track = 50% of your Shorts revenue share goes to music rights holder
+- 2 tracks = only 33% of your share
+- No music = keep 100% of your 45% creator share
+```
+
+### Posting Schedule
+
+Include a recommendation:
+- **Optimal posting**: Space shorts 2-3 days apart for algorithm diversity
+- **Best times**: Morning (6-9 AM) or evening (7-10 PM) local time
+- **Batch tip**: If posting multiple shorts from a `/repurpose`, stagger over 1-2 weeks
 
 ## Quality Criteria
 

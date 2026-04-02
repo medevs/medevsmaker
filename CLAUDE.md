@@ -1,6 +1,6 @@
 # medevsmaker — AI Video Director Project
 
-## 6-Command Pipeline
+## 8-Command Pipeline
 
 ```
 /idea [focus]         → trend scan + competitor check + ranked ideas (FREE)
@@ -9,12 +9,13 @@
                         User picks a topic before proceeding
 
 /script <idea>        → 6-phase pipeline: context → research → hooks → scenes → narration → critic (FREE)
-                        Supports --from-idea to carry forward /idea context
+                        Supports --from-idea and --format short flags
                         Output: productions/<date>-<slug>/research.md + script.json
                         User reviews hook variants + narration + scene plan + critic feedback
 
 /video <VideoName>    → Remotion code + manifest.json + transcript.json (FREE)
                         Durations computed from narration word counts
+                        Auto-detects format (landscape/portrait) from script.json
                         User reviews visuals in Remotion Studio
 
 /voiceover <VideoName> → TTS synthesis + audio integration ($$)
@@ -26,9 +27,14 @@
 
 /assets <VideoName>   → Title, description, tags, chapters, thumbnail ($ for thumbnail)
                         5 title variants scored + SEO description + auto-chapters from manifest
-                        Optional: AI thumbnail via Replicate MCP (Flux) + Remotion renderStill()
+                        Short-form mode: 4-6 word titles, hashtags, no thumbnail/chapters
                         Output: productions/<date>-<slug>/assets.md + thumbnail PNGs
                         User picks title + thumbnail, then uploads to YouTube
+
+/repurpose <VideoName> → Extract 3-5 short-form clips from long-form (FREE)
+                        Identifies standalone moments, rewrites hooks for vertical
+                        Output: src/<VideoName>Short1-5/script.json
+                        User reviews clips, then runs /video for each
 
 /sfx <VideoName>      → Sound effects (FUTURE)
 ```
@@ -48,7 +54,8 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 **`/script <idea>`**: Context Gathering → Deep Research → Angle & Hook → Scene Planning → Narration Writing → Quality Review → `script.json`
 **`/video <VideoName>`**: Duration Calc → Code Generation → manifest.json + transcript.json (pre-populated)
 
-**Supported video types**: news, explainer, tutorial (historical alias: `educational` → `explainer`)
+**Supported video types**: short, news, explainer, tutorial (historical alias: `educational` → `explainer`)
+**Short-form**: `--format short` flag on `/script`, or auto-detected from platform mentions (TikTok, Shorts, Reel). 1080x1920 portrait, 13-60s, flat TransitionSeries, CaptionOverlay always on.
 
 ### voiceover-director — Powers `/voiceover`
 
@@ -92,18 +99,20 @@ Located at `.claude/agents/script-critic.md`.
 src/
   index.ts                          # registerRoot entry point
   Root.tsx                          # Composition registry (all videos)
-  shared/                           # 20 components + 27 scenes (13 Core + 14 Advanced)
+  shared/                           # 22 components + 29 scenes (13 Core + 16 Advanced)
     styles.ts                       # baseTokens, BRAND, SECTION_THEMES, CARD, MONO
     animations.ts                   # EASINGS, entrances (fadeUpSlow, fadeLeftSlow), pulse
-    transitions.ts                  # TRANSITIONS presets (fade, slide, wipe, clockWipe)
-    components/                     # AnimatedText, Background, CodeBlock, ColorBorderCard, etc.
-    scenes/                         # HookQuestion, TitleIntro, DiagramFlow, EndScreen, etc.
+    transitions.ts                  # TRANSITIONS presets (fade, slide, wipe, clockWipe, shortFade)
+    formats.ts                      # FORMAT_PRESETS, SAFE_ZONES, useLayoutMode() hook
+    components/                     # AnimatedText, Background, CaptionOverlay, SafeZoneOverlay, etc.
+    scenes/                         # HookQuestion, TitleIntro, FullScreenText, SwipeReveal, etc.
   <VideoName>/                      # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
 
 .agents/skills/video-director/      # Powers /script (6 phases) and /video (3 phases)
   rules/                            # context-gathering, research-integration, hook-selection,
                                     # video-types, audience-profile, educational-scenes,
-                                    # narration-writing, long-form-architecture, duration-calculation
+                                    # narration-writing, long-form-architecture, duration-calculation,
+                                    # short-form
 .agents/skills/voiceover-director/  # Powers /voiceover (TTS + audio integration)
 .agents/skills/music-director/      # Powers /music (music generation + ducking)
 .claude/agents/script-critic.md     # Read-only quality reviewer (8 checks)
@@ -111,7 +120,7 @@ src/
 scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio
 scripts/music/                      # Music pipeline: types, generate-music
 productions/                        # /idea output + /script research.md + script.json + /assets assets.md
-commands/                           # /idea, /script, /video, /voiceover, /music, /assets slash commands
+commands/                           # /idea, /script, /video, /voiceover, /music, /assets, /repurpose
 public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets)
 ```
 
@@ -141,3 +150,10 @@ public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /asset
 - Use `PillBadge` for ALL CAPS monospace labels
 - Use `GradientText` for key phrase emphasis
 - Negative space: content in left 60-65% for FeatureIntro/KeyRuleCard, 80px+ outer padding
+- **Short-form (9:16)**: `useLayoutMode()` from `formats.ts` provides responsive tokens
+- Short-form: flat `TransitionSeries`, no `<Series>` sections, `shortFade` (8f) transitions
+- Short-form: `CaptionOverlay` always on (bold style, 400ms combineMs)
+- Short-form: no ProgressBar, SectionTracker, FeatureCounter, Watermark overlays
+- Short-form: safe zones — 160px top, 350px bottom, 60px sides (auto via `useLayoutMode`)
+- Short-form: 170 WPM pacing, max 8s/scene, visual change every 3s
+- 6 scenes are responsive: CodeDisplay, ComparisonSplit, BeforeAfter, ThreeColumnCompare, MetricDashboard, SplitCodeComparison

@@ -9,6 +9,7 @@ import {
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { CodeBlock } from "../components/CodeBlock";
 import { ColorBorderCard } from "../components/ColorBorderCard";
+import { useLayoutMode } from "../formats";
 
 type Annotation = {
   text: string;
@@ -48,6 +49,7 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
   const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, contentPadding, fontScale } = useLayoutMode();
 
   const titleP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const titleOpacity = interpolate(titleP, [0, 1], [0, 1]);
@@ -57,8 +59,8 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
     <AbsoluteFill
       style={{
         backgroundColor: colors.bg,
-        padding: 80,
-        gap: 24,
+        padding: contentPadding,
+        gap: isVertical ? 16 : 24,
       }}
     >
       {/* Title */}
@@ -67,7 +69,7 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
           opacity: titleOpacity,
           transform: `translateY(${titleY}px)`,
           fontFamily,
-          fontSize: 44,
+          fontSize: Math.round(44 * fontScale),
           fontWeight: 800,
           color: colors.text,
         }}
@@ -79,12 +81,13 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
       <div
         style={{
           display: "flex",
-          gap: 32,
+          flexDirection: isVertical ? "column" : "row",
+          gap: isVertical ? 16 : 32,
           flex: 1,
-          alignItems: "flex-start",
+          alignItems: isVertical ? "stretch" : "flex-start",
         }}
       >
-        <div style={{ flex: 3 }}>
+        <div style={{ flex: isVertical ? undefined : 3 }}>
           <CodeBlock
             code={code}
             delay={8}

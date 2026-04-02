@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS, CARD } from "../styles";
+import { useLayoutMode } from "../formats";
 
 type MetricDisplay = "counter" | "gauge" | "bar";
 
@@ -38,18 +39,20 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  const { isVertical, contentPadding, fontScale } = useLayoutMode();
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSilky });
 
-  // Grid: 2 cols for 2-4 items
-  const cols = metrics.length <= 2 ? metrics.length : 2;
+  // Grid: 1 col for vertical, 2 cols for landscape
+  const cols = isVertical ? 1 : (metrics.length <= 2 ? metrics.length : 2);
+  const visibleMetrics = isVertical ? metrics.slice(0, 3) : metrics;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: 80, gap: 40 }}>
+    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: contentPadding, gap: isVertical ? 24 : 40 }}>
       <div
         style={{
           opacity: headP,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
@@ -62,14 +65,15 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
         style={{
           flex: 1,
           display: "flex",
-          flexWrap: "wrap",
+          flexDirection: isVertical ? "column" : "row",
+          flexWrap: isVertical ? "nowrap" : "wrap",
           justifyContent: "center",
-          alignItems: "center",
-          gap: 40,
-          padding: "20px 40px",
+          alignItems: isVertical ? "stretch" : "center",
+          gap: isVertical ? 20 : 40,
+          padding: isVertical ? "0" : "20px 40px",
         }}
       >
-        {metrics.map((m, i) => {
+        {visibleMetrics.map((m, i) => {
           const delay = 8 + i * 8;
           const metricP = spring({
             frame: frame - delay,
@@ -104,7 +108,7 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
               style={{
                 opacity,
                 transform: `translateY(${translateY}px) scale(${scale})`,
-                width: cols === 1 ? 600 : 480,
+                width: isVertical ? "100%" : (cols === 1 ? 600 : 480),
                 background: CARD.bg,
                 border: `${CARD.borderWidth}px solid ${CARD.border}`,
                 borderRadius: CARD.radius,

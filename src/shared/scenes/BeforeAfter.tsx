@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { useLayoutMode } from "../formats";
 
 type BeforeAfterReveal = "wipe" | "split";
 
@@ -41,6 +42,7 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, contentPadding, fontScale } = useLayoutMode();
 
   // Heading entrance
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
@@ -145,15 +147,15 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
       <AbsoluteFill
         style={{
           backgroundColor: colors.bg,
-          padding: 80,
-          gap: 32,
+          padding: contentPadding,
+          gap: isVertical ? 20 : 32,
         }}
       >
         <div
           style={{
             opacity: headOpacity,
             fontFamily,
-            fontSize: 48,
+            fontSize: Math.round(48 * fontScale),
             fontWeight: 800,
             color: colors.text,
             textAlign: "center",
@@ -162,16 +164,18 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
           {heading}
         </div>
 
-        <div style={{ display: "flex", gap: 32, flex: 1, position: "relative" }}>
+        <div style={{ display: "flex", flexDirection: isVertical ? "column" : "row", gap: isVertical ? 16 : 32, flex: 1, position: "relative" }}>
           {/* Before — always visible */}
           {renderPanel(before, colors.beforeColor, beforeOpacity, 12)}
 
-          {/* After — wipe reveal from left */}
+          {/* After — wipe reveal */}
           <div
             style={{
               flex: 1,
               display: "flex",
-              clipPath: `inset(0 ${100 - wipePercent}% 0 0)`,
+              clipPath: isVertical
+                ? `inset(0 0 ${100 - wipePercent}% 0)`
+                : `inset(0 ${100 - wipePercent}% 0 0)`,
             }}
           >
             {renderPanel(after, colors.afterColor, 1, 30)}
@@ -190,15 +194,15 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
     <AbsoluteFill
       style={{
         backgroundColor: colors.bg,
-        padding: 80,
-        gap: 32,
+        padding: contentPadding,
+        gap: isVertical ? 20 : 32,
       }}
     >
       <div
         style={{
           opacity: headOpacity,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
@@ -207,26 +211,29 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
         {heading}
       </div>
 
-      <div style={{ display: "flex", gap: 32, flex: 1 }}>
+      <div style={{ display: "flex", flexDirection: isVertical ? "column" : "row", gap: isVertical ? 16 : 32, flex: 1 }}>
         {renderPanel(before, colors.beforeColor, beforeOpacity, 12)}
         <div
           style={{
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             fontFamily,
             fontSize: 24,
             fontWeight: 700,
             color: colors.muted,
           }}
         >
-          →
+          {isVertical ? "↓" : "→"}
         </div>
         <div
           style={{
             flex: 1,
             display: "flex",
             opacity: afterProgress,
-            transform: `translateX(${afterX}px)`,
+            transform: isVertical
+              ? `translateY(${afterX}px)`
+              : `translateX(${afterX}px)`,
           }}
         >
           {renderPanel(after, colors.afterColor, 1, 30)}

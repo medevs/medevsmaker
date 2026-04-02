@@ -7,7 +7,7 @@ metadata:
 
 # Video Types
 
-Three active types for the medevsmaker channel. Auto-detect from user input, default to `explainer`.
+Four active types for the medevsmaker channel. Auto-detect from user input, default to `explainer`.
 
 > **Historical alias**: `educational` maps to `explainer`. Existing script.json files with `type: "educational"` are treated as explainer.
 
@@ -297,6 +297,72 @@ background: #0a0a0f
 text:       #e2e8f0
 code-bg:    #1e1e2e
 ```
+
+---
+
+## Short
+
+### When to Use
+YouTube Shorts, TikTok, Instagram Reels. Vertical 9:16 format. Triggered by `--format short` flag or auto-detected from platform mentions and duration hints.
+
+### Defaults
+
+| Setting | Value |
+|---------|-------|
+| Duration | 60s (1800 frames) |
+| Duration Range | 10-90s (sweet spots: 13s or 60s) |
+| FPS | 30 |
+| Resolution | 1080x1920 (portrait) |
+| Background | Dark gradient with particle overlay |
+| Transitions | shortFade(8) — fast cuts |
+| Pacing | very fast |
+| CTA | no (loop setup instead) |
+| Captions | always on (bold style) |
+| Typography | Heading: Inter / 800, Body: Inter / 400, Code: JetBrains Mono / 400 |
+
+### Scene Structure
+
+Single section, flat TransitionSeries. No SectionTitle, no sections.
+
+```
+ColdOpen or HookQuestion
+  → Scroll-stopping hook in 1-3 seconds
+  → Must create curiosity gap or pattern interrupt
+
+2-6 Content Scenes
+  → Visual change every 3 seconds minimum
+  → One idea per scene
+  → Use vertical-compatible scenes (see short-form.md)
+
+KeyTakeaway or FullScreenText
+  → Loop setup: mirrors or callbacks to opening
+  → Creates seamless replay (boosts loop rate metric)
+```
+
+### Key Rules
+- **3-8 scenes total** — never more
+- **170 WPM** narration pacing (faster than long-form 155)
+- **Max 8s per scene**, min 3s
+- **Visual change every 3s** — enforced by scene duration limits
+- **No ProgressBar, SectionTracker, FeatureCounter, Watermark** overlays
+- **CaptionOverlay always on** — bold style, word-by-word highlighting
+- **Loop setup mandatory** — final 1-2s must mirror opening
+- **Flat TransitionSeries** — no `<Series>` section wrapper
+- **Safe zones**: 160px top, 350px bottom, 60px sides (platform UI overlays)
+- **No music by default** — each track costs 50% revenue share
+
+### Palette: medevsmaker-short
+```
+primary:    #6366f1 (indigo)
+secondary:  #8b5cf6 (violet)
+accent:     #06b6d4 (cyan)
+background: #0f0f1a
+bgLight:    #1a1a2e
+text:       #f8fafc
+textMuted:  #94a3b8
+```
+
+Full rules: [short-form.md](short-form.md)
 
 ---
 

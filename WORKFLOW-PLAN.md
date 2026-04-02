@@ -300,15 +300,37 @@ public/music/<VideoName>/          # Phase 5 output: background music
 
 ### Phase 8: Short-Form Pipeline
 
-**Status**: Does not exist. Needs to be designed after long-form works.
+**Status**: Built (2026-04-02).
 
-**What to figure out**:
-- Can we render 9:16 (vertical) format with Remotion? (Yes, just change resolution)
-- Should shorts come from long-form (repurpose) or be scripted separately?
-- Can `/script` handle a `--format short` flag for 30/60/90 second videos?
-- Which scenes work in vertical format? Do we need vertical variants?
-- Distribution: YouTube Shorts, TikTok, Instagram Reels — different requirements?
-- Use youtube skill's shorts sub-skill for optimization
+**What was built**:
+
+1. **Format foundation** (`src/shared/formats.ts`): FORMAT_PRESETS (landscape/portrait/square), SAFE_ZONES, `useLayoutMode()` hook providing responsive tokens (isVertical, contentPadding, fontScale, maxItems, layoutDirection)
+
+2. **Fixed hardcoded dimensions**: ParticleField.tsx uses `useVideoConfig()` instead of 1920/1080. transitions.ts has `createClockWipe()` factory + `shortFade` (8f) preset.
+
+3. **6 responsive scenes**: CodeDisplay, ComparisonSplit, BeforeAfter, ThreeColumnCompare, MetricDashboard, SplitCodeComparison — all use `useLayoutMode()` to switch between row/column layout.
+
+4. **CaptionOverlay vertical mode**: Auto-detects vertical, defaults to bold style with 400ms combineMs, scales fonts 1.3x, positions above 350px safe zone.
+
+5. **Short video type**: Added to video-types.md, context-gathering.md, duration-calculation.md. New `rules/short-form.md` with scene catalog, pacing (170 WPM), structure (Hook → Value Bomb → Loop Setup), safe zones, and flat architecture.
+
+6. **`/script --format short`**: Updated command.md with flag docs, examples, and short-form output differences.
+
+7. **`/assets` short-form mode**: Detects `type: "short"`, switches to simplified metadata (4-6 word titles, 125-char description, hashtags, no chapters/thumbnail, music revenue warning).
+
+8. **`/repurpose <VideoName>`**: New command extracting 3-5 short candidates from long-form script.json with rewritten hooks, quality ratings, and posting schedule.
+
+9. **2 new scenes**: FullScreenText (large bold text for hooks/punchlines), SwipeReveal (swipe-up content transition).
+
+10. **SafeZoneOverlay**: Dev tool showing platform UI danger zones in Remotion Studio.
+
+**Decisions made**:
+- Both standalone (`--format short`) and repurposed (`/repurpose`) shorts supported
+- Scenes are responsive (not separate vertical variants) — `useLayoutMode()` hook
+- CaptionOverlay auto-on for shorts (bold style), auto-off for long-form
+- 1080x1920 at 30fps, sweet spots at 13s or 60s
+- No music by default (50% revenue share per track)
+- Flat TransitionSeries, no sections, `shortFade` (8f) transitions
 
 **Session goal**: Render one short-form video. Decide on the short-form workflow.
 
@@ -341,7 +363,7 @@ public/music/<VideoName>/          # Phase 5 output: background music
 | 5 | `/music` — Background music | Build from scratch | [ ] |
 | 6 | `/assets` — Title, description, thumbnail | Built | [x] |
 | 7 | End-to-end test | Full pipeline test | [ ] |
-| 8 | Short-form pipeline | Design + build | [ ] |
+| 8 | Short-form pipeline | Design + build | [x] |
 | 9 | Distribution + content cascade | Design + build | [ ] |
 
 ---

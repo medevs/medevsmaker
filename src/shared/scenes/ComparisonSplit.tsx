@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { ColorBorderCard } from "../components/ColorBorderCard";
+import { useLayoutMode } from "../formats";
 
 type ComparisonSide = {
   title: string;
@@ -41,6 +42,7 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { isVertical, contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
@@ -150,15 +152,15 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
       <AbsoluteFill
         style={{
           backgroundColor: colors.bg,
-          padding: 80,
-          gap: 32,
+          padding: contentPadding,
+          gap: isVertical ? 20 : 32,
         }}
       >
         <div
           style={{
             opacity: headOpacity,
             fontFamily,
-            fontSize: 48,
+            fontSize: Math.round(48 * fontScale),
             fontWeight: 800,
             color: colors.text,
             textAlign: "center",
@@ -169,16 +171,18 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
         <div
           style={{
             display: "flex",
-            gap: 32,
+            flexDirection: isVertical ? "column" : "row",
+            gap: isVertical ? 16 : 32,
             flex: 1,
             alignItems: "stretch",
           }}
         >
-          {renderCardSide(left, leftOpacity, leftX, 15)}
+          {renderCardSide(left, leftOpacity, isVertical ? 0 : leftX, 15)}
           <div
             style={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               fontFamily,
               fontSize: 24,
               fontWeight: 700,
@@ -187,7 +191,7 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
           >
             VS
           </div>
-          {renderCardSide(right, rightOpacity, rightX, 15)}
+          {renderCardSide(right, rightOpacity, isVertical ? 0 : rightX, 15)}
         </div>
       </AbsoluteFill>
     );
@@ -266,15 +270,15 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
     <AbsoluteFill
       style={{
         backgroundColor: colors.bg,
-        padding: 80,
-        gap: 32,
+        padding: contentPadding,
+        gap: isVertical ? 20 : 32,
       }}
     >
       <div
         style={{
           opacity: headOpacity,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
@@ -286,17 +290,19 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
       <div
         style={{
           display: "flex",
-          gap: 32,
+          flexDirection: isVertical ? "column" : "row",
+          gap: isVertical ? 16 : 32,
           flex: 1,
           alignItems: "stretch",
         }}
       >
-        {renderSide(left, leftOpacity, leftX, 20)}
+        {renderSide(left, leftOpacity, isVertical ? 0 : leftX, 20)}
         {/* VS divider */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
+            justifyContent: "center",
             fontFamily,
             fontSize: 24,
             fontWeight: 700,
@@ -305,7 +311,7 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
         >
           VS
         </div>
-        {renderSide(right, rightOpacity, rightX, 20)}
+        {renderSide(right, rightOpacity, isVertical ? 0 : rightX, 20)}
       </div>
     </AbsoluteFill>
   );
