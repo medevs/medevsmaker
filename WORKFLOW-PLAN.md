@@ -243,26 +243,33 @@ public/music/<VideoName>/          # Phase 5 output: background music
 
 ### Phase 6: `/assets` — Title, Description, Tags, Thumbnail
 
-**Status**: Does not exist. Needs to be built. YouTube skill has sub-skills (seo, metadata, thumbnail) that can be used internally.
+**Status**: Built (2026-04-02).
 
-**What it should do**:
-1. Read script.json + research.md for context
-2. Generate 5 title options ranked by CTR potential (youtube seo + metadata knowledge)
-3. Write SEO-optimized description with keywords + chapter timestamps
-4. Generate relevant tags
-5. Create 3 thumbnail concepts with text overlay suggestions
-6. Optionally call image generation API for thumbnail
-7. Output to `productions/<date>-<slug>/assets.md` + thumbnail image
+**What it does**:
+1. Reads script.json + manifest.json + research.md for context
+2. Generates 5 title variants (search/browse/hybrid/contrarian/listicle) scored on 5 dimensions (max 50)
+3. Writes SEO-optimized description with auto-generated chapter timestamps from manifest.json
+4. Generates 10-15 tags within 500-char limit
+5. Creates primary thumbnail brief + 3 A/B variants (each changes ONE variable)
+6. Optionally generates AI thumbnails via Replicate MCP (Flux 1.1 Pro) + Remotion `renderStill()` compositing
+7. Outputs to `productions/<date>-<slug>/assets.md` + thumbnail PNGs
 
-**Skills used internally**: youtube (seo, metadata, thumbnail)
+**Decisions made**:
+- **Architecture**: Standalone command, no new skill. Orchestrates youtube sub-skills (seo, metadata, thumbnail) internally.
+- **Thumbnail generation**: Replicate MCP (Flux 1.1 Pro) for photorealistic background (~$0.04/image) + Remotion `renderStill()` for text compositing. Guarantees crisp text with brand fonts/colors.
+- **Title scoring**: Heuristic 5-dimension scoring (keyword position, length, curiosity gap, thumbnail independence, pattern match). No external API dependency. Suggests YouTube's built-in A/B testing after upload.
+- **Chapters**: Auto-generated from manifest.json section durations. Zero manual effort.
+- **Tags**: Minimal effort (vestigial in 2026 — Gemini reads content directly).
+- **Fallback**: If Replicate MCP unavailable, outputs detailed text brief for manual thumbnail creation.
 
-**What to figure out**:
-- Which image generation service to use for thumbnails (Flux? DALL-E? Midjourney?)
-- How to integrate image generation into Claude Code (MCP server? API call?)
-- Thumbnail style guide for the channel (consistent look)
-- Should titles be A/B testable? (generate variants for YouTube's built-in A/B testing)
+**Files created**:
+- `commands/assets/command.md` — Slash command (6-phase orchestration)
+- `src/shared/scenes/Thumbnail.tsx` — Remotion composition for thumbnail compositing
+- `.mcp.json` — Replicate MCP server configuration
 
-**Session goal**: Build `/assets` command, test on a real video, evaluate title/thumbnail quality.
+**Files modified**:
+- `src/Root.tsx` — Registered ThumbnailComposition
+- `CLAUDE.md` — Updated pipeline documentation (5→6 commands)
 
 ---
 
@@ -332,7 +339,7 @@ public/music/<VideoName>/          # Phase 5 output: background music
 | 3 | `/video` — Generate Remotion visuals | Analyze + improve existing | [ ] |
 | 4 | `/voiceover` — TTS voice generation | Analyze + improve existing | [ ] |
 | 5 | `/music` — Background music | Build from scratch | [ ] |
-| 6 | `/assets` — Title, description, thumbnail | Build from scratch | [ ] |
+| 6 | `/assets` — Title, description, thumbnail | Built | [x] |
 | 7 | End-to-end test | Full pipeline test | [ ] |
 | 8 | Short-form pipeline | Design + build | [ ] |
 | 9 | Distribution + content cascade | Design + build | [ ] |

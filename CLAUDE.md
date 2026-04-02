@@ -1,6 +1,6 @@
 # medevsmaker — AI Video Director Project
 
-## 5-Command Pipeline
+## 6-Command Pipeline
 
 ```
 /idea [focus]         → trend scan + competitor check + ranked ideas (FREE)
@@ -23,6 +23,12 @@
 /music <VideoName>    → Background music + voiceover ducking ($$)
                         ElevenLabs Music API or manual MP3
                         User reviews music vibe + ducking levels
+
+/assets <VideoName>   → Title, description, tags, chapters, thumbnail ($ for thumbnail)
+                        5 title variants scored + SEO description + auto-chapters from manifest
+                        Optional: AI thumbnail via Replicate MCP (Flux) + Remotion renderStill()
+                        Output: productions/<date>-<slug>/assets.md + thumbnail PNGs
+                        User picks title + thumbnail, then uploads to YouTube
 
 /sfx <VideoName>      → Sound effects (FUTURE)
 ```
@@ -55,6 +61,12 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 **`/music <VideoName>`**: Mood Analysis → Music Generation → Ducking Integration
 
 **Provider**: ElevenLabs Music API (default), manual MP3 via `--manual` flag
+
+### assets — Publishing Metadata + Thumbnail
+
+**`/assets <VideoName>`**: Context Gathering → Titles (5 variants, scored) → Description + Tags + Chapters → Thumbnail Brief + A/B Variants → Optional AI Thumbnail Generation → `assets.md`
+
+Self-contained command (no separate skill). Leverages youtube skill's sub-skills (seo, metadata, thumbnail) internally. Auto-generates chapter timestamps from manifest.json. Thumbnail generation via Replicate MCP (Flux 1.1 Pro) + Remotion `renderStill()` compositing.
 
 ### youtube — YouTube Research & Strategy (installed)
 
@@ -98,8 +110,9 @@ src/
 
 scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio
 scripts/music/                      # Music pipeline: types, generate-music
-productions/                        # /idea output + /script research.md + script.json
-commands/                           # /idea, /script, /video, /voiceover, /music slash commands
+productions/                        # /idea output + /script research.md + script.json + /assets assets.md
+commands/                           # /idea, /script, /video, /voiceover, /music, /assets slash commands
+public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets)
 ```
 
 ## Remotion Conventions
