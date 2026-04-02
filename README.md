@@ -67,9 +67,9 @@ scripts/
   tts/                        TTS pipeline (generate-manifest, transcript, audio)
   music/                      Music generation pipeline
 
-commands/                     Slash command definitions (8 commands)
 productions/                  Output: ideas, research, scripts, assets
-.agents/skills/               Skills: video-director, voiceover-director, music-director, youtube, research
+.agents/skills/               Skills: video, voiceover, music, youtube, research
+.claude/skills/               All 8 slash commands registered here
 .claude/agents/               Sub-agents: script-critic
 ```
 
@@ -99,9 +99,9 @@ Managed by `npx skills`. Source of truth in `.agents/skills/`, junctions in `.cl
 
 | Skill | Powers |
 |-------|--------|
-| **video-director** | `/script` + `/video` |
-| **voiceover-director** | `/voiceover` |
-| **music-director** | `/music` |
+| **video** | `/script` + `/video` |
+| **voiceover** | `/voiceover` |
+| **music** | `/music` |
 | **youtube** | SEO, hooks, retention (used by `/script` and `/assets`) |
 | **research** | Web research (used by `/script`) |
 | **remotion-best-practices** | Remotion API patterns |

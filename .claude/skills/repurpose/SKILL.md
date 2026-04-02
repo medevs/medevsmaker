@@ -1,8 +1,8 @@
 ---
 name: repurpose
 description: "Extract 3-5 short-form video candidates from an existing long-form video."
-user-invocable: true
-skill: video-director
+disable-model-invocation: true
+skill: video
 ---
 
 # /repurpose — Extract Shorts from Long-Form

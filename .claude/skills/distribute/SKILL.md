@@ -1,7 +1,7 @@
 ---
 name: distribute
 description: "Generate cross-platform distribution content from a completed video — blog post, social threads, email newsletter, community post, and posting schedule."
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # /distribute — Content Cascade Across Platforms

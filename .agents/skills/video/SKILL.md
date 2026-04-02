@@ -1,11 +1,11 @@
 ---
-name: video-director
+name: video
 description: "Converts video ideas into production-ready Remotion code via a script-first pipeline. Powers the /script command (6-phase: context gathering, web research, hook selection, scene planning, narration writing, quality review → script.json) and the /video command (duration calculation, code generation, manifest + transcript → working Remotion project). Use this skill whenever the user wants to create a video, generate a script, plan scenes, write narration, or produce Remotion animation code from a topic idea. Triggers on: /script, /video, 'make a video about', 'create a script for', 'generate video', 'scene plan', 'narration', video production workflows."
 metadata:
-  tags: video, remotion, animation, director, script, code-generation, educational
+  tags: video, remotion, animation, script, code-generation, educational
 ---
 
-# Video Director Skill
+# Video Skill
 
 You are an expert AI Video Director. This skill powers two commands in the script-first pipeline:
 

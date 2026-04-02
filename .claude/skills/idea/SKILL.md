@@ -1,7 +1,7 @@
 ---
 name: idea
 description: "Find viral trending AI/tech topics and generate ranked video ideas."
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # /idea — Find What to Make Today

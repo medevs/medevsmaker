@@ -54,7 +54,7 @@ Each step has a validation checkpoint. Review output before proceeding to the ne
 
 Self-contained command (no separate skill). Spawns 3 parallel research agents, scores ideas on 4 dimensions (search demand, gap opportunity, audience fit, timeliness), and outputs ranked ideas with source URLs.
 
-### video-director — Powers `/script` and `/video`
+### video — Powers `/script` and `/video`
 
 **`/script <idea>`**: Context Gathering → Deep Research → Angle & Hook → Scene Planning → Narration Writing → Quality Review → `script.json`
 **`/video <VideoName>`**: Duration Calc → Code Generation → manifest.json + transcript.json (pre-populated)
@@ -62,13 +62,13 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 **Supported video types**: short, news, explainer, tutorial (historical alias: `educational` → `explainer`)
 **Short-form**: `--format short` flag on `/script`, or auto-detected from platform mentions (TikTok, Shorts, Reel). 1080x1920 portrait, 13-60s, flat TransitionSeries, CaptionOverlay always on.
 
-### voiceover-director — Powers `/voiceover`
+### voiceover — Powers `/voiceover`
 
 **`/voiceover <VideoName>`**: TTS Synthesis → Audio Integration
 
 **Provider**: ElevenLabs (default), Cartesia, Edge TTS — switch via `TTS_PROVIDER` env var
 
-### music-director — Powers `/music`
+### music — Powers `/music`
 
 **`/music <VideoName>`**: Mood Analysis → Music Generation → Ducking Integration
 
@@ -78,13 +78,13 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 
 **`/assets <VideoName>`**: Context Gathering → Titles (5 variants, scored) → Description + Tags + Chapters → Thumbnail Brief + A/B Variants → Optional AI Thumbnail Generation → `assets.md`
 
-Self-contained command (no separate skill). Leverages youtube skill's sub-skills (seo, metadata, thumbnail) internally. Auto-generates chapter timestamps from manifest.json. Thumbnail generation requires Replicate MCP configured in `.mcp.json`; without it, outputs a text-only thumbnail brief for manual creation.
+Leverages youtube skill's sub-skills (seo, metadata, thumbnail) internally. Auto-generates chapter timestamps from manifest.json. Thumbnail generation requires Replicate MCP configured in `.mcp.json`; without it, outputs a text-only thumbnail brief for manual creation.
 
 ### distribute — Content Cascade
 
 **`/distribute <VideoName>`**: Context Gathering → Blog Post → Twitter Thread → LinkedIn Post → Email Newsletter → Community Post → Schedule → `distribute/`
 
-Self-contained command (no separate skill). Reads script.json + assets.md + research.md, leverages youtube skill's repurpose sub-skill knowledge. Generates platform-native content (not transcript paste). Outputs to `productions/<date>-<slug>/distribute/` with `distribute-status.json` tracking.
+Reads script.json + assets.md + research.md, leverages youtube skill's repurpose sub-skill knowledge. Generates platform-native content (not transcript paste). Outputs to `productions/<date>-<slug>/distribute/` with `distribute-status.json` tracking.
 
 ### youtube — YouTube Research & Strategy (installed)
 
@@ -119,19 +119,19 @@ src/
     scenes/                         # HookQuestion, TitleIntro, FullScreenText, SwipeReveal, etc.
   <VideoName>/                      # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
 
-.agents/skills/video-director/      # Powers /script (6 phases) and /video (3 phases)
+.agents/skills/video/               # Powers /script (6 phases) and /video (3 phases)
   rules/                            # context-gathering, research-integration, hook-selection,
                                     # video-types, audience-profile, educational-scenes,
                                     # narration-writing, long-form-architecture, duration-calculation,
                                     # short-form
-.agents/skills/voiceover-director/  # Powers /voiceover (TTS + audio integration)
-.agents/skills/music-director/      # Powers /music (music generation + ducking)
+.agents/skills/voiceover/           # Powers /voiceover (TTS + audio integration)
+.agents/skills/music/               # Powers /music (music generation + ducking)
+.claude/skills/                     # All 8 commands registered here (/idea, /script, /video, etc.)
 .claude/agents/script-critic.md     # Read-only quality reviewer (8 checks)
 
 scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio
 scripts/music/                      # Music pipeline: types, generate-music
 productions/                        # /idea output + /script research.md + script.json + /assets assets.md + /distribute distribute/
-commands/                           # /idea, /script, /video, /voiceover, /music, /assets, /repurpose, /distribute
 public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets, requires Replicate MCP)
 ```
 

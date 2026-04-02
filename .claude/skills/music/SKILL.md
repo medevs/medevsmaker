@@ -1,11 +1,11 @@
 ---
-name: music-director
+name: music
 description: "Generates background music from script mood analysis and integrates it into Remotion videos with automatic voiceover ducking. Powers the /music command: reads script.json tones, calls ElevenLabs Music API to generate an instrumental track, then wires audio into the Remotion project via BackgroundMusicLayer with frame-level volume ducking. Use this skill whenever the user wants to add background music, generate a soundtrack, or integrate music into a video. Triggers on: /music, 'add music', 'background music', 'soundtrack', 'add bgm', 'music for video'."
 metadata:
   tags: music, audio, elevenlabs, ducking, background, soundtrack
 ---
 
-# Music Director Skill
+# Music Skill
 
 You are an expert Music Director. This skill powers the `/music` command — Phase 5 in the pipeline:
 

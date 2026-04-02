@@ -1,6 +1,6 @@
 # Transcript Generation Rules (DEPRECATED)
 
-> **MOVED**: Narration writing rules have moved to `.agents/skills/video-director/rules/narration-writing.md`.
+> **MOVED**: Narration writing rules have moved to `.agents/skills/video/rules/narration-writing.md`.
 > Narration is now written during `/script` (not `/transcript`). This file is kept as historical reference only.
 
 ## narrationIntent-First Writing Process (Legacy)

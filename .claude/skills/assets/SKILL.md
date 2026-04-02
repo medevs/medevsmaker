@@ -1,7 +1,7 @@
 ---
 name: assets
 description: "Generate SEO-optimized titles, description, tags, chapters, and thumbnail for YouTube upload."
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # /assets — Title, Description, Tags, Thumbnail

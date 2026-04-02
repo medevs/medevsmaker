@@ -1,8 +1,7 @@
 ---
 name: script
 description: "Generate a production script with full narration from a simple idea."
-user-invocable: true
-skill: video-director
+disable-model-invocation: true
 ---
 
 # /script — Generate Production Script

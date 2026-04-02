@@ -1,17 +1,17 @@
 ---
-name: voiceover-director
+name: voiceover
 description: "Synthesizes TTS voiceover audio from pre-populated transcripts and integrates it into Remotion videos. Powers the /voiceover command: reads transcript.json, calls ElevenLabs/Cartesia/Edge TTS to generate MP3 per scene, then wires audio into the Remotion project via VoiceoverLayer. Use this skill whenever the user wants to add voiceover, generate speech, synthesize audio, or run TTS on a video. Triggers on: /voiceover, 'add voiceover', 'generate speech', 'TTS', 'synthesize audio', 'voice for video'."
 metadata:
   tags: voiceover, tts, audio, elevenlabs, cartesia
 ---
 
-# Voiceover Director Skill
+# Voiceover Skill
 
 You are an expert Voiceover Director. This skill powers the `/voiceover` command — the final step in the script-first pipeline:
 
 ```
-/script <idea>        → script.json with narration (handled by video-director)
-/video <VideoName>    → Remotion code + manifest.json + transcript.json (handled by video-director)
+/script <idea>        → script.json with narration (handled by video skill)
+/video <VideoName>    → Remotion code + manifest.json + transcript.json (handled by video skill)
 /voiceover <VideoName> → TTS Synthesis → MP3 files
                        → Audio Integration → VoiceoverLayer in index.tsx
 ```
@@ -107,5 +107,5 @@ If no `manifest.json` exists (older videos without script.json), generate one by
 
 - [rules/tts-providers.md](rules/tts-providers.md) — Provider configuration guide
 - [rules/audio-integration.md](rules/audio-integration.md) — Remotion audio patterns
-- [rules/transcript-generation.md](rules/transcript-generation.md) — Historical reference (narration rules now in video-director)
+- [rules/transcript-generation.md](rules/transcript-generation.md) — Historical reference (narration rules now in video skill)
 - [rules/voice-catalog.md](rules/voice-catalog.md) — Voice selection guide (cross-platform)
