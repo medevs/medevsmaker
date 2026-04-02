@@ -43,7 +43,7 @@ You are an expert Voiceover Director. This skill powers the `/voiceover` command
 The script automatically:
 - Generates MP3 files to `public/vo/<VideoName>/`
 - Updates `transcript.json` with `audioFile` and `actualDurationSeconds`
-- Creates `src/<VideoName>/voiceover.ts` with the `VOICEOVER_SCENES` array
+- Creates `src/videos/<VideoName>/voiceover.ts` with the `VOICEOVER_SCENES` array
 - Generates `captions.json` to `public/vo/<VideoName>/` (when word timestamps available)
 - Exports `CAPTIONS_FILE` from voiceover.ts (when captions generated)
 - Auto-syncs scene durations to match audio (with --auto-sync flag)
@@ -56,9 +56,9 @@ The script automatically:
 
 ### Steps
 
-1. **Add import** to `src/<VideoName>/index.tsx`:
+1. **Add import** to `src/videos/<VideoName>/index.tsx`:
    ```tsx
-   import { VoiceoverLayer } from "../shared/components/VoiceoverLayer";
+   import { VoiceoverLayer } from "../../shared/components/VoiceoverLayer";
    import { VOICEOVER_SCENES } from "./voiceover";
    ```
 
@@ -87,8 +87,8 @@ The script automatically:
 
 If no `manifest.json` exists (older videos without script.json), generate one by parsing the video's section files:
 
-1. Read `src/<VideoName>/styles.ts` for FPS, section frame constants
-2. Read each `src/<VideoName>/sections/SectionN.tsx`
+1. Read `src/videos/<VideoName>/styles.ts` for FPS, section frame constants
+2. Read each `src/videos/<VideoName>/sections/SectionN.tsx`
 3. Extract scene types, durations (from `durationInFrames / FPS`), and props
 4. Extract transition types and frame durations
 5. Write `manifest.json` with the extracted data

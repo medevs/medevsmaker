@@ -33,7 +33,7 @@
 
 /repurpose <VideoName> → Extract 3-5 short-form clips from long-form (FREE)
                         Identifies standalone moments, rewrites hooks for vertical
-                        Output: src/<VideoName>Short1-5/script.json
+                        Output: src/videos/<VideoName>Short1-5/script.json
                         User reviews clips, then runs /video for each
 
 /distribute <VideoName> → Cross-platform content cascade (FREE)
@@ -117,7 +117,7 @@ src/
     formats.ts                      # FORMAT_PRESETS, SAFE_ZONES, useLayoutMode() hook
     components/                     # AnimatedText, Background, CaptionOverlay, SafeZoneOverlay, etc.
     scenes/                         # HookQuestion, TitleIntro, FullScreenText, SwipeReveal, etc.
-  <VideoName>/                      # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
+  videos/<VideoName>/                # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
 
 .agents/skills/video/               # Powers /script (6 phases) and /video (3 phases)
   rules/                            # context-gathering, research-integration, hook-selection,
@@ -129,7 +129,7 @@ src/
 .claude/skills/                     # All 8 commands registered here (/idea, /script, /video, etc.)
 .claude/agents/script-critic.md     # Read-only quality reviewer (8 checks)
 
-scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio
+scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio, pronunciation.json
 scripts/music/                      # Music pipeline: types, generate-music
 productions/                        # /idea output + /script research.md + script.json + /assets assets.md + /distribute distribute/
 public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets, requires Replicate MCP)

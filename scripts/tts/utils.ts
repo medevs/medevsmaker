@@ -66,17 +66,28 @@ export function getAudioDuration(filePath: string): number {
       { encoding: "utf-8" },
     );
     const data = JSON.parse(output);
-    return parseFloat(data.format.duration);
+    const duration = parseFloat(data.format.duration);
+    if (!isNaN(duration)) return duration;
+
+    // WebM/Opus from streaming sources often lack duration in the container header.
+    // Decode the file with ffmpeg to get the actual duration.
+    const ffmpegOut = execSync(
+      `ffmpeg -i "${filePath}" -f null - 2>&1`,
+      { encoding: "utf-8", shell: true },
+    );
+    const match = ffmpegOut.match(/time=(\d+):(\d+):(\d+\.\d+)/);
+    if (match) {
+      return parseInt(match[1]) * 3600 + parseInt(match[2]) * 60 + parseFloat(match[3]);
+    }
+
+    throw new Error("Could not parse duration from ffmpeg output");
   } catch {
     console.warn(
-      "[WARNING] ffprobe not found — using file-size estimate for audio duration.",
+      "[WARNING] ffprobe/ffmpeg not found — using file-size estimate for audio duration.",
     );
     console.warn(
       "  Install ffmpeg (https://ffmpeg.org/) for accurate durations.",
     );
-    // Fallback: estimate from MP3 file size (~48kbps, typical for Edge TTS).
-    // Uses low bitrate estimate to OVER-estimate duration (safer than under).
-    // Under-estimating causes audio cutoff; over-estimating just adds silence.
     const stats = readFileSync(filePath);
     return (stats.byteLength * 8) / 48_000;
   }

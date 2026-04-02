@@ -5,14 +5,14 @@
  *   node --env-file=.env --strip-types scripts/tts/generate-transcript.ts <VideoName> [--force] [--from-script]
  *
  * Default mode (no flags):
- *   Reads manifest.json from src/<VideoName>/ and outputs transcript.json
+ *   Reads manifest.json from src/videos/<VideoName>/ and outputs transcript.json
  *   with empty narration fields (to be filled by the voiceover skill).
  *   If transcript.json already exists with narrations:
  *     - MERGE mode — preserves existing narrations, only fills empty ones
  *     - --force: overwrites everything with a fresh skeleton
  *
  * --from-script mode:
- *   Reads script.json + manifest.json from src/<VideoName>/ and outputs
+ *   Reads script.json + manifest.json from src/videos/<VideoName>/ and outputs
  *   transcript.json with narration PRE-POPULATED from script.json.
  *   Requires both script.json (for narration) and manifest.json (for durations).
  */
@@ -32,7 +32,7 @@ const forceOverwrite = process.argv.includes("--force");
 const fromScript = process.argv.includes("--from-script");
 
 const rootDir = join(import.meta.dirname, "..", "..");
-const videoDir = join(rootDir, "src", videoName);
+const videoDir = join(rootDir, "src", "videos", videoName);
 const manifestPath = join(videoDir, "manifest.json");
 const scriptPath = join(videoDir, "script.json");
 const transcriptPath = join(videoDir, "transcript.json");

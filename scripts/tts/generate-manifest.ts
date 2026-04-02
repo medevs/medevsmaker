@@ -19,7 +19,7 @@ if (!videoName) {
 }
 
 const rootDir = join(import.meta.dirname, "..", "..");
-const videoDir = join(rootDir, "src", videoName);
+const videoDir = join(rootDir, "src", "videos", videoName);
 const stylesPath = join(videoDir, "styles.ts");
 const sectionsDir = join(videoDir, "sections");
 const manifestPath = join(videoDir, "manifest.json");

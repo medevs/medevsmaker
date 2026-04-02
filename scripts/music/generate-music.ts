@@ -9,7 +9,7 @@
  *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --no-loop
  *
  * Reads manifest.json + script.json for mood, generates music via ElevenLabs,
- * writes MP3 to public/music/<VideoName>/, and generates src/<VideoName>/music.ts.
+ * writes MP3 to public/music/<VideoName>/, and generates src/videos/<VideoName>/music.ts.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -184,7 +184,7 @@ function generateMusicModule(
   loop: boolean,
 ): string {
   const lines = [
-    `import type { MusicConfig } from "../shared/components/BackgroundMusicLayer";`,
+    `import type { MusicConfig } from "../../shared/components/BackgroundMusicLayer";`,
     ``,
     `export const MUSIC_CONFIG: MusicConfig = {`,
     `  src: "${src}",`,
@@ -213,7 +213,7 @@ async function main() {
   }
 
   const rootDir = join(import.meta.dirname, "..", "..");
-  const videoDir = join(rootDir, "src", flags.videoName);
+  const videoDir = join(rootDir, "src", "videos", flags.videoName);
   const manifestPath = join(videoDir, "manifest.json");
   const scriptPath = join(videoDir, "script.json");
   const voiceoverPath = join(videoDir, "voiceover.ts");
@@ -300,7 +300,7 @@ async function main() {
 
   console.log(`\n─── Next Steps ───`);
   console.log(`  1. Add BackgroundMusicLayer to ${flags.videoName}/index.tsx:`);
-  console.log(`     import { BackgroundMusicLayer } from "../shared/components/BackgroundMusicLayer";`);
+  console.log(`     import { BackgroundMusicLayer } from "../../shared/components/BackgroundMusicLayer";`);
   console.log(`     import { MUSIC_CONFIG } from "./music";`);
   console.log(`     // Add after VoiceoverLayer:`);
   console.log(`     <BackgroundMusicLayer config={MUSIC_CONFIG} voiceoverScenes={VOICEOVER_SCENES} />`);

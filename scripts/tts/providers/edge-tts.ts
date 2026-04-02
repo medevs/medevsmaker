@@ -33,9 +33,9 @@ export class EdgeTTSProvider implements TTSProvider {
     const voice = request.voiceId || this.voice;
 
     const tts = new MsEdgeTTS();
-    await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
 
-    // msedge-tts writes to a directory as audio.mp3
+    // msedge-tts writes to a directory as audio.<ext> based on format
     const tmpDir = join(tmpdir(), `edge-tts-${Date.now()}`);
     mkdirSync(tmpDir, { recursive: true });
 

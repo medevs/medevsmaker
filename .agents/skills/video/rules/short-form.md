@@ -110,7 +110,7 @@ finalDuration = clamp(rounded, 3, 8)        // 3s min, 8s max per scene
 Shorts use a **flat** `TransitionSeries` — no `<Series>` section wrapper, no section files.
 
 ```
-src/<VideoName>/
+src/videos/<VideoName>/
   index.tsx              # TransitionSeries of all scenes (no sections/)
   script.json            # type: "short", single section
   manifest.json          # Flat scene list
@@ -124,13 +124,13 @@ src/<VideoName>/
 import { AbsoluteFill } from "remotion";
 import { TransitionSeries } from "@remotion/transitions";
 import { linearTiming } from "@remotion/transitions";
-import { TRANSITIONS } from "../shared/transitions";
-import { CaptionOverlay } from "../shared/components/CaptionOverlay";
-import { Background } from "../shared/components/Background";
+import { TRANSITIONS } from "../../shared/transitions";
+import { CaptionOverlay } from "../../shared/components/CaptionOverlay";
+import { Background } from "../../shared/components/Background";
 
 // Import shared scenes
-import { ColdOpen } from "../shared/scenes/ColdOpen";
-import { ConceptExplain } from "../shared/scenes/ConceptExplain";
+import { ColdOpen } from "../../shared/scenes/ColdOpen";
+import { ConceptExplain } from "../../shared/scenes/ConceptExplain";
 // ... etc
 
 export const ShortVideoName: React.FC = () => {

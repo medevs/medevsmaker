@@ -41,10 +41,10 @@ Generates all YouTube publishing metadata and optionally creates AI-generated th
 
 Read these files automatically — do NOT ask the user for this information:
 
-1. `src/<VideoName>/script.json` — topic, narration text, sections, scene types, meta fields (ideaSource, researchFile), sources
-2. `src/<VideoName>/manifest.json` — section names, durationFrames, fps, totalDurationFrames
+1. `src/videos/<VideoName>/script.json` — topic, narration text, sections, scene types, meta fields (ideaSource, researchFile), sources
+2. `src/videos/<VideoName>/manifest.json` — section names, durationFrames, fps, totalDurationFrames
 3. `productions/<date>-<slug>/research.md` — if available (via meta.researchFile or scanning productions/)
-4. `src/<VideoName>/voiceover.ts` — if available (VOICEOVER_SCENES timing)
+4. `src/videos/<VideoName>/voiceover.ts` — if available (VOICEOVER_SCENES timing)
 
 Extract and note:
 - **Primary topic/keyword** from script.json meta or first section narration

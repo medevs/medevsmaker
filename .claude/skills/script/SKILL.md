@@ -62,7 +62,7 @@ productions/<date>-<slug>/
   research.md         ← sourced facts from Phase 2
   script.json         ← canonical copy
 
-src/<VideoName>/
+src/videos/<VideoName>/
   script.json         ← copy for /video compatibility
 ```
 

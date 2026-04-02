@@ -52,13 +52,13 @@ You are an expert Music Director. This skill powers the `/music` command — Pha
 
 4. **Verify output** — Check that:
    - `public/music/<VideoName>/background.mp3` was created
-   - `src/<VideoName>/music.ts` was generated with `MUSIC_CONFIG` export
+   - `src/videos/<VideoName>/music.ts` was generated with `MUSIC_CONFIG` export
 
-5. **Integrate into composition** — Add BackgroundMusicLayer to `src/<VideoName>/index.tsx`:
+5. **Integrate into composition** — Add BackgroundMusicLayer to `src/videos/<VideoName>/index.tsx`:
 
    Add imports:
    ```tsx
-   import { BackgroundMusicLayer } from "../shared/components/BackgroundMusicLayer";
+   import { BackgroundMusicLayer } from "../../shared/components/BackgroundMusicLayer";
    import { MUSIC_CONFIG } from "./music";
    ```
 
@@ -106,7 +106,7 @@ Default volumes are calibrated for tech explainer videos:
 | `fadeOutFrames` | 60 | Want faster/slower outro |
 | `duckRampFrames` | 15 | Ducking transitions feel abrupt (raise) or sluggish (lower) |
 
-To adjust: edit `src/<VideoName>/music.ts` and change the `MUSIC_CONFIG` values.
+To adjust: edit `src/videos/<VideoName>/music.ts` and change the `MUSIC_CONFIG` values.
 
 ---
 
@@ -136,6 +136,6 @@ When the user provides their own music file:
 public/music/<VideoName>/
   background.mp3              # The music track (generated or manual)
 
-src/<VideoName>/
+src/videos/<VideoName>/
   music.ts                    # Exports MUSIC_CONFIG for BackgroundMusicLayer
 ```

@@ -28,8 +28,8 @@ Generates ready-to-post content for 5 platforms from a completed video. Reads sc
 ## Prerequisites
 
 - Run `/assets <VideoName>` first — assets.md must exist (provides chosen title, tags, SEO keyword)
-- `src/<VideoName>/script.json` — narration text, topic, meta, sources
-- `src/<VideoName>/manifest.json` — section names, durations
+- `src/videos/<VideoName>/script.json` — narration text, topic, meta, sources
+- `src/videos/<VideoName>/manifest.json` — section names, durations
 - `productions/<date>-<slug>/research.md` — recommended for blog depth (stats, sources, context)
 
 ## Flags
@@ -46,14 +46,14 @@ Generates ready-to-post content for 5 platforms from a completed video. Reads sc
 
 Read these files automatically — do NOT ask the user for this information:
 
-1. `src/<VideoName>/script.json` — topic, narration text per scene, sections, meta fields (ideaSource, researchFile, type), sources array
-2. `src/<VideoName>/manifest.json` — section names, durationFrames, fps, totalDurationFrames
+1. `src/videos/<VideoName>/script.json` — topic, narration text per scene, sections, meta fields (ideaSource, researchFile, type), sources array
+2. `src/videos/<VideoName>/manifest.json` — section names, durationFrames, fps, totalDurationFrames
 3. `productions/<date>-<slug>/assets.md` — chosen title, description, tags, chapters (via meta.researchFile path or scanning productions/ for matching slug)
 4. `productions/<date>-<slug>/research.md` — if available (original research with sources, stats, context)
-5. `src/<VideoName>/transcript.json` — if available (scene-by-scene narration with timing)
+5. `src/videos/<VideoName>/transcript.json` — if available (scene-by-scene narration with timing)
 
 Also scan:
-6. `src/<VideoName>Short*/script.json` — detect if `/repurpose` has been run, count how many shorts exist
+6. `src/videos/<VideoName>Short*/script.json` — detect if `/repurpose` has been run, count how many shorts exist
 
 Load platform formatting knowledge:
 7. `.agents/skills/youtube/sub-skills/repurpose.md` — platform-specific templates and quality rules

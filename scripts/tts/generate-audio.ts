@@ -5,7 +5,7 @@
  *   node --experimental-strip-types --env-file=.env scripts/tts/generate-audio.ts <VideoName>
  *
  * Reads transcript.json, calls TTS for each scene, writes MP3 files
- * to public/vo/<VideoName>/, and generates src/<VideoName>/voiceover.ts.
+ * to public/vo/<VideoName>/, and generates src/videos/<VideoName>/voiceover.ts.
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -14,6 +14,18 @@ import { createProvider } from "./providers/index.ts";
 import { getAudioDuration, buildVoiceoverScenes, computeFrameOffsets, wordTimestampsToCaptions, syncTimings } from "./utils.ts";
 import type { VideoManifest, Transcript, VoiceoverScene, WordTimestamp } from "./types.ts";
 import type { CaptionEntry } from "./utils.ts";
+
+// ─── Pronunciation dictionary ───────────────────────────────
+function applyPronunciation(text: string): string {
+  const dictPath = join(import.meta.dirname, "pronunciation.json");
+  if (!existsSync(dictPath)) return text;
+  const dict: Record<string, string> = JSON.parse(readFileSync(dictPath, "utf-8"));
+  let result = text;
+  for (const [word, replacement] of Object.entries(dict)) {
+    result = result.replace(new RegExp(`\\b${word}\\b`, "g"), replacement);
+  }
+  return result;
+}
 
 // ─── Voice ID resolution per provider ────────────────────────
 const VOICE_ID_ENV: Record<string, { envVar: string; fallback: string }> = {
@@ -43,7 +55,7 @@ async function main() {
   }
 
   const rootDir = join(import.meta.dirname, "..", "..");
-  const videoDir = join(rootDir, "src", videoName);
+  const videoDir = join(rootDir, "src", "videos", videoName);
   const transcriptPath = join(videoDir, "transcript.json");
   const manifestPath = join(videoDir, "manifest.json");
   const audioDir = join(rootDir, "public", "vo", videoName);
@@ -92,8 +104,9 @@ async function main() {
   const diagnostics: SceneDiag[] = [];
 
   for (const scene of transcript.scenes) {
+    const sectionNum = String(scene.sectionIndex).padStart(2, "0");
     const sceneNum = String(scene.sceneIndex).padStart(2, "0");
-    const filename = `scene-${sceneNum}.mp3`;
+    const filename = `s${sectionNum}-scene-${sceneNum}.mp3`;
     const filePath = join(audioDir, filename);
     const relativePath = `vo/${videoName}/${filename}`;
 
@@ -114,7 +127,7 @@ async function main() {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
         result = await provider.synthesize({
-          text: scene.narration,
+          text: applyPronunciation(scene.narration),
           voiceId: voiceId,
           format: "mp3",
         });
@@ -260,7 +273,7 @@ async function main() {
 
 function generateVoiceoverModule(scenes: VoiceoverScene[], captionsFile: string | null): string {
   const lines = [
-    `import type { VoiceoverScene } from "../shared/components/VoiceoverLayer";`,
+    `import type { VoiceoverScene } from "../../shared/components/VoiceoverLayer";`,
     ``,
     `export const VOICEOVER_SCENES: VoiceoverScene[] = [`,
   ];
