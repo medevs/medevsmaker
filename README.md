@@ -1,181 +1,107 @@
 # medevsmaker — AI Video Director
 
-One prompt, complete Remotion video. Educational content, promos, tutorials, and more.
-
-## What This Does
-
-Type `/video How the Web Actually Works` in Claude Code and get a complete, production-ready Remotion video project — scenes, animations, transitions, branding, and rendering instructions. No video editing knowledge required.
+Automated YouTube video production with Claude Code + Remotion. From idea to published video in one workflow. No camera, no manual editing.
 
 ## Quick Start
 
 ```bash
-# 1. Clone and install
+# Install
 git clone <repo-url> && cd medevsmaker
 npm install
 
-# 2. Generate a video (in Claude Code)
-/video How the Web Actually Works
+# Preview in Remotion Studio
+npm run studio
+```
 
-# 3. Preview in Remotion Studio
-npx remotion studio
+## 9-Command Pipeline
 
-# 4. Render to MP4
-npx remotion render src/index.ts HowTheWebWorks out/video.mp4
+Each command is a Claude Code slash command. Run them in order — each step has a validation checkpoint before proceeding.
+
+```
+/idea [focus]              Trend scan + competitor check + ranked ideas
+/script <idea>             6-phase script: research, hooks, scenes, narration, critic review
+/video <VideoName>         Remotion code generation from script.json
+/voiceover <VideoName>     TTS synthesis (ElevenLabs, Cartesia, or Edge TTS)
+/music <VideoName>         Background music + voiceover ducking
+/assets <VideoName>        YouTube titles, description, tags, chapters, thumbnail
+/repurpose <VideoName>     Extract 3-5 short-form clips from long-form
+/distribute <VideoName>    Blog post, Twitter thread, LinkedIn, email, community post
 ```
 
 ## How It Works
 
 ```
-Your Idea → [Phase 1: Research & Expand] → Production Brief
-         → [Phase 2: Scene Planning]     → Scene Manifest
-         → [Phase 3: Code Generation]    → Remotion Code
+/idea       → productions/YYYY-MM-DD/idea.md (pick a topic)
+/script     → script.json + research.md (review narration + scenes)
+/video      → src/<VideoName>/ with Remotion code + manifest.json + transcript.json
+/voiceover  → public/vo/<VideoName>/*.mp3 (TTS audio per scene)
+/music      → public/music/<VideoName>/background.mp3 (auto-ducking)
+/assets     → assets.md (5 title variants, SEO description, chapters)
+/distribute → distribute/ (platform-native content for 5 channels)
 ```
-
-1. **Research & Expand** — Detects video type, generates a production brief with sections, colors, typography, audience context, and engagement plan
-2. **Scene Planning** — Maps every scene to one of 20 reusable templates with timing, content, and visual variety
-3. **Code Generation** — Writes all Remotion files in dependency order: `styles.ts` → `sections/` → `index.tsx` → `Root.tsx`
 
 ## Video Types
 
-| Type | Auto-detected keywords | Default Duration |
-|------|----------------------|-----------------|
-| Educational | conceptual topics, "how X works" | 3-10 min |
-| Promo | "promo", "ad", "launch" | 15-30s |
-| Tutorial | "tutorial", "how to", "guide" | 60-120s |
-| Explainer | "explainer", "how it works" | 30-60s |
-| Social Clip | "reel", "tiktok", "shorts" | 15-30s |
-| Announcement | "announcing", "new feature" | 15-30s |
-| Demo | "demo", "showcase", "preview" | 30-60s |
+| Type | Description |
+|------|-------------|
+| **news** | AI/tech news coverage |
+| **explainer** | Concept deep-dives ("how X works") |
+| **tutorial** | Step-by-step guides |
+| **short** | 13-60s vertical (TikTok, Shorts, Reels) |
 
-## What You Get
+## Project Structure
 
 ```
-src/HowTheWebWorks/
-  styles.ts              # Colors, fonts, timing tokens
-  sections/
-    Section1.tsx          # Introduction (HookQuestion + TitleIntro + content)
-    Section2.tsx          # Core concept sections
-    Section3.tsx
-    ...
-  index.tsx               # Main composition — chains sections
-src/Root.tsx              # Updated with new Composition entry
+src/
+  Root.tsx                    Composition registry
+  shared/
+    components/               25 reusable UI components
+    scenes/                   35 scene templates
+    styles.ts                 Brand palette, tokens, themes
+    animations.ts             Spring configs, entrance animations
+    transitions.ts            Transition presets
+    formats.ts                Landscape/portrait format system
+  <VideoName>/                Per-video generated code
+
+scripts/
+  tts/                        TTS pipeline (generate-manifest, transcript, audio)
+  music/                      Music generation pipeline
+
+commands/                     Slash command definitions (8 commands)
+productions/                  Output: ideas, research, scripts, assets
+.agents/skills/               Skills: video-director, voiceover-director, music-director, youtube, research
+.claude/agents/               Sub-agents: script-critic
 ```
 
-## Shared Library
-
-### Components (`src/shared/components/`) — 13 total
-
-| Component | Description |
-|-----------|-------------|
-| AnimatedText | Text with fade-up spring animation |
-| Background | Gradient background with particle/grid overlay |
-| CodeBlock | Typewriter code reveal with line numbers |
-| DiagramBox | Labeled box that scales in for flow diagrams |
-| DiagramArrow | SVG arrow that draws itself between points |
-| StatCounter | Number counter from 0 to target with spring |
-| BulletReveal | Bullet points that stagger in from left |
-| SectionBadge | Numbered badge (01, 02...) with pop-in |
-| AccentBox | Colored card with left border (info/warning/success/danger) |
-| ProgressBar | Section progress dots at screen bottom |
-| Watermark | Persistent branding overlay (default: top-right) |
-| ParticleField | Deterministic floating particle system |
-| GridPattern | Subtle background grid |
-
-### Scene Templates (`src/shared/scenes/`) — 20 total
-
-| Scene | Duration | Used For |
-|-------|----------|----------|
-| HookQuestion | 4-5s | Opening question (always first) |
-| TitleIntro | 6-8s | Title + objectives (always second) |
-| SectionTitle | 3-4s | Chapter markers |
-| ConceptExplain | 6-8s | Core teaching content |
-| DiagramFlow | 8-12s | Processes, flows, architectures |
-| CodeDisplay | 8-15s | Technical code content |
-| ComparisonSplit | 6-10s | A vs B comparisons |
-| StatHighlight | 4-6s | Key statistics |
-| BulletRevealScene | 5-10s | Lists of items |
-| VisualMetaphor | 5-8s | Analogies for abstract concepts |
-| KeyTakeaway | 4-6s | Section summaries |
-| SummaryRecap | 8-12s | Video recap |
-| Outro | 4-6s | Channel branding + CTA |
-| EndScreen | 4-6s | Polished end card with gradient text + glow CTA |
-| WarningCallout | 5-7s | Mistakes, pitfalls |
-| StepSequence | 8-12s | Numbered step-by-step processes |
-| ColdOpen | 4-6s | Dramatic opening statements |
-| BeforeAfter | 8-12s | Before/after comparisons with wipe |
-| TimelineScene | 8-12s | Historical progressions, evolution |
-| DataChart | 8-12s | Animated bar charts, statistics |
-
-## Design System
-
-### Color Palette (medevsmaker-educational)
-
-| Color | Hex | Usage |
-|-------|-----|-------|
-| Indigo | `#6366f1` | Primary, section badges |
-| Violet | `#8b5cf6` | Secondary, concept accents |
-| Cyan | `#06b6d4` | Accent, bullet markers |
-| Amber | `#f59e0b` | Warnings, highlights |
-| Green | `#10b981` | Success, good examples |
-| Red | `#ef4444` | Danger, bad examples |
-| Background | `#0f0f1a` | Dark navy |
-| Text | `#f8fafc` | Near white |
-
-### Spring Configs
-
-| Config | Settings | Use |
-|--------|----------|-----|
-| Smooth | `damping: 200` | Text, fade-ups, gentle entrances |
-| Snappy | `damping: 20, stiffness: 200` | Badges, buttons, pop-ins |
-| Bouncy | `damping: 8` | Dramatic entrances |
-| Heavy | `damping: 15, stiffness: 80, mass: 2` | Impactful reveals |
-
-### Transition Presets
-
-| Transition | Frames | Use |
-|------------|--------|-----|
-| fade | 15 | Default, most transitions |
-| slide | 20 | After section titles, conceptual shifts |
-| wipe | 18 | After diagram/stat scenes |
-| clockWipe | 25 | Major section changes (sparingly) |
-| springFade | 15 | Smooth spring-based fade |
-
-## For Contributors
-
-### How skills work
-Skills live in `.agents/skills/` with symlinks in `.claude/skills/`. Managed by `npx skills`:
+## Environment Setup
 
 ```bash
-npx skills list                    # Show installed skills
-npx skills add <github-url>        # Install from GitHub
-npx skills init <path>             # Create a new skill
+# .env — TTS provider config
+TTS_PROVIDER=edge-tts        # Free, no API key needed
+# Or: elevenlabs (best quality, requires API key)
+# Or: cartesia (alternative, requires API key)
 ```
 
-### Adding a new scene template
-1. Create `src/shared/scenes/YourScene.tsx` following the existing pattern
-2. Add props type, use `useCurrentFrame()` + `spring()` for all animations
-3. Document in `.agents/skills/video-director/rules/educational-scenes.md`
-4. Classify as visual-heavy or text-heavy in the Scene Visual Classification table
-
-### Key rule files
-| File | What it controls |
-|------|-----------------|
-| `SKILL.md` | 3-phase workflow, constraints, code patterns |
-| `rules/prompt-expansion.md` | Phase 1 — brief generation, engagement planning |
-| `rules/video-types.md` | 7 video types — defaults, palettes |
-| `rules/audience-profile.md` | Audience, tone, humor, engagement psychology |
-| `rules/educational-scenes.md` | 20 scene types — props, usage, visual classification |
-| `rules/long-form-architecture.md` | Section pattern, duration math |
-
-## Commands
+## npm Scripts
 
 ```bash
-# Generate a video (Claude Code)
-/video <your idea>
-
-# Preview
-npx remotion studio
-
-# Render
-npx remotion render src/index.ts <CompositionId> out/video.mp4
+npm run studio               # Remotion Studio (preview)
+npm run render               # Render video
+npm run manifest             # Generate manifest from script.json
+npm run transcript           # Generate transcript from script.json
+npm run voiceover            # Run TTS synthesis
+npm run music                # Generate background music
 ```
+
+## Skills
+
+Managed by `npx skills`. Source of truth in `.agents/skills/`, junctions in `.claude/skills/`.
+
+| Skill | Powers |
+|-------|--------|
+| **video-director** | `/script` + `/video` |
+| **voiceover-director** | `/voiceover` |
+| **music-director** | `/music` |
+| **youtube** | SEO, hooks, retention (used by `/script` and `/assets`) |
+| **research** | Web research (used by `/script`) |
+| **remotion-best-practices** | Remotion API patterns |

@@ -78,7 +78,7 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 
 **`/assets <VideoName>`**: Context Gathering → Titles (5 variants, scored) → Description + Tags + Chapters → Thumbnail Brief + A/B Variants → Optional AI Thumbnail Generation → `assets.md`
 
-Self-contained command (no separate skill). Leverages youtube skill's sub-skills (seo, metadata, thumbnail) internally. Auto-generates chapter timestamps from manifest.json. Thumbnail generation via Replicate MCP (Flux 1.1 Pro) + Remotion `renderStill()` compositing.
+Self-contained command (no separate skill). Leverages youtube skill's sub-skills (seo, metadata, thumbnail) internally. Auto-generates chapter timestamps from manifest.json. Thumbnail generation requires Replicate MCP configured in `.mcp.json`; without it, outputs a text-only thumbnail brief for manual creation.
 
 ### distribute — Content Cascade
 
@@ -132,7 +132,7 @@ scripts/tts/                        # TTS pipeline: types, utils, generate-trans
 scripts/music/                      # Music pipeline: types, generate-music
 productions/                        # /idea output + /script research.md + script.json + /assets assets.md + /distribute distribute/
 commands/                           # /idea, /script, /video, /voiceover, /music, /assets, /repurpose, /distribute
-public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets)
+public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets, requires Replicate MCP)
 ```
 
 ## Remotion Conventions
