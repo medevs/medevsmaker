@@ -74,3 +74,55 @@ export function genreFromTones(tones: string[]): string {
   }
   return bestGenre;
 }
+
+// ─── Breathing Music Types ────────────────────────────────
+
+export type BreathingMusicConfig = {
+  src: string;
+  durationInFrames: number;
+  narrationVolume: number;
+  gapVolume: number;
+  transitionVolume: number;
+  hookVolume: number;
+  outroVolume: number;
+  hookFrames: number;
+  outroFrames: number;
+  transitionFrames: number;
+  rampFrames: number;
+  fadeInFrames: number;
+  fadeOutFrames: number;
+  sectionStarts: number[];
+  loop: boolean;
+};
+
+// ─── Strategic Music Types ────────────────────────────────
+
+export type MusicSegmentRole =
+  | "hook"        // First section intro (moderate volume, ~15s)
+  | "transition"  // Section boundary swell (3-5s)
+  | "accent"      // Brief emphasis on key stats/comparisons (1-2s)
+  | "outro";      // End card / CTA (last section)
+
+export type MusicSegment = {
+  /** Unique label for Remotion Sequence name (e.g., "hook", "transition-s2") */
+  label: string;
+  /** Segment role — drives default volume/duration heuristics */
+  role: MusicSegmentRole;
+  /** Absolute start frame in the composition */
+  fromFrame: number;
+  /** Duration in frames */
+  durationInFrames: number;
+  /** Peak volume for this segment (0-1) */
+  volume: number;
+  /** Fade-in duration in frames */
+  fadeInFrames: number;
+  /** Fade-out duration in frames */
+  fadeOutFrames: number;
+};
+
+export type StrategicMusicConfig = {
+  /** Path relative to public/ (same MP3 as BackgroundMusicLayer) */
+  src: string;
+  /** Array of discrete music windows */
+  segments: MusicSegment[];
+};

@@ -1,8 +1,8 @@
 ---
 name: music
-description: "Generates background music from script mood analysis and integrates it into Remotion videos with automatic voiceover ducking. Powers the /music command: selects from local royalty-free music library (mood-matched) or generates via ElevenLabs Music API, then wires audio into the Remotion project via BackgroundMusicLayer with frame-level volume ducking. Use this skill whenever the user wants to add background music, generate a soundtrack, or integrate music into a video. Triggers on: /music, 'add music', 'background music', 'soundtrack', 'add bgm', 'music for video'."
+description: "Generates background music from script mood analysis and integrates it into Remotion videos with breathing volume — continuous music bed that rises during hooks/transitions/outro and ducks during narration, matching how top YouTubers use music. Powers the /music command: selects from local royalty-free music library (mood-matched) or generates via ElevenLabs Music API. Use this skill whenever the user wants to add background music, generate a soundtrack, or integrate music into a video. Triggers on: /music, 'add music', 'background music', 'soundtrack', 'add bgm', 'music for video'."
 metadata:
-  tags: music, audio, elevenlabs, ducking, background, soundtrack
+  tags: music, audio, elevenlabs, breathing, ducking, background, soundtrack
 ---
 
 # Music Skill
@@ -13,16 +13,16 @@ You are an expert Music Director. This skill powers the `/music` command — Pha
 /script <idea>         → script.json with narration + section tones
 /video <VideoName>     → Remotion code + manifest.json + transcript.json
 /voiceover <VideoName> → TTS Synthesis → MP3 files + voiceover.ts
-/music <VideoName>     → Background music → MP3 + BackgroundMusicLayer
+/music <VideoName>     → Background music → MP3 + BreathingMusicLayer
 ```
 
-**Music is generated from script mood analysis and integrated with automatic voiceover ducking.**
+**Music plays continuously with breathing volume — the way top YouTubers do it.**
 
 ---
 
 ## MUSIC GENERATION (triggered by `/music`)
 
-**Goal**: Generate or import a background music track and wire it into the Remotion composition.
+**Goal**: Generate or import a background music track and wire it into the Remotion composition with breathing volume.
 
 ### Prerequisites
 
@@ -42,11 +42,11 @@ You are an expert Music Director. This skill powers the `/music` command — Pha
 
    **Library mode (preferred, free, no API):**
    ```bash
-   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --library
+   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --library --breathing
    ```
    Auto-selects best track by mood. Or pick a specific track:
    ```bash
-   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --library --track ambient-tech-01
+   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --library --breathing --track ambient-tech-01
    ```
    List all tracks and download status:
    ```bash
@@ -55,25 +55,24 @@ You are an expert Music Director. This skill powers the `/music` command — Pha
 
    **Manual mode (user-provided MP3):**
    ```bash
-   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --manual
+   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --manual --breathing
    ```
 
    **API mode (ElevenLabs, costs money):**
    ```bash
-   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName>
-   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --prompt "dark cinematic ambient"
+   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --breathing
    ```
 
 4. **Verify output** — Check that:
    - `public/music/<VideoName>/background.mp3` was created
-   - `src/videos/<VideoName>/music.ts` was generated with `MUSIC_CONFIG` export
+   - `src/videos/<VideoName>/music.ts` was generated with `BREATHING_MUSIC_CONFIG` export
 
-5. **Integrate into composition** — Add BackgroundMusicLayer to `src/videos/<VideoName>/index.tsx`:
+5. **Integrate into composition** — Add BreathingMusicLayer to `src/videos/<VideoName>/index.tsx`:
 
    Add imports:
    ```tsx
-   import { BackgroundMusicLayer } from "../../shared/components/BackgroundMusicLayer";
-   import { MUSIC_CONFIG } from "./music";
+   import { BreathingMusicLayer } from "../../shared/components/BreathingMusicLayer";
+   import { BREATHING_MUSIC_CONFIG } from "./music";
    ```
 
    If voiceover exists, ensure `VOICEOVER_SCENES` is imported:
@@ -88,13 +87,13 @@ You are an expert Music Director. This skill powers the `/music` command — Pha
      <Series>{/* sections */}</Series>
      <Watermark ... />
      <VoiceoverLayer scenes={VOICEOVER_SCENES} />
-     <BackgroundMusicLayer config={MUSIC_CONFIG} voiceoverScenes={VOICEOVER_SCENES} />
+     <BreathingMusicLayer config={BREATHING_MUSIC_CONFIG} voiceoverScenes={VOICEOVER_SCENES} />
    </AbsoluteFill>
    ```
 
    If no voiceover exists, omit the `voiceoverScenes` prop:
    ```tsx
-   <BackgroundMusicLayer config={MUSIC_CONFIG} />
+   <BreathingMusicLayer config={BREATHING_MUSIC_CONFIG} />
    ```
 
 6. **Provide preview/render instructions**:
@@ -108,19 +107,43 @@ You are an expert Music Director. This skill powers the `/music` command — Pha
 
 ---
 
+## HOW BREATHING MUSIC WORKS
+
+Music plays continuously but volume "breathes" with the content — matching how MKBHD, Fireship, Veritasium, and other top YouTubers use music:
+
+| Moment | Volume | Behavior |
+|--------|--------|----------|
+| **Hook** (first ~15s) | 0.30 | Moderate — establishes energy, sets the vibe |
+| **During narration** | 0.05 | Very low — felt, not heard. Doesn't compete with voice |
+| **Gaps between narration** | 0.15 | Rises to fill pauses — keeps energy flowing |
+| **Section transitions** (4s) | 0.25 | Swells briefly — signals topic change to viewer |
+| **Outro** (last ~30s) | 0.30 | Returns to moderate — carries the end card/CTA |
+
+All transitions between volume levels ramp smoothly (no hard cuts). The music never fully drops out — it creates a continuous sonic foundation that makes intentional silence (if used) feel dramatic.
+
+### Key principle: music breathes, it doesn't burst
+
+The music bed is always there. It rises during visual moments and transitions. It ducks during speech. This matches industry standard for educational/tech YouTube content.
+
+---
+
 ## VOLUME TUNING
 
 Default volumes are calibrated for tech explainer videos:
 
 | Parameter | Default | Adjust when... |
 |-----------|---------|----------------|
-| `volume` | 0.20 | Music feels too loud/quiet overall |
-| `duckVolume` | 0.06 | Music drowns out voice (lower) or gaps feel empty (raise) |
-| `fadeInFrames` | 30 | Want faster/slower intro |
-| `fadeOutFrames` | 60 | Want faster/slower outro |
-| `duckRampFrames` | 15 | Ducking transitions feel abrupt (raise) or sluggish (lower) |
+| `narrationVolume` | 0.05 | Voice drowns out (lower) or music disappears (raise) |
+| `gapVolume` | 0.15 | Gaps between speech feel empty (raise) or music intrudes (lower) |
+| `transitionVolume` | 0.25 | Section transitions need more/less emphasis |
+| `hookVolume` | 0.30 | Intro energy too high/low |
+| `outroVolume` | 0.30 | Outro energy too high/low |
+| `hookFrames` | 450 (15s) | Hook feels too long/short |
+| `outroFrames` | 900 (30s) | Outro music starts too early/late |
+| `transitionFrames` | 120 (4s) | Transition swells feel too long/short |
+| `rampFrames` | 20 (0.67s) | Volume changes feel abrupt (raise) or sluggish (lower) |
 
-To adjust: edit `src/videos/<VideoName>/music.ts` and change the `MUSIC_CONFIG` values.
+To adjust: edit `src/videos/<VideoName>/music.ts` and change the `BREATHING_MUSIC_CONFIG` values.
 
 ---
 
@@ -132,7 +155,7 @@ A curated collection of royalty-free tracks in `public/music/library/`, organize
 1. Tracks are cataloged in `scripts/music/library.ts` with mood tags
 2. `--library` flag auto-matches script.json tones to the best track
 3. Track is copied to `public/music/<VideoName>/background.mp3`
-4. Integration proceeds identically (music.ts + BackgroundMusicLayer)
+4. Integration proceeds identically (music.ts + BreathingMusicLayer)
 
 ### Managing the library
 - **List tracks**: `node --experimental-strip-types scripts/music/generate-music.ts --list`
@@ -158,17 +181,29 @@ A curated collection of royalty-free tracks in `public/music/library/`, organize
 When the user provides their own music file:
 
 1. User places MP3 at `public/music/<VideoName>/background.mp3`
-2. Run with `--manual` flag — skips API call, generates music.ts from existing file
+2. Run with `--manual --breathing` flags — skips API call, generates music.ts from existing file
 3. Integration proceeds identically
+
+---
+
+## LEGACY MODES
+
+Two older music modes exist but **breathing mode is the default and recommended approach**:
+
+- **BackgroundMusicLayer** (`--` no flag): Simple continuous music with flat ducking. Less nuanced than breathing.
+- **StrategicMusicLayer** (`--strategic`): Discrete music bursts at specific moments. Silence during narration. Not how top YouTubers structure music — sounds unnatural.
+
+Both components still exist in `src/shared/components/` for backwards compatibility but should not be used for new videos.
 
 ---
 
 ## CONSTRAINTS
 
-- **One track per video** — a single background track for the entire composition. Per-section music would require multiple Audio components with complex timing. Keep it simple.
+- **One track per video** — a single background track that plays continuously with breathing volume.
 - **Always instrumental** — `force_instrumental: true` in the API call. Vocals in background music conflict with voiceover.
 - **Loop by default** — if the generated track is shorter than the video, it loops. Use `--no-loop` only if the track matches or exceeds video length.
-- **Ducking needs voiceover.ts** — the BackgroundMusicLayer reads VOICEOVER_SCENES for timing. Without it, music plays at constant volume (still works, just no ducking).
+- **Breathing needs voiceover.ts** — the BreathingMusicLayer reads VOICEOVER_SCENES for timing. Without it, music plays at gap volume (still works, just no ducking/breathing).
+- **Breathing needs manifest.json** — section boundaries drive the transition swells. Always generated by `/video`.
 - **ElevenLabs duration limit** — max 600 seconds (10 min). For longer videos, enable looping.
 
 ---
@@ -180,5 +215,5 @@ public/music/<VideoName>/
   background.mp3              # The music track (generated or manual)
 
 src/videos/<VideoName>/
-  music.ts                    # Exports MUSIC_CONFIG for BackgroundMusicLayer
+  music.ts                    # Exports BREATHING_MUSIC_CONFIG for BreathingMusicLayer
 ```

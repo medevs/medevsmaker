@@ -1,18 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -r from.*shared/scenes/ /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/src/HowTheWebWorks/sections/)",
-      "Bash(sed 's/\"\"\"\".*//')",
-      "Bash(grep -l \"export const\\\\|export function\\\\|export default\" /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/src/shared/scenes/*.tsx)",
-      "Bash(xargs -I {} basename {})",
-      "Bash(sed 's/\\\\.tsx//')",
-      "Bash(find /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/.agents -type f -name *.md)",
-      "Bash(find /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/.agents/skills/video/rules -type f -name *.md)",
-      "WebSearch",
-      "Bash(npx skills:*)",
-      "Bash(ls -la \"c:\\\\Users\\\\ahmed\\\\OneDrive\\\\Documents\\\\apps\\\\medevsmaker\\\\.claude\"\" 2>/dev/null || echo \"Directory check \")",
-      "Bash(grep -l \"user-invocable: true\" /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/.agents/skills/*/*.md /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/.claude/skills/*/*.md)",
-      "Bash(grep -r \"Trigger\\\\|user-invocable\\\\|slash command\\\\|/research\\\\|/youtube\" /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/.agents/skills/ /c/Users/ahmed/OneDrive/Documents/apps/medevsmaker/.claude/skills/ --include=*.md)"
+      "Bash(grep -r \"from \\\\\"remotion\\\\\"\" /d/dev/active/medevsmaker/src/shared/components/*.tsx)",
+      "Bash(grep -roh '\"sceneType\": \"[^\"]*\"' D:/dev/active/medevsmaker/src/videos/*/manifest.json)",
+      "Bash(npx tsc:*)",
+      "Bash(node --experimental-strip-types scripts/music/generate-music.ts GraphRAGExplained --library --strategic)",
+      "Bash(node --experimental-strip-types scripts/music/generate-music.ts GraphRAGExplained --library --breathing)"
     ]
   }
 }

@@ -8,6 +8,7 @@
  *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName>
  *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --prompt "dark ambient"
  *   node --experimental-strip-types scripts/music/generate-music.ts --list
+ *   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --library --strategic
  *
  * Modes:
  *   --library        Select from local music library (mood-matched, no API needed)
@@ -15,13 +16,16 @@
  *   --manual         Use existing MP3 at public/music/<VideoName>/background.mp3
  *   (default)        Generate via ElevenLabs Music API (requires ELEVENLABS_API_KEY)
  *   --list           Show all library tracks and their download status
+ *   --strategic      Also generate StrategicMusicLayer config (music at hook/transitions/outro only)
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync } from "node:fs";
 import { join } from "node:path";
 import type { VideoManifest, VideoScript } from "../tts/types.ts";
 import { genreFromTones, DEFAULT_GENRE } from "./types.ts";
+import type { MusicSegment, BreathingMusicConfig } from "./types.ts";
 import { selectTrack, getAvailableTracks, listLibrary } from "./library.ts";
+import { generateStrategicSegments } from "./strategic.ts";
 
 const ELEVENLABS_MUSIC_URL = "https://api.elevenlabs.io/v1/music";
 
@@ -45,6 +49,8 @@ function parseArgs(argv: string[]) {
     volume: parseFloat(process.env.MUSIC_VOLUME ?? String(DEFAULT_VOLUME)),
     duckVolume: parseFloat(process.env.MUSIC_DUCK_VOLUME ?? String(DEFAULT_DUCK_VOLUME)),
     noLoop: false,
+    strategic: false,
+    breathing: false,
     videoName: "",
   };
 
@@ -67,6 +73,10 @@ function parseArgs(argv: string[]) {
       flags.duckVolume = parseFloat(args[++i]);
     } else if (arg === "--no-loop") {
       flags.noLoop = true;
+    } else if (arg === "--strategic") {
+      flags.strategic = true;
+    } else if (arg === "--breathing") {
+      flags.breathing = true;
     } else if (!arg.startsWith("--")) {
       flags.videoName = arg;
     }
@@ -218,6 +228,95 @@ function generateMusicModule(
   return lines.join("\n");
 }
 
+function generateStrategicMusicModule(
+  src: string,
+  segments: MusicSegment[],
+  durationInFrames: number,
+  volume: number,
+  duckVolume: number,
+  loop: boolean,
+): string {
+  const segmentsJson = JSON.stringify(segments, null, 2)
+    .split("\n")
+    .map((line, i) => (i === 0 ? line : `  ${line}`))
+    .join("\n");
+
+  const lines = [
+    `import type { MusicConfig } from "../../shared/components/BackgroundMusicLayer";`,
+    `import type { StrategicMusicConfig } from "../../shared/components/StrategicMusicLayer";`,
+    ``,
+    `// Continuous mode (BackgroundMusicLayer — music plays throughout, ducks during voiceover)`,
+    `export const MUSIC_CONFIG: MusicConfig = {`,
+    `  src: "${src}",`,
+    `  durationInFrames: ${durationInFrames},`,
+    `  volume: ${volume},`,
+    `  duckVolume: ${duckVolume},`,
+    `  fadeInFrames: ${DEFAULT_FADE_IN_FRAMES},`,
+    `  fadeOutFrames: ${DEFAULT_FADE_OUT_FRAMES},`,
+    `  duckRampFrames: ${DEFAULT_DUCK_RAMP_FRAMES},`,
+    `  loop: ${loop},`,
+    `};`,
+    ``,
+    `// Strategic mode (StrategicMusicLayer — music at hook, transitions, accents, outro only)`,
+    `export const STRATEGIC_MUSIC_CONFIG: StrategicMusicConfig = {`,
+    `  src: "${src}",`,
+    `  segments: ${segmentsJson},`,
+    `};`,
+    ``,
+  ];
+
+  return lines.join("\n");
+}
+
+function generateBreathingMusicModule(
+  src: string,
+  durationInFrames: number,
+  sectionStarts: number[],
+  fps: number,
+  loop: boolean,
+): string {
+  const config = {
+    narrationVolume: 0.05,
+    gapVolume: 0.15,
+    transitionVolume: 0.25,
+    hookVolume: 0.30,
+    outroVolume: 0.30,
+    hookFrames: Math.round(fps * 15),
+    outroFrames: Math.round(fps * 30),
+    transitionFrames: Math.round(fps * 4),
+    rampFrames: Math.round(fps * 0.67),
+    fadeInFrames: Math.round(fps * 1),
+    fadeOutFrames: Math.round(fps * 2),
+  };
+
+  const lines = [
+    `import type { BreathingMusicConfig } from "../../shared/components/BreathingMusicLayer";`,
+    ``,
+    `// Breathing mode — continuous music bed, volume breathes with content`,
+    `// Hook & outro: moderate | Transitions: swell | Narration: very low | Gaps: rises`,
+    `export const BREATHING_MUSIC_CONFIG: BreathingMusicConfig = {`,
+    `  src: "${src}",`,
+    `  durationInFrames: ${durationInFrames},`,
+    `  narrationVolume: ${config.narrationVolume},`,
+    `  gapVolume: ${config.gapVolume},`,
+    `  transitionVolume: ${config.transitionVolume},`,
+    `  hookVolume: ${config.hookVolume},`,
+    `  outroVolume: ${config.outroVolume},`,
+    `  hookFrames: ${config.hookFrames},`,
+    `  outroFrames: ${config.outroFrames},`,
+    `  transitionFrames: ${config.transitionFrames},`,
+    `  rampFrames: ${config.rampFrames},`,
+    `  fadeInFrames: ${config.fadeInFrames},`,
+    `  fadeOutFrames: ${config.fadeOutFrames},`,
+    `  sectionStarts: [${sectionStarts.join(", ")}],`,
+    `  loop: ${loop},`,
+    `};`,
+    ``,
+  ];
+
+  return lines.join("\n");
+}
+
 // ─── Main ──────────────────────────────────────────────────
 
 async function main() {
@@ -232,7 +331,7 @@ async function main() {
   }
 
   if (!flags.videoName) {
-    console.error("Usage: generate-music <VideoName> [--library] [--track <id>] [--manual] [--prompt '...'] [--volume 0.20] [--no-loop]");
+    console.error("Usage: generate-music <VideoName> [--library] [--track <id>] [--manual] [--strategic] [--prompt '...'] [--volume 0.20] [--no-loop]");
     console.error("       generate-music --list");
     process.exit(1);
   }
@@ -343,13 +442,50 @@ async function main() {
 
   // ─── Generate music.ts ─────────────────────────────────
   const loop = !flags.noLoop;
-  const musicCode = generateMusicModule(
-    musicRelativePath,
-    totalFrames,
-    flags.volume,
-    flags.duckVolume,
-    loop,
-  );
+  let musicCode: string;
+  let mode: string;
+
+  if (flags.breathing) {
+    // Compute section start frames from manifest
+    const sectionStarts: number[] = [];
+    let cumulative = 0;
+    for (const sec of manifest.sections) {
+      sectionStarts.push(cumulative);
+      cumulative += sec.durationFrames;
+    }
+    console.log(`  ✓ Breathing mode: ${sectionStarts.length} sections, ${voiceoverRegions.length} voiceover scenes`);
+    console.log(`    Section starts: [${sectionStarts.map((f) => `${f} (${(f / fps).toFixed(1)}s)`).join(", ")}]`);
+    musicCode = generateBreathingMusicModule(
+      musicRelativePath,
+      totalFrames,
+      sectionStarts,
+      fps,
+      loop,
+    );
+    mode = "breathing (continuous bed, volume breathes with content)";
+  } else if (flags.strategic) {
+    const segments = generateStrategicSegments(manifest);
+    console.log(`  ✓ Strategic segments: ${segments.length} (${segments.map((s) => s.role).join(", ")})`);
+    musicCode = generateStrategicMusicModule(
+      musicRelativePath,
+      segments,
+      totalFrames,
+      flags.volume,
+      flags.duckVolume,
+      loop,
+    );
+    mode = "strategic (hook/transitions/outro)";
+  } else {
+    musicCode = generateMusicModule(
+      musicRelativePath,
+      totalFrames,
+      flags.volume,
+      flags.duckVolume,
+      loop,
+    );
+    mode = "continuous (ducking)";
+  }
+
   const musicTsPath = join(videoDir, "music.ts");
   writeFileSync(musicTsPath, musicCode);
   console.log(`  ✓ Music module: ${musicTsPath}`);
@@ -357,16 +493,30 @@ async function main() {
   // ─── Summary ───────────────────────────────────────────
   console.log(`\n─── Summary ───`);
   console.log(`  Source: ${musicRelativePath}`);
-  console.log(`  Volume: ${flags.volume} (base), ${flags.duckVolume} (ducked)`);
+  console.log(`  Mode: ${mode}`);
   console.log(`  Loop: ${loop}`);
-  console.log(`  Ducking: ${voiceoverRegions.length > 0 ? "enabled" : "disabled (no voiceover)"}`);
 
   console.log(`\n─── Next Steps ───`);
-  console.log(`  1. Add BackgroundMusicLayer to ${flags.videoName}/index.tsx:`);
-  console.log(`     import { BackgroundMusicLayer } from "../../shared/components/BackgroundMusicLayer";`);
-  console.log(`     import { MUSIC_CONFIG } from "./music";`);
-  console.log(`     // Add after VoiceoverLayer:`);
-  console.log(`     <BackgroundMusicLayer config={MUSIC_CONFIG} voiceoverScenes={VOICEOVER_SCENES} />`);
+  if (flags.breathing) {
+    console.log(`  1. Add BreathingMusicLayer to ${flags.videoName}/index.tsx:`);
+    console.log(`     import { BreathingMusicLayer } from "../../shared/components/BreathingMusicLayer";`);
+    console.log(`     import { BREATHING_MUSIC_CONFIG } from "./music";`);
+    console.log(`     import { VOICEOVER_SCENES } from "./voiceover";`);
+    console.log(`     // Add after VoiceoverLayer:`);
+    console.log(`     <BreathingMusicLayer config={BREATHING_MUSIC_CONFIG} voiceoverScenes={VOICEOVER_SCENES} />`);
+  } else if (flags.strategic) {
+    console.log(`  1. Add StrategicMusicLayer to ${flags.videoName}/index.tsx:`);
+    console.log(`     import { StrategicMusicLayer } from "../../shared/components/StrategicMusicLayer";`);
+    console.log(`     import { STRATEGIC_MUSIC_CONFIG } from "./music";`);
+    console.log(`     // Add after VoiceoverLayer:`);
+    console.log(`     <StrategicMusicLayer config={STRATEGIC_MUSIC_CONFIG} />`);
+  } else {
+    console.log(`  1. Add BackgroundMusicLayer to ${flags.videoName}/index.tsx:`);
+    console.log(`     import { BackgroundMusicLayer } from "../../shared/components/BackgroundMusicLayer";`);
+    console.log(`     import { MUSIC_CONFIG } from "./music";`);
+    console.log(`     // Add after VoiceoverLayer:`);
+    console.log(`     <BackgroundMusicLayer config={MUSIC_CONFIG} voiceoverScenes={VOICEOVER_SCENES} />`);
+  }
   console.log(`\n  2. Preview: npx remotion studio`);
   console.log(`  3. Render: npx remotion render ${flags.videoName}`);
 }

@@ -21,9 +21,10 @@
 /voiceover <VideoName> → TTS synthesis + audio integration ($$)
                         User reviews final video with audio
 
-/music <VideoName>    → Background music + voiceover ducking ($$)
-                        ElevenLabs Music API or manual MP3
-                        User reviews music vibe + ducking levels
+/music <VideoName>    → Background music with breathing volume (FREE with library)
+                        Royalty-free library (preferred) or ElevenLabs Music API
+                        Continuous bed: rises at hook/transitions/outro, ducks during narration
+                        User reviews music vibe + volume levels
 
 /assets <VideoName>   → Title, description, tags, chapters, thumbnail ($ for thumbnail)
                         5 title variants scored + SEO description + auto-chapters from manifest
@@ -70,9 +71,11 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 
 ### music — Powers `/music`
 
-**`/music <VideoName>`**: Mood Analysis → Music Generation → Ducking Integration
+**`/music <VideoName>`**: Mood Analysis → Track Selection → Breathing Music Integration
 
-**Provider**: ElevenLabs Music API (default), manual MP3 via `--manual` flag
+**Default mode**: Breathing — continuous music bed with volume that breathes (rises at hook/transitions/outro, ducks during narration). Uses `BreathingMusicLayer` component.
+**Source**: Royalty-free library (preferred, free), manual MP3, or ElevenLabs Music API
+**Volume zones**: Hook (0.30) → Narration (0.05) → Gaps (0.15) → Transitions (0.25) → Outro (0.30)
 
 ### assets — Publishing Metadata + Thumbnail
 
@@ -130,7 +133,7 @@ src/
 .claude/agents/script-critic.md     # Read-only quality reviewer (8 checks)
 
 scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio, pronunciation.json
-scripts/music/                      # Music pipeline: types, generate-music
+scripts/music/                      # Music pipeline: types, generate-music, strategic, library
 productions/                        # /idea output + /script research.md + script.json + /assets assets.md + /distribute distribute/
 public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets, requires Replicate MCP)
 ```
@@ -152,7 +155,7 @@ public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /asset
 - `/video` outputs `manifest.json` + `transcript.json` (pre-populated with narration from script.json)
 - Voiceover: `<Audio>` from `@remotion/media`, placed inside `<Sequence>` via `VoiceoverLayer`
 - Audio files in `public/vo/<VideoName>/`, referenced via `staticFile()`
-- Background music: `<Audio>` with volume callback for ducking, placed via `BackgroundMusicLayer`
+- Background music: `<Audio>` with breathing volume callback, placed via `BreathingMusicLayer`
 - Music files in `public/music/<VideoName>/`, referenced via `staticFile()`
 - Per-section color theming: use `SECTION_THEMES.get(index)` for section accent colors
 - Persistent overlays: `SectionTracker` (bottom-right), `FeatureCounter` (top-left, optional)
