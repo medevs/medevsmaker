@@ -2,20 +2,26 @@
  * Background Music Generation — Generate or integrate background music for a video.
  *
  * Usage:
+ *   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --library
+ *   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --library --track ambient-tech-01
+ *   node --experimental-strip-types scripts/music/generate-music.ts <VideoName> --manual
  *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName>
- *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --manual
  *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --prompt "dark ambient"
- *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --volume 0.25
- *   node --experimental-strip-types --env-file=.env scripts/music/generate-music.ts <VideoName> --no-loop
+ *   node --experimental-strip-types scripts/music/generate-music.ts --list
  *
- * Reads manifest.json + script.json for mood, generates music via ElevenLabs,
- * writes MP3 to public/music/<VideoName>/, and generates src/videos/<VideoName>/music.ts.
+ * Modes:
+ *   --library        Select from local music library (mood-matched, no API needed)
+ *   --library --track <id>  Use a specific library track
+ *   --manual         Use existing MP3 at public/music/<VideoName>/background.mp3
+ *   (default)        Generate via ElevenLabs Music API (requires ELEVENLABS_API_KEY)
+ *   --list           Show all library tracks and their download status
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync } from "node:fs";
 import { join } from "node:path";
 import type { VideoManifest, VideoScript } from "../tts/types.ts";
 import { genreFromTones, DEFAULT_GENRE } from "./types.ts";
+import { selectTrack, getAvailableTracks, listLibrary } from "./library.ts";
 
 const ELEVENLABS_MUSIC_URL = "https://api.elevenlabs.io/v1/music";
 
@@ -32,6 +38,9 @@ function parseArgs(argv: string[]) {
   const args = argv.slice(2);
   const flags = {
     manual: false,
+    library: false,
+    track: "",
+    list: false,
     prompt: "",
     volume: parseFloat(process.env.MUSIC_VOLUME ?? String(DEFAULT_VOLUME)),
     duckVolume: parseFloat(process.env.MUSIC_DUCK_VOLUME ?? String(DEFAULT_DUCK_VOLUME)),
@@ -43,6 +52,13 @@ function parseArgs(argv: string[]) {
     const arg = args[i];
     if (arg === "--manual") {
       flags.manual = true;
+    } else if (arg === "--library") {
+      flags.library = true;
+    } else if (arg === "--track" && args[i + 1]) {
+      flags.track = args[++i];
+      flags.library = true; // --track implies --library
+    } else if (arg === "--list") {
+      flags.list = true;
     } else if (arg === "--prompt" && args[i + 1]) {
       flags.prompt = args[++i];
     } else if (arg === "--volume" && args[i + 1]) {
@@ -206,13 +222,21 @@ function generateMusicModule(
 
 async function main() {
   const flags = parseArgs(process.argv);
+  const rootDir = join(import.meta.dirname, "..", "..");
+  const libraryDir = join(rootDir, "public", "music", "library");
+
+  // ─── List mode ─────────────────────────────────────────
+  if (flags.list) {
+    listLibrary(libraryDir);
+    return;
+  }
 
   if (!flags.videoName) {
-    console.error("Usage: generate-music <VideoName> [--manual] [--prompt '...'] [--volume 0.20] [--no-loop]");
+    console.error("Usage: generate-music <VideoName> [--library] [--track <id>] [--manual] [--prompt '...'] [--volume 0.20] [--no-loop]");
+    console.error("       generate-music --list");
     process.exit(1);
   }
 
-  const rootDir = join(import.meta.dirname, "..", "..");
   const videoDir = join(rootDir, "src", "videos", flags.videoName);
   const manifestPath = join(videoDir, "manifest.json");
   const scriptPath = join(videoDir, "script.json");
@@ -251,10 +275,48 @@ async function main() {
     console.log(`  Voiceover: none found (no ducking)`);
   }
 
-  // ─── Generate or Use Manual ────────────────────────────
+  // ─── Generate, Library, or Manual ───────────────────────
   mkdirSync(musicDir, { recursive: true });
 
-  if (flags.manual) {
+  if (flags.library) {
+    // Library mode — select and copy a track from public/music/library/
+    const availableTracks = getAvailableTracks(libraryDir);
+    if (availableTracks.length === 0) {
+      console.error(`\n  ✗ No tracks found in music library.`);
+      console.error(`  Download tracks to: ${libraryDir}`);
+      console.error(`  Run --list to see required tracks and download links.`);
+      process.exit(1);
+    }
+
+    // Collect tones for mood matching
+    const tones: string[] = [];
+    if (script) {
+      for (const section of script.sections) {
+        if (section.sectionTone) tones.push(section.sectionTone);
+      }
+    }
+
+    let selectedTrack;
+    if (flags.track) {
+      // Specific track requested
+      selectedTrack = availableTracks.find((t) => t.id === flags.track);
+      if (!selectedTrack) {
+        console.error(`\n  ✗ Track "${flags.track}" not found or MP3 missing.`);
+        console.error(`  Available: ${availableTracks.map((t) => t.id).join(", ")}`);
+        process.exit(1);
+      }
+    } else {
+      // Auto-select best match
+      selectedTrack = selectTrack(tones, availableTracks);
+    }
+
+    const sourcePath = join(libraryDir, `${selectedTrack.id}.mp3`);
+    copyFileSync(sourcePath, musicFilePath);
+    console.log(`\n  ✓ Library track: ${selectedTrack.name} (${selectedTrack.id})`);
+    console.log(`    Genre: ${selectedTrack.genre} | Moods: ${selectedTrack.moods.join(", ")}`);
+    console.log(`    License: ${selectedTrack.license}`);
+    console.log(`    Copied to: ${musicFilePath}`);
+  } else if (flags.manual) {
     if (!existsSync(musicFilePath)) {
       console.error(`\n  --manual specified but no file found at:`);
       console.error(`  ${musicFilePath}`);
@@ -274,6 +336,7 @@ async function main() {
     } catch (err) {
       console.error(`\n  ✗ Generation failed: ${(err as Error).message}`);
       console.error(`\n  Fallback: place an MP3 at ${musicFilePath} and re-run with --manual`);
+      console.error(`  Or use --library to select from your local music library.`);
       process.exit(1);
     }
   }
