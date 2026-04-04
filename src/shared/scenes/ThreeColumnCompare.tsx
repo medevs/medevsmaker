@@ -20,6 +20,7 @@ type CompareColumn = {
 type ThreeColumnCompareProps = {
   heading: string;
   columns: [CompareColumn, CompareColumn, CompareColumn];
+  sectionColor?: string;
   colors?: { bg: string; text: string; muted: string };
   fontFamily?: string;
 };
@@ -27,6 +28,7 @@ type ThreeColumnCompareProps = {
 export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
   heading,
   columns,
+  sectionColor,
   colors = { bg: BRAND.bg, text: BRAND.text, muted: BRAND.textMuted },
   fontFamily = "Inter",
 }) => {

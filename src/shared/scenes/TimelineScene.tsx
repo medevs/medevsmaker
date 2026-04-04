@@ -18,6 +18,7 @@ type TimelineLayout = "horizontal" | "vertical";
 type TimelineSceneProps = {
   heading: string;
   nodes: TimelineNode[];
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
   layout?: TimelineLayout;
@@ -32,11 +33,15 @@ export const TimelineScene: React.FC<TimelineSceneProps> = ({
     accent: BRAND.indigo,
     muted: BRAND.textMuted,
   },
+  sectionColor,
   fontFamily = "Inter",
   layout = "horizontal",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const effectiveColors = sectionColor
+    ? { ...colors, accent: sectionColor }
+    : colors;
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
@@ -67,7 +72,7 @@ export const TimelineScene: React.FC<TimelineSceneProps> = ({
       {isHorizontal ? (
         <HorizontalTimeline
           nodes={nodes}
-          colors={colors}
+          colors={effectiveColors}
           fontFamily={fontFamily}
           frame={frame}
           fps={fps}
@@ -75,7 +80,7 @@ export const TimelineScene: React.FC<TimelineSceneProps> = ({
       ) : (
         <VerticalTimeline
           nodes={nodes}
-          colors={colors}
+          colors={effectiveColors}
           fontFamily={fontFamily}
           frame={frame}
           fps={fps}

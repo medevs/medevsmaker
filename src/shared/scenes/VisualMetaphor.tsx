@@ -15,6 +15,7 @@ type VisualMetaphorProps = {
   icon: string;
   heading: string;
   analogy: string;
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
   iconEffect?: IconEffect;
@@ -30,6 +31,7 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
     accent: BRAND.violet,
     muted: BRAND.textMuted,
   },
+  sectionColor,
   fontFamily = "Inter",
   iconEffect = "pop",
 }) => {

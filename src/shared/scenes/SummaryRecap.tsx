@@ -8,20 +8,26 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { entrances } from "../animations";
+import { GradientText } from "../components/GradientText";
+import { ParticleField } from "../components/ParticleField";
 
 type ItemEntrance = "left" | "scale" | "fade";
 
 type SummaryRecapProps = {
   heading?: string;
   items: string[];
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
   itemEntrance?: ItemEntrance;
+  highlightTerms?: string[];
+  showParticles?: boolean;
 };
 
 export const SummaryRecap: React.FC<SummaryRecapProps> = ({
   heading = "What We Covered",
   items,
+  sectionColor,
   colors = {
     bg: BRAND.bg,
     text: BRAND.text,
@@ -30,9 +36,32 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
   },
   fontFamily = "Inter",
   itemEntrance = "left",
+  highlightTerms,
+  showParticles = false,
 }) => {
+  const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  const highlightText = (text: string): React.ReactNode => {
+    if (!highlightTerms?.length) return text;
+    let result: (string | React.ReactElement)[] = [text];
+    for (const term of highlightTerms) {
+      result = result.flatMap((part): (string | React.ReactElement)[] => {
+        if (typeof part !== "string") return [part];
+        const idx = part.indexOf(term);
+        if (idx === -1) return [part];
+        const parts: (string | React.ReactElement)[] = [];
+        if (part.slice(0, idx)) parts.push(part.slice(0, idx));
+        parts.push(
+          <GradientText key={term} text={term} from={effectiveAccent} to={BRAND.violet} fontSize={30} fontWeight={700} />
+        );
+        if (part.slice(idx + term.length)) parts.push(part.slice(idx + term.length));
+        return parts;
+      });
+    }
+    return result;
+  };
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
@@ -47,6 +76,9 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
         gap: 28,
       }}
     >
+      {showParticles && (
+        <ParticleField count={15} color={effectiveAccent} opacity={0.06} />
+      )}
       <div
         style={{
           opacity: headOpacity,
@@ -103,7 +135,7 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
                 width: 36,
                 height: 36,
                 borderRadius: 10,
-                backgroundColor: colors.accent,
+                backgroundColor: effectiveAccent,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -124,7 +156,7 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
                 lineHeight: 1.3,
               }}
             >
-              {item}
+              {highlightText(item)}
             </span>
           </div>
         );

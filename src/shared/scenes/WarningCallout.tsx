@@ -13,6 +13,7 @@ type WarningCalloutProps = {
   heading: string;
   body: string;
   severity?: "warning" | "danger";
+  sectionColor?: string;
   colors?: { bg: string; text: string };
   fontFamily?: string;
 };
@@ -21,6 +22,7 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
   heading,
   body,
   severity = "warning",
+  sectionColor,
   colors = { bg: BRAND.bg, text: BRAND.text },
   fontFamily = "Inter",
 }) => {

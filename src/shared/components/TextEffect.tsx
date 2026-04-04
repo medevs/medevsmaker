@@ -2,6 +2,7 @@ import React from "react";
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { glowPulse } from "../animations";
+import { NeonText } from "./NeonText";
 
 type TextEffectType = "typewriter" | "scramble" | "glitch" | "neon";
 
@@ -102,43 +103,49 @@ export const TextEffect: React.FC<TextEffectProps> = ({
       config: SCENE_DEFAULTS.springSilky,
     });
 
-    // Glitch triggers periodically
+    // Glitch triggers periodically via dual sine wave
     const glitchCycle = Math.sin(f * 0.2) + Math.sin(f * 0.31);
     const isGlitching = glitchCycle > 1.5 && f > 5;
-    const offsetX = isGlitching ? seededRandom(f) * 8 - 4 : 0;
+    const glitchAmount = isGlitching ? 1 : 0;
+
+    // Sin-wave tracking offset for RGB separation
+    const tracking = Math.sin(f * 0.1) * 4 * glitchAmount;
+
+    // Randomized jitter on glitch frames
+    const jitterX = isGlitching ? (seededRandom(f) * 8 - 4) : 0;
 
     return (
       <div style={{ ...baseStyle, opacity: enter, position: "relative" }}>
         {/* Red channel */}
-        {isGlitching && (
-          <span
-            style={{
-              position: "absolute",
-              left: -3,
-              top: 0,
-              color: "#ff000088",
-              mixBlendMode: "screen",
-            }}
-          >
-            {text}
-          </span>
-        )}
-        {/* Blue channel */}
-        {isGlitching && (
-          <span
-            style={{
-              position: "absolute",
-              left: 3,
-              top: 0,
-              color: "#0000ff88",
-              mixBlendMode: "screen",
-            }}
-          >
-            {text}
-          </span>
-        )}
+        <span
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            color: "rgba(255, 0, 0, 0.7)",
+            mixBlendMode: "screen",
+            transform: `translateX(${-tracking}px)`,
+            opacity: glitchAmount,
+          }}
+        >
+          {text}
+        </span>
+        {/* Cyan channel */}
+        <span
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            color: "rgba(0, 255, 255, 0.7)",
+            mixBlendMode: "screen",
+            transform: `translateX(${tracking}px)`,
+            opacity: glitchAmount,
+          }}
+        >
+          {text}
+        </span>
         {/* Main text */}
-        <span style={{ transform: `translateX(${offsetX}px)`, display: "inline-block" }}>
+        <span style={{ transform: `translateX(${jitterX}px)`, display: "inline-block" }}>
           {text}
         </span>
       </div>
@@ -152,25 +159,16 @@ export const TextEffect: React.FC<TextEffectProps> = ({
       config: SCENE_DEFAULTS.springSilky,
     });
 
-    // Neon flicker for first 15 frames
-    const flickerPhase = f < 15;
-    const flickerOp = flickerPhase
-      ? seededRandom(f * 7) > 0.3
-        ? 1
-        : 0.2
-      : 1;
-
-    const glow = glowPulse(f, color, 45);
-
     return (
-      <div
-        style={{
-          ...baseStyle,
-          opacity: enter * flickerOp,
-          textShadow: glow,
-        }}
-      >
-        {text}
+      <div style={{ opacity: enter }}>
+        <NeonText
+          text={text}
+          color={color}
+          fontSize={fontSize}
+          delay={0}
+          flickerIntensity="medium"
+          fontFamily={fontFamily}
+        />
       </div>
     );
   }

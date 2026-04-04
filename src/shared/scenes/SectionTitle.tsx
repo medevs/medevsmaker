@@ -8,9 +8,10 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { SectionBadge } from "../components/SectionBadge";
+import { NeonText } from "../components/NeonText";
 import { entrances } from "../animations";
 
-type SectionTitleEntrance = "fadeUp" | "slideLeft" | "scaleBlur";
+type SectionTitleEntrance = "fadeUp" | "slideLeft" | "scaleBlur" | "neon";
 
 type SectionTitleProps = {
   sectionNumber: number;
@@ -47,9 +48,14 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
     extrapolateRight: "clamp",
   });
 
-  let titleStyle: React.CSSProperties;
+  let titleStyle: React.CSSProperties = {};
+  let titleContent: React.ReactNode;
 
-  if (entrance === "slideLeft") {
+  if (entrance === "neon") {
+    titleContent = (
+      <NeonText text={title} color={colors.accent} fontSize={56} fontFamily={fontFamily} />
+    );
+  } else if (entrance === "slideLeft") {
     const s = entrances.fadeLeft(clampedP);
     titleStyle = { opacity: s.opacity, transform: s.transform };
   } else if (entrance === "scaleBlur") {
@@ -68,6 +74,25 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
       opacity: clampedP,
       transform: `translateY(${titleY}px)`,
     };
+  }
+
+  if (entrance !== "neon") {
+    titleContent = (
+      <div
+        style={{
+          ...titleStyle,
+          fontFamily,
+          fontSize: 56,
+          fontWeight: 800,
+          color: colors.text,
+          textAlign: "center",
+          lineHeight: 1.15,
+          marginTop: 8,
+        }}
+      >
+        {title}
+      </div>
+    );
   }
 
   const subP = spring({
@@ -91,20 +116,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
       }}
     >
       <SectionBadge number={sectionNumber} color={colors.accent} fontFamily={fontFamily} />
-      <div
-        style={{
-          ...titleStyle,
-          fontFamily,
-          fontSize: 56,
-          fontWeight: 800,
-          color: colors.text,
-          textAlign: "center",
-          lineHeight: 1.15,
-          marginTop: 8,
-        }}
-      >
-        {title}
-      </div>
+      {titleContent}
       {subtitle && (
         <div
           style={{

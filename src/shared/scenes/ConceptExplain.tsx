@@ -17,6 +17,7 @@ type ConceptExplainProps = {
   body: string;
   analogy?: string;
   icon?: string;
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
   headingEntrance?: HeadingEntrance;
@@ -33,9 +34,11 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
     accent: BRAND.violet,
     muted: BRAND.textMuted,
   },
+  sectionColor,
   fontFamily = "Inter",
   headingEntrance = "fadeUp",
 }) => {
+  const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -105,7 +108,7 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
             <span
               style={{
                 opacity: frame % 30 < 15 ? 1 : 0,
-                color: colors.accent,
+                color: effectiveAccent,
               }}
             >
               |
@@ -131,11 +134,11 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
               opacity: analogyOpacity,
               fontFamily,
               fontSize: 26,
-              color: colors.accent,
+              color: effectiveAccent,
               fontStyle: "italic",
               marginTop: 8,
               paddingLeft: 20,
-              borderLeft: `3px solid ${colors.accent}44`,
+              borderLeft: `3px solid ${effectiveAccent}44`,
             }}
           >
             {analogy}
@@ -217,11 +220,11 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
             opacity: analogyOpacity,
             fontFamily,
             fontSize: 26,
-            color: colors.accent,
+            color: effectiveAccent,
             fontStyle: "italic",
             marginTop: 8,
             paddingLeft: 20,
-            borderLeft: `3px solid ${colors.accent}44`,
+            borderLeft: `3px solid ${effectiveAccent}44`,
           }}
         >
           {analogy}

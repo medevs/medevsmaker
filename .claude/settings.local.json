@@ -1,11 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -r \"from \\\\\"remotion\\\\\"\" /d/dev/active/medevsmaker/src/shared/components/*.tsx)",
-      "Bash(grep -roh '\"sceneType\": \"[^\"]*\"' D:/dev/active/medevsmaker/src/videos/*/manifest.json)",
       "Bash(npx tsc:*)",
-      "Bash(node --experimental-strip-types scripts/music/generate-music.ts GraphRAGExplained --library --strategic)",
-      "Bash(node --experimental-strip-types scripts/music/generate-music.ts GraphRAGExplained --library --breathing)"
+      "Bash(node:*)",
+      "Read(//d/dev/active//**)",
+      "Read(//d/dev/active/**)",
+      "Bash(rm:*)"
     ]
   }
 }

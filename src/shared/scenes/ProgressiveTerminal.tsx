@@ -22,6 +22,7 @@ type ProgressiveTerminalProps = {
   sectionColor?: string;
   colors?: { bg: string; text: string; muted: string };
   fontFamily?: string;
+  terminal?: boolean;
 };
 
 export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
@@ -31,6 +32,7 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
   sectionColor = BRAND.indigo,
   colors = { bg: BRAND.bg, text: BRAND.text, muted: BRAND.textMuted },
   fontFamily = "Inter",
+  terminal = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -97,29 +99,50 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
               extrapolateRight: "clamp",
             });
 
-            // Render text with highlight
+            const itemStartFrame = itemDelay;
+            const itemFont = terminal ? "JetBrains Mono, monospace" : fontFamily;
+            const itemIcon = terminal && !item.icon ? "$" : (item.icon || "▸");
+
+            // Render text with highlight or terminal typing
             const renderText = () => {
-              if (!item.highlight) {
+              const fullText = item.text;
+
+              if (terminal) {
+                const charsToShow = Math.min(
+                  fullText.length,
+                  Math.floor((frame - itemStartFrame) / 1.5)
+                );
+                const visibleText = fullText.slice(0, Math.max(0, charsToShow));
+                const showCursor = frame % 30 < 15;
                 return (
-                  <span style={{ color: colors.text }}>{item.text}</span>
+                  <span style={{ color: colors.text }}>
+                    {visibleText}
+                    <span style={{ opacity: showCursor ? 1 : 0, color: sectionColor }}>|</span>
+                  </span>
                 );
               }
-              const idx = item.text.indexOf(item.highlight);
+
+              if (!item.highlight) {
+                return (
+                  <span style={{ color: colors.text }}>{fullText}</span>
+                );
+              }
+              const idx = fullText.indexOf(item.highlight);
               if (idx === -1) {
                 return (
-                  <span style={{ color: colors.text }}>{item.text}</span>
+                  <span style={{ color: colors.text }}>{fullText}</span>
                 );
               }
               return (
                 <>
                   <span style={{ color: colors.text }}>
-                    {item.text.slice(0, idx)}
+                    {fullText.slice(0, idx)}
                   </span>
                   <span style={{ color: sectionColor, fontWeight: 700 }}>
                     {item.highlight}
                   </span>
                   <span style={{ color: colors.text }}>
-                    {item.text.slice(idx + item.highlight.length)}
+                    {fullText.slice(idx + item.highlight.length)}
                   </span>
                 </>
               );
@@ -134,13 +157,13 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
                   display: "flex",
                   alignItems: "center",
                   gap: 12,
-                  fontFamily,
+                  fontFamily: itemFont,
                   fontSize: 24,
                   lineHeight: 1.5,
                 }}
               >
                 <span style={{ fontSize: 20 }}>
-                  {item.icon || "▸"}
+                  {itemIcon}
                 </span>
                 {renderText()}
               </div>

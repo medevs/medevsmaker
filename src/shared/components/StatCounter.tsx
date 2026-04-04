@@ -6,6 +6,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { DramaticCounter } from "./DramaticCounter";
 
 type StatCounterProps = {
   target: number;
@@ -19,6 +20,7 @@ type StatCounterProps = {
   fontFamily?: string;
   glow?: boolean;
   gradientText?: boolean;
+  mode?: "spring" | "slot" | "splitFlap";
 };
 
 export const StatCounter: React.FC<StatCounterProps> = ({
@@ -33,9 +35,29 @@ export const StatCounter: React.FC<StatCounterProps> = ({
   fontFamily = "Inter",
   glow = false,
   gradientText = false,
+  mode = "spring",
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  // Safety: coerce string values to numbers (script.json may pass strings)
+  const safeTarget = typeof target === "string" ? parseFloat(target) || 0 : target;
+
+  if (mode === "slot" || mode === "splitFlap") {
+    return (
+      <DramaticCounter
+        target={safeTarget}
+        suffix={suffix}
+        prefix={prefix}
+        label={label}
+        mode={mode}
+        color={color}
+        delay={delay}
+        fontSize={fontSize}
+        fontFamily={fontFamily}
+      />
+    );
+  }
 
   const countProgress = spring({
     frame: frame - delay,
@@ -44,7 +66,7 @@ export const StatCounter: React.FC<StatCounterProps> = ({
   });
 
   const displayNumber = Math.round(
-    interpolate(countProgress, [0, 1], [0, target], {
+    interpolate(countProgress, [0, 1], [0, safeTarget], {
       extrapolateRight: "clamp",
     })
   );

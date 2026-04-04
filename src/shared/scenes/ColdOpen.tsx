@@ -9,8 +9,10 @@ import {
 import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
 import { entrances, glowPulse } from "../animations";
 import { ParticleField } from "../components/ParticleField";
+import { NeonText } from "../components/NeonText";
+import { CinematicOverlay } from "../components/CinematicOverlay";
 
-type ColdOpenEntrance = "glow" | "gradient" | "typewriter";
+type ColdOpenEntrance = "glow" | "gradient" | "typewriter" | "neon" | "cinematic";
 
 type ColdOpenProps = {
   statement: string;
@@ -93,6 +95,92 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
           >
             |
           </span>
+        </div>
+        {subtext && (
+          <div
+            style={{
+              opacity: subOpacity,
+              fontFamily,
+              fontSize: 28,
+              color: colors.accent,
+              textAlign: "center",
+              marginTop: 24,
+            }}
+          >
+            {subtext}
+          </div>
+        )}
+      </AbsoluteFill>
+    );
+  }
+
+  if (entrance === "neon") {
+    return (
+      <AbsoluteFill
+        style={{
+          backgroundColor: colors.bg,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 100,
+        }}
+      >
+        {showParticles && (
+          <ParticleField count={15} color={colors.accent} opacity={0.08} />
+        )}
+        <NeonText text={statement} color={colors.accent} fontSize={80} fontFamily={fontFamily} flickerIntensity="heavy" />
+        {subtext && (
+          <div
+            style={{
+              opacity: subOpacity,
+              fontFamily,
+              fontSize: 28,
+              color: colors.accent,
+              textAlign: "center",
+              marginTop: 24,
+            }}
+          >
+            {subtext}
+          </div>
+        )}
+      </AbsoluteFill>
+    );
+  }
+
+  if (entrance === "cinematic") {
+    mainStyle = {
+      opacity: clampedP,
+      transform: `scale(${interpolate(clampedP, [0, 1], [0.85, 1], {
+        extrapolateRight: "clamp",
+      })})`,
+      color: colors.text,
+      textShadow: glowPulse(frame, colors.accent, 60),
+    };
+
+    return (
+      <AbsoluteFill
+        style={{
+          backgroundColor: colors.bg,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 100,
+        }}
+      >
+        {showParticles && (
+          <ParticleField count={15} color={colors.accent} opacity={0.08} />
+        )}
+        <CinematicOverlay effect="filmGrain" intensity={0.3} />
+        <CinematicOverlay effect="vignette" intensity={0.6} />
+        <div
+          style={{
+            ...mainStyle,
+            fontFamily,
+            fontSize: 80,
+            fontWeight: 800,
+            textAlign: "center",
+            lineHeight: 1.15,
+          }}
+        >
+          {statement}
         </div>
         {subtext && (
           <div

@@ -40,11 +40,21 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
   const { fps } = useVideoConfig();
 
   const { isVertical, contentPadding, fontScale } = useLayoutMode();
+
+  // Safety: coerce string values to numbers (script.json may pass strings)
+  const safeMetrics = metrics.map((m) => ({
+    ...m,
+    value: typeof m.value === "string" ? parseFloat(m.value) || 0 : m.value,
+    maxValue: m.maxValue != null
+      ? (typeof m.maxValue === "string" ? parseFloat(m.maxValue) || 100 : m.maxValue)
+      : undefined,
+  }));
+
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSilky });
 
   // Grid: 1 col for vertical, 2 cols for landscape
-  const cols = isVertical ? 1 : (metrics.length <= 2 ? metrics.length : 2);
-  const visibleMetrics = isVertical ? metrics.slice(0, 3) : metrics;
+  const cols = isVertical ? 1 : (safeMetrics.length <= 2 ? safeMetrics.length : 2);
+  const visibleMetrics = isVertical ? safeMetrics.slice(0, 3) : safeMetrics;
 
   return (
     <AbsoluteFill style={{ backgroundColor: colors.bg, padding: contentPadding, gap: isVertical ? 24 : 40 }}>

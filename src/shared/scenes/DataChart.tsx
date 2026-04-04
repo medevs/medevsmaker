@@ -27,6 +27,7 @@ type DataChartProps = {
   prefix?: string;
   variant?: DataChartVariant;
   badgeLabels?: string[];
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
 };
@@ -48,6 +49,7 @@ export const DataChart: React.FC<DataChartProps> = ({
   prefix = "",
   variant = "bars",
   badgeLabels = [],
+  sectionColor,
   colors = {
     bg: BRAND.bg,
     text: BRAND.text,
@@ -56,13 +58,23 @@ export const DataChart: React.FC<DataChartProps> = ({
   },
   fontFamily = "Inter",
 }) => {
+  const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  // Safety: coerce string values to numbers (script.json may pass strings)
+  const safeBars = bars.map((b) => ({
+    ...b,
+    value: typeof b.value === "string" ? parseFloat(b.value) || 0 : b.value,
+  }));
+  const safeMaxValue = maxValue != null
+    ? (typeof maxValue === "string" ? parseFloat(maxValue) || 100 : maxValue)
+    : undefined;
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
 
-  const max = maxValue || Math.max(...bars.map((b) => b.value));
+  const max = safeMaxValue || Math.max(...safeBars.map((b) => b.value));
 
   // Shared heading
   const Heading = (
@@ -82,14 +94,14 @@ export const DataChart: React.FC<DataChartProps> = ({
 
   // --- PIE / DONUT ---
   if (variant === "pie" || variant === "donut") {
-    const total = bars.reduce((s, b) => s + b.value, 0);
+    const total = safeBars.reduce((s, b) => s + b.value, 0);
     const cx = 300;
     const cy = 300;
     const r = 200;
     const innerR = variant === "donut" ? 120 : 0;
 
     let accumulated = 0;
-    const segments = bars.map((item, i) => {
+    const segments = safeBars.map((item, i) => {
       const segDelay = 6 + i * 6;
       const segP = spring({
         frame: frame - segDelay,
@@ -128,7 +140,7 @@ export const DataChart: React.FC<DataChartProps> = ({
     });
 
     // Legend
-    const legendItems = bars.map((item, i) => {
+    const legendItems = safeBars.map((item, i) => {
       const segDelay = 6 + i * 6;
       const legendP = spring({
         frame: frame - segDelay - 3,
@@ -196,8 +208,8 @@ export const DataChart: React.FC<DataChartProps> = ({
       extrapolateRight: "clamp",
     });
 
-    const points = bars.map((item, i) => ({
-      x: padX + (i / Math.max(bars.length - 1, 1)) * plotW,
+    const points = safeBars.map((item, i) => ({
+      x: padX + (i / Math.max(safeBars.length - 1, 1)) * plotW,
       y: padY + plotH - (item.value / max) * plotH,
     }));
 
@@ -235,7 +247,7 @@ export const DataChart: React.FC<DataChartProps> = ({
               <path
                 d={lineD}
                 fill="none"
-                stroke={colors.accent}
+                stroke={effectiveAccent}
                 strokeWidth={4}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -256,14 +268,14 @@ export const DataChart: React.FC<DataChartProps> = ({
                   cx={p.x}
                   cy={p.y}
                   r={6 * dotP}
-                  fill={colors.accent}
+                  fill={effectiveAccent}
                   opacity={dotP}
                 />
               );
             })}
 
             {/* Labels */}
-            {bars.map((item, i) => {
+            {safeBars.map((item, i) => {
               const labelP = spring({
                 frame: frame - 12 - i * 4,
                 fps,
@@ -292,10 +304,10 @@ export const DataChart: React.FC<DataChartProps> = ({
 
   // --- GAUGE ---
   if (variant === "gauge") {
-    const item = bars[0] || { label: "", value: 0 };
+    const item = safeBars[0] || { label: "", value: 0 };
     const gaugeMax = max || 100;
     const fraction = item.value / gaugeMax;
-    const gaugeColor = item.color || colors.accent;
+    const gaugeColor = item.color || effectiveAccent;
 
     const gaugeP = spring({
       frame: frame - 8,
@@ -401,7 +413,7 @@ export const DataChart: React.FC<DataChartProps> = ({
           padding: "0 40px",
         }}
       >
-        {bars.map((bar, i) => {
+        {safeBars.map((bar, i) => {
           const barDelay = 8 + i * 8;
           const barP = spring({
             frame: frame - barDelay,
@@ -415,7 +427,7 @@ export const DataChart: React.FC<DataChartProps> = ({
             extrapolateRight: "clamp",
           });
 
-          const barColor = bar.color || colors.accent;
+          const barColor = bar.color || effectiveAccent;
           const widthPercent = (bar.value / max) * 100;
 
           const valP = spring({

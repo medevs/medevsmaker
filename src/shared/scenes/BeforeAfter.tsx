@@ -15,6 +15,7 @@ type BeforeAfterProps = {
   heading: string;
   before: { title: string; items: string[] };
   after: { title: string; items: string[] };
+  sectionColor?: string;
   colors?: {
     bg: string;
     text: string;
@@ -37,6 +38,7 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
     afterColor: BRAND.green,
     muted: BRAND.textMuted,
   },
+  sectionColor,
   fontFamily = "Inter",
   reveal = "wipe",
 }) => {

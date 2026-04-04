@@ -3,6 +3,7 @@ import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
 import { noise2D } from "@remotion/noise";
 import { ParticleField, type ParticleConfig } from "./ParticleField";
 import { GridPattern } from "./GridPattern";
+import { PerspectiveGrid } from "./PerspectiveGrid";
 import { BRAND } from "../styles";
 
 type BackgroundVariant =
@@ -12,7 +13,9 @@ type BackgroundVariant =
   | "aurora"
   | "noiseField"
   | "meshAnimated"
-  | "solidWithOrbs";
+  | "solidWithOrbs"
+  | "perspectiveGrid"
+  | "bokeh";
 
 type BackgroundOverlay =
   | "none"
@@ -94,6 +97,10 @@ export const Background: React.FC<BackgroundProps> = ({
     ].join(", ");
   } else if (variant === "solidWithOrbs") {
     bgStyle = BRAND.bg;
+  } else if (variant === "perspectiveGrid") {
+    bgStyle = BRAND.bg;
+  } else if (variant === "bokeh") {
+    bgStyle = BRAND.bg;
   } else {
     bgStyle = `linear-gradient(${angle}deg, ${colors[0]}, ${colors[1]})`;
   }
@@ -109,6 +116,38 @@ export const Background: React.FC<BackgroundProps> = ({
   return (
     <>
       <AbsoluteFill style={{ background: bgStyle }} />
+
+      {variant === "perspectiveGrid" && (
+        <PerspectiveGrid color={colors[0]} showHorizon showSun sunColor={colors[1]} />
+      )}
+
+      {variant === "bokeh" && (
+        <AbsoluteFill style={{ overflow: "hidden" }}>
+          {Array.from({ length: 15 }).map((_, i) => {
+            const size = 80 + Math.sin(i * 2.1) * 60;
+            const x = ((i * 37 + 13) % 100);
+            const y = ((i * 53 + 7) % 100);
+            const drift = Math.sin(frame * 0.003 + i) * 20;
+            const bokehColor = i % 2 === 0 ? colors[0] : colors[1];
+            return (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  width: size,
+                  height: size,
+                  borderRadius: "50%",
+                  background: `radial-gradient(circle, ${bokehColor}33 0%, transparent 70%)`,
+                  filter: `blur(${20 + i * 3}px)`,
+                  transform: `translate(-50%, -50%) translateY(${drift}px)`,
+                }}
+              />
+            );
+          })}
+        </AbsoluteFill>
+      )}
 
       {/* Animated orbs for solidWithOrbs variant */}
       {variant === "solidWithOrbs" && (

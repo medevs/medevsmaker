@@ -17,9 +17,11 @@ type StatHighlightProps = {
   prefix?: string;
   label: string;
   context?: string;
+  sectionColor?: string;
   colors?: { bg: string; text: string; accent: string; muted: string };
   fontFamily?: string;
   emphasis?: StatEmphasis;
+  mode?: "spring" | "slot" | "splitFlap";
 };
 
 export const StatHighlight: React.FC<StatHighlightProps> = ({
@@ -34,11 +36,17 @@ export const StatHighlight: React.FC<StatHighlightProps> = ({
     accent: BRAND.cyan,
     muted: BRAND.textMuted,
   },
+  sectionColor,
   fontFamily = "Inter",
   emphasis = "default",
+  mode = "spring",
 }) => {
+  const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  // Safety: coerce string values to numbers (script.json may pass strings)
+  const safeStat = typeof stat === "string" ? parseFloat(stat) || 0 : stat;
 
   const contextP = spring({
     frame: frame - 20,
@@ -61,14 +69,15 @@ export const StatHighlight: React.FC<StatHighlightProps> = ({
       }}
     >
       <StatCounter
-        target={stat}
+        target={safeStat}
         suffix={suffix}
         prefix={prefix}
         label={label}
-        color={colors.accent}
+        color={effectiveAccent}
         fontFamily={fontFamily}
         glow={emphasis === "glow"}
         gradientText={emphasis === "gradient"}
+        mode={mode}
       />
       {context && (
         <div
