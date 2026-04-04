@@ -9,7 +9,25 @@ metadata:
 
 All scene types available for video production. Each scene is a reusable React component in `src/shared/scenes/`.
 
+## Extended Scene Library
+
+For visual enhancement scenes (backgrounds, cinematic opens, text effects, transitions, UI demos, data animations), see **[rules/scene-library.md](rules/scene-library.md)** — 30 curated extended scenes in `src/shared/scenes/extended/`.
+
+The 35 educational scenes below are for **content delivery** (teaching concepts, explaining ideas, building knowledge). The 30 extended scenes are for **visual framing, atmosphere, and demonstration** (cinematic opens, transitions, atmospheric backgrounds, UI demos). A well-produced video blends both: educational scenes carry the teaching, extended scenes carry the style.
+
 > **Note**: Duration ranges listed below are **minimum animation times** — the time needed for entrance animations to complete. Actual scene durations are computed from narration word counts (see `duration-calculation.md`). Write narration naturally; the duration will follow.
+
+## Universal Props
+
+All content scenes accept these common props:
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `sectionColor` | `string?` | Per-section accent color override. Takes precedence over `colors.accent`. Pass this on every content scene to ensure consistent per-section theming. |
+| `colors` | `object?` | Theme colors (`bg`, `text`, `accent`, `muted`). Defaults to BRAND colors. |
+| `fontFamily` | `string?` | Font family. Defaults to `"Inter"`. |
+
+**Always pass `sectionColor`** — it's the primary way to apply per-section theming. The `colors.accent` serves as a fallback when `sectionColor` is not provided.
 
 ## Scene Tiers
 
@@ -55,7 +73,11 @@ Scenes are divided into two tiers. For daily production, prefer **Core** scenes.
 | MetricDashboard | Visual | 2-4 stat cards grid with mini charts |
 | ProcessAnimation | Visual | Items moving through stages |
 | SplitCodeComparison | Text | Side-by-side code comparison (before/after) |
+| FullScreenText | Text | Full-screen statement with dramatic entrance |
+| SwipeReveal | Visual | Swipe transition with before/after content |
 | Outro | Structural | Basic channel branding (**deprecated** — use EndScreen) |
+
+> **Note**: `Thumbnail.tsx` is a special-purpose scene used by `/assets` for thumbnail generation, not for video content.
 
 ### Scene Selection Rule
 
@@ -89,7 +111,7 @@ STRUCTURAL (don't count toward ratio):
 **Duration**: 4-5s (120-150 frames at 30fps)
 **Layout**: Centered hero
 **Animation**: Spring scale-in (0.9→1) + opacity fade
-**Props**: `question`, `subtext?`, `entrance?: 'scale' | 'blur' | 'fadeUp'`
+**Props**: `question: string`, `subtext?: string`, `entrance?: 'scale' | 'blur' | 'fadeUp'`
 
 **When to use**: Every video's first scene. Ask a question the viewer thinks they know the answer to.
 
@@ -115,7 +137,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Centered with underline divider
 **Animation**: Title fade-up → underline expand → objectives stagger-in
-**Props**: `title`, `objectives[]`, `entrance?: 'fadeUp' | 'scaleRotate' | 'splitReveal'`
+**Props**: `title: string`, `objectives: string[]`, `entrance?: 'fadeUp' | 'scaleRotate' | 'splitReveal'`
 
 **When to use**: Immediately after the hook. Sets expectations.
 
@@ -135,7 +157,7 @@ subtext: "It's more complex than you think"
 **Duration**: 3-4s (90-120 frames)
 **Layout**: Centered with section badge
 **Animation**: Badge pop-in → title fade-up → subtitle fade
-**Props**: `sectionNumber`, `title`, `subtitle?`, `entrance?: 'fadeUp' | 'slideLeft' | 'scaleBlur'`
+**Props**: `sectionNumber: number`, `title: string`, `subtitle?: string`, `entrance?: 'fadeUp' | 'slideLeft' | 'scaleBlur'`
 
 **When to use**: Start of every section (3-7 per video).
 
@@ -154,7 +176,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Left-aligned with padding
 **Animation**: Head fade-up → body fade-up (12f delay) → analogy fade (25f delay)
-**Props**: `heading`, `body`, `analogy?`, `icon?`, `headingEntrance?: 'fadeUp' | 'fadeLeft' | 'typewriter'`
+**Props**: `heading: string`, `body: string`, `analogy?: string`, `icon?: string`, `headingEntrance?: 'fadeUp' | 'fadeLeft' | 'typewriter'`
 
 **When to use**: The workhorse scene for explaining any concept.
 
@@ -174,7 +196,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Title top, diagram centered
 **Animation**: Nodes scale-in staggered → arrows draw-in between them
-**Props**: `title`, `nodes[]`, `connections[]`, `direction?`
+**Props**: `title: string`, `nodes: {label: string, sublabel?: string}[]`, `connections: {from: number, to: number}[]`, `direction?: 'horizontal' | 'vertical'`
 
 **When to use**: Any process, pipeline, data flow, request lifecycle.
 
@@ -195,7 +217,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-15s (240-450 frames)
 **Layout**: Title top, code left, annotations right
 **Animation**: Title fade-up → code typewriter → annotations stagger-in
-**Props**: `title`, `code`, `annotations?[]`, `highlightLines?[]`
+**Props**: `title: string`, `code: string`, `annotations?: {line: number, text: string}[]`, `highlightLines?: number[]`
 
 **When to use**: Any time you show code, commands, or config.
 
@@ -216,7 +238,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-10s (180-300 frames)
 **Layout**: Heading top, two equal columns with VS divider
 **Animation**: Heading fade → left slide-in-from-left → right slide-in-from-right → items stagger
-**Props**: `heading`, `left: {title, items[], color}`, `right: {title, items[], color}`, `entranceStyle?: 'slide' | 'spring' | 'overshoot'`
+**Props**: `heading: string`, `left: {title: string, items: string[], color: string}`, `right: {title: string, items: string[], color: string}`, `entranceStyle?: 'slide' | 'spring' | 'overshoot'`
 
 **When to use**: Good vs bad, before/after, old vs new, two approaches.
 
@@ -236,7 +258,9 @@ subtext: "It's more complex than you think"
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered hero
 **Animation**: Number counts from 0 → target with spring scale → label fade-up → context fade
-**Props**: `stat`, `suffix?`, `prefix?`, `label`, `context?`, `emphasis?: 'default' | 'glow' | 'gradient'`
+**Props**: `stat: number` ⚠️, `suffix?: string`, `prefix?: string`, `label: string`, `context?: string`, `emphasis?: 'default' | 'glow' | 'gradient'`
+
+> **⚠️ `stat` MUST be a raw number** (e.g., `stat={82}`, not `stat="82%"`). Use `suffix`/`prefix` for formatting. Strings crash `interpolate()`.
 
 **When to use**: Key statistics, percentages, performance numbers.
 
@@ -257,7 +281,7 @@ subtext: "It's more complex than you think"
 **Duration**: 5-10s (150-300 frames)
 **Layout**: Heading top, bullets stacked below
 **Animation**: Heading fade-up → bullets stagger-in from left
-**Props**: `heading`, `items[]`, `bulletStyle?`
+**Props**: `heading: string`, `items: string[]`, `bulletStyle?: 'dot' | 'check' | 'arrow' | 'number'`
 
 **When to use**: Lists of benefits, features, requirements, considerations.
 
@@ -277,7 +301,7 @@ subtext: "It's more complex than you think"
 **Duration**: 5-8s (150-240 frames)
 **Layout**: Centered — icon on top, heading middle, analogy below
 **Animation**: Icon pop-in (snappy spring) → heading fade-up → analogy fade
-**Props**: `icon`, `heading`, `analogy`, `iconEffect?: 'pop' | 'rotate' | 'bounce'`
+**Props**: `icon: string`, `heading: string`, `analogy: string`, `iconEffect?: 'pop' | 'rotate' | 'bounce'`
 
 **When to use**: Breaking complex concepts with relatable analogies. Use after dense scenes.
 
@@ -298,7 +322,7 @@ subtext: "It's more complex than you think"
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered with accent box
 **Animation**: Heading fade-up → accent box scale-in
-**Props**: `heading?`, `takeaway`, `variant?`
+**Props**: `heading?: string`, `takeaway: string`, `variant?: 'accent' | 'insight'`
 
 **When to use**: Last scene of each section. Distills the section into one memorable statement.
 
@@ -317,7 +341,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, numbered list stacked
 **Animation**: Heading fade-up → items stagger-in with number badges
-**Props**: `heading?`, `items[]`, `itemEntrance?: 'left' | 'scale' | 'fade'`
+**Props**: `heading?: string`, `items: string[]`, `itemEntrance?: 'left' | 'scale' | 'fade'`
 
 **When to use**: Near the end of the video, before the outro.
 
@@ -337,7 +361,7 @@ subtext: "It's more complex than you think"
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered — logo top, CTA button middle, tagline bottom
 **Animation**: Logo pop-in (snappy) → CTA button fade-up → tagline fade
-**Props**: `channel?`, `cta?`, `tagline?`
+**Props**: `channel?: string`, `cta?: string`, `tagline?: string`
 
 **When to use**: Always the last scene.
 
@@ -356,7 +380,7 @@ subtext: "It's more complex than you think"
 **Duration**: 5-7s (150-210 frames)
 **Layout**: Centered with accent box
 **Animation**: Heading fade-up with subtle pulse → accent box scale-in
-**Props**: `heading`, `body`, `severity?`
+**Props**: `heading: string`, `body: string`, `severity?: 'warning' | 'danger'`
 
 **When to use**: Common mistakes, pitfalls, security concerns, things to avoid.
 
@@ -376,7 +400,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, steps stacked with section badges
 **Animation**: Heading fade-up → steps stagger-in with badge pop-ins
-**Props**: `heading`, `steps: {title, description?}[]`
+**Props**: `heading: string`, `steps: {title: string, description?: string}[]`
 
 **When to use**: Step-by-step processes, setup instructions, workflows.
 
@@ -397,7 +421,7 @@ subtext: "It's more complex than you think"
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered — channel name + underline + CTA button + tagline + social links
 **Animation**: Channel name bouncy spring → underline expand → CTA fade-up with glow pulse → tagline fade → social links stagger
-**Props**: `channel?`, `cta?`, `tagline?`, `socialLinks?: {label, handle}[]`, `showParticles?`
+**Props**: `channel?: string`, `cta?: string`, `tagline?: string`, `socialLinks?: {label: string, handle: string}[]`, `showParticles?: boolean`
 
 **When to use**: As a premium replacement for Outro. Use for polished end cards with branding.
 
@@ -417,7 +441,7 @@ subtext: "It's more complex than you think"
 **Duration**: 4-6s (120-180 frames)
 **Layout**: Centered hero
 **Animation**: Heavy spring entrance with glow pulse or gradient text
-**Props**: `statement`, `subtext?`, `entrance?: 'glow' | 'gradient' | 'typewriter'`, `showParticles?`
+**Props**: `statement: string`, `subtext?: string`, `entrance?: 'glow' | 'gradient' | 'typewriter'`, `showParticles?: boolean`
 
 **When to use**: Alternative to HookQuestion for dramatic, statement-driven openings.
 
@@ -436,7 +460,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, two panels side by side
 **Animation**: Before panel slides in → after panel wipe-reveals or slides in
-**Props**: `heading`, `before: {title, items[]}`, `after: {title, items[]}`, `reveal?: 'wipe' | 'split'`
+**Props**: `heading: string`, `before: {title: string, items: string[]}`, `after: {title: string, items: string[]}`, `reveal?: 'wipe' | 'split'`
 
 **When to use**: Showing improvements, transformations, old vs new approaches.
 
@@ -455,7 +479,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, timeline centered
 **Animation**: Nodes pop-in staggered with connecting lines drawing between them
-**Props**: `heading`, `nodes: {label, description?}[]`, `layout?: 'horizontal' | 'vertical'`
+**Props**: `heading: string`, `nodes: {label: string, description?: string}[]`, `layout?: 'horizontal' | 'vertical'`
 
 **When to use**: Historical progressions, evolution of technology, step sequences over time.
 
@@ -476,7 +500,9 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, bars stacked vertically
 **Animation**: Heading fade → bars grow with spring + value counter
-**Props**: `heading`, `bars: {label, value, color?}[]`, `maxValue?`, `suffix?`
+**Props**: `heading: string`, `bars: {label: string, value: number, color?: string}[]` ⚠️, `maxValue?: number`, `suffix?: string`
+
+> **⚠️ `value` and `maxValue` MUST be raw numbers** (e.g., `value: 82`, not `value: "82"`). Strings crash `interpolate()`.
 
 **When to use**: Statistics, performance comparisons, survey results, market data.
 
@@ -498,7 +524,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-8s (180-240 frames)
 **Layout**: Content in left 65% of frame (negative space on right), breadcrumb top-left
 **Animation**: Heading fadeUpSlow → ColorBorderCard scale-in → PillBadge row stagger
-**Props**: `heading`, `definition`, `badge?`, `icon?`, `breadcrumb?: {current, total, label}`, `pills?: {label, color?}[]`, `sectionColor?`
+**Props**: `heading: string`, `definition: string`, `badge?: string`, `icon?: string`, `breadcrumb?: {current: number, total: number, label: string}`, `pills?: {label: string, color?: string}[]`, `sectionColor?: string`
 
 **When to use**: Introducing a new feature, concept, or topic at the start of a section. Prefer over ConceptExplain when defining something for the first time.
 
@@ -519,7 +545,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-10s (180-300 frames)
 **Layout**: Heading top, single large ColorBorderCard with items appearing one by one
 **Animation**: Heading fadeUpSlow → card scale-in → items stagger with fadeLeftSlow (14f delay)
-**Props**: `heading`, `items: {text, icon?, highlight?}[]`, `summary?`, `sectionColor?`
+**Props**: `heading: string`, `items: {text: string, icon?: string, highlight?: string}[]`, `summary?: string`, `sectionColor?: string`
 
 **When to use**: Listing capabilities, features, or sequential points that build on each other.
 
@@ -539,7 +565,7 @@ subtext: "It's more complex than you think"
 **Duration**: 6-10s (180-300 frames)
 **Layout**: Heading centered, stacked ColorBorderCard rows
 **Animation**: Heading fade → rows stagger in (14f delay), each row: question left + PillBadge answer right
-**Props**: `heading`, `rows: {icon?, question, answer, answerColor?}[]`, `sectionColor?`
+**Props**: `heading: string`, `rows: {icon?: string, question: string, answer: string, answerColor?: string}[]`, `sectionColor?: string`
 
 **When to use**: Decision criteria, FAQ-style content, when to use what, feature comparisons as rows.
 
@@ -560,7 +586,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, three equal ColorBorderCards (gap 24px)
 **Animation**: Heading fade → cards stagger in → items stagger within each card
-**Props**: `heading`, `columns: [{title, icon?, items[], color}] x3`
+**Props**: `heading: string`, `columns: {title: string, icon?: string, items: string[], color: string}[]` (3 columns)
 
 **When to use**: Comparing three approaches, tools, or categories. When ComparisonSplit's two columns aren't enough.
 
@@ -580,7 +606,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, FileTree left (2/3), optional annotation card right (1/3)
 **Animation**: Heading fadeUpSlow → tree items stagger with fadeLeftSlow → annotation card fades in last
-**Props**: `heading`, `items: {name, type, indent, color?, highlight?}[]`, `annotation?`, `sectionColor?`
+**Props**: `heading: string`, `items: {name: string, type: string, indent: number, color?: string, highlight?: boolean}[]`, `annotation?: string`, `sectionColor?: string`
 
 **When to use**: Showing project structure, file organization, config layouts, directory hierarchies.
 
@@ -601,7 +627,7 @@ subtext: "It's more complex than you think"
 **Duration**: 5-7s (150-210 frames)
 **Layout**: Centered — preLabel (monospace caps) → large statement with gradient highlight → subtitle → optional detail cards
 **Animation**: Labels fade → statement with gradient text glow → subtitle fade → cards stagger
-**Props**: `preLabel?`, `statement`, `highlightWord?`, `subtitle?`, `cards?: {text, icon?}[]`, `sectionColor?`
+**Props**: `preLabel?: string`, `statement: string`, `highlightWord?: string`, `subtitle?: string`, `cards?: {text: string, icon?: string}[]`, `sectionColor?: string`
 
 **When to use**: Key rules, important insights, memorable one-liners. Use instead of KeyTakeaway when you want gradient emphasis.
 
@@ -623,7 +649,7 @@ subtext: "It's more complex than you think"
 **Duration**: 8-12s (240-360 frames)
 **Layout**: Heading top, central ColorBorderCard with glow, satellite cards arranged in circle, SVG dashed connection lines
 **Animation**: Heading fade → center node scale-in → connection lines fade → satellites stagger in (14f delay)
-**Props**: `heading`, `center: {label, icon?, sublabel?, color?}`, `satellites: {label, icon?, sublabel?, color?}[]`, `sectionColor?`
+**Props**: `heading: string`, `center: {label: string, icon?: string, sublabel?: string, color?: string}`, `satellites: {label: string, icon?: string, sublabel?: string, color?: string}[]`, `sectionColor?: string`
 
 **When to use**: System architectures, hub-spoke relationships, central concept with related components.
 

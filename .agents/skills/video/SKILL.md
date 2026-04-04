@@ -59,7 +59,9 @@ Full rules: [rules/hook-selection.md](rules/hook-selection.md)
 
 **Goal**: Convert the production brief into a concrete scene plan. **No durations** — durations come from narration in Phase 7.
 
-Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (scene catalog + selection priorities + sequencing)
+Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (35 educational scene catalog + selection priorities + sequencing)
+
+For visual enhancement, backgrounds, text effects, transitions, cinematic opens, UI demos, and data animations, also consult [rules/scene-library.md](rules/scene-library.md) (30 extended scenes). When content demands cinematic impact or atmospheric visuals (opening hook that needs drama, section transition that needs polish, background that needs visual richness), blend in appropriate extended scenes.
 
 For **short** (10-90s): flat TransitionSeries (3-8 scenes), single section, see [rules/short-form.md](rules/short-form.md).
 For **news** (1-4 min): flat TransitionSeries (5-15 scenes) or section-based (one per news item).
@@ -252,7 +254,16 @@ All video types use shared building-block components from `src/shared/`:
 
 **Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern, VoiceoverLayer, ColorBorderCard, PillBadge, SectionTracker, FeatureCounter, FileTree, GradientText, GlassCard, TextEffect, CaptionOverlay
 
-**Scene Templates** (`src/shared/scenes/`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram, QuoteCard, AnimatedDiagram, MetricDashboard, ProcessAnimation, SplitCodeComparison
+**Scene Templates** (`src/shared/scenes/`):
+- *Educational scenes* (flat `src/shared/scenes/SceneName`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram, QuoteCard, AnimatedDiagram, MetricDashboard, ProcessAnimation, SplitCodeComparison (35 scenes)
+- *Extended scenes* (`src/shared/scenes/extended/SceneName`): 30 curated scenes for visual enhancement — backgrounds, text effects, cinematic opens, data visualizations, UI demos, transitions. See [rules/scene-library.md](rules/scene-library.md) for complete catalog.
+
+Import format for extended scenes:
+```tsx
+import { TextGlitch } from "../../../shared/scenes/extended/TextGlitch";
+import { BackgroundBokeh } from "../../../shared/scenes/extended/BackgroundBokeh";
+import { CinematicSciFi } from "../../../shared/scenes/extended/CinematicSciFi";
+```
 
 **Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow/slideAndFade/dropBounce/zoomBlur, pulse, glowPulse, float, shimmer, breathe), transitions.ts (TRANSITIONS presets incl. flip, shortFade + OVERLAYS for light leaks), styles.ts (SHADOWS incl. deepGlow, GRADIENTS incl. aurora, SECTION_THEMES, CARD, GLASS, MONO, SCENE_ALTERNATION, spring configs incl. springSilky), formats.ts (FORMAT_PRESETS, SAFE_ZONES, useLayoutMode hook for responsive scenes)
 
@@ -498,7 +509,8 @@ Use `<AbsoluteFill>` + flexbox for layout (not manual `position: absolute`) beca
 - [rules/hook-selection.md](rules/hook-selection.md) — Phase 3: youtube hook frameworks, variant selection
 - [rules/video-types.md](rules/video-types.md) — 3 active video types (news, explainer, tutorial) with defaults, scenes, rules, palettes
 - [rules/audience-profile.md](rules/audience-profile.md) — Target audience, tone rules, retention engineering
-- [rules/educational-scenes.md](rules/educational-scenes.md) — Scene catalog (27 types), selection priorities, sequencing
+- [rules/educational-scenes.md](rules/educational-scenes.md) — Educational scene catalog (35 types), selection priorities, sequencing
+- [rules/scene-library.md](rules/scene-library.md) — Extended visual scene library (30 scenes), when to use, quick reference by video type
 - [rules/narration-writing.md](rules/narration-writing.md) — Narration writing, source attribution, retention patterns
 - [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for explainer/tutorial videos
 - [rules/duration-calculation.md](rules/duration-calculation.md) — Duration calculation from narration

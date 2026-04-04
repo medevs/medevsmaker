@@ -113,61 +113,37 @@ Located at `.claude/agents/script-critic.md`.
 src/
   index.ts                          # registerRoot entry point
   Root.tsx                          # Composition registry (all videos)
-  shared/                           # 22 components + 29 scenes (13 Core + 16 Advanced)
+  shared/
     styles.ts                       # baseTokens, BRAND, SECTION_THEMES, CARD, MONO
-    animations.ts                   # EASINGS, entrances (fadeUpSlow, fadeLeftSlow), pulse
+    animations.ts                   # EASINGS, entrances, pulse, float, shimmer, breathe
     transitions.ts                  # TRANSITIONS presets (fade, slide, wipe, clockWipe, shortFade)
     formats.ts                      # FORMAT_PRESETS, SAFE_ZONES, useLayoutMode() hook
-    components/                     # AnimatedText, Background, CaptionOverlay, SafeZoneOverlay, etc.
-    scenes/                         # HookQuestion, TitleIntro, FullScreenText, SwipeReveal, etc.
-  videos/<VideoName>/                # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
+    utils/                          # blobUtils (SVG blob path generation)
+    components/                     # Core components (Background, StatCounter, TextEffect, etc.)
+    scenes/                         # 35 educational scenes (HookQuestion, TitleIntro, CodeDisplay, etc.)
+      extended/                     # 30 extended scenes (flat directory, no subdirs)
+  videos/<VideoName>/               # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
 
 .agents/skills/video/               # Powers /script (6 phases) and /video (3 phases)
-  rules/                            # context-gathering, research-integration, hook-selection,
-                                    # video-types, audience-profile, educational-scenes,
-                                    # narration-writing, long-form-architecture, duration-calculation,
-                                    # short-form
 .agents/skills/voiceover/           # Powers /voiceover (TTS + audio integration)
 .agents/skills/music/               # Powers /music (music generation + ducking)
 .claude/skills/                     # All 8 commands registered here (/idea, /script, /video, etc.)
 .claude/agents/script-critic.md     # Read-only quality reviewer (8 checks)
 
-scripts/tts/                        # TTS pipeline: types, utils, generate-transcript, generate-audio, pronunciation.json
-scripts/music/                      # Music pipeline: types, generate-music, strategic, library
-productions/                        # /idea output + /script research.md + script.json + /assets assets.md + /distribute distribute/
-public/thumbnails/<VideoName>/      # AI-generated thumbnail images (from /assets, requires Replicate MCP)
+scripts/tts/                        # TTS pipeline
+scripts/music/                      # Music pipeline
+productions/                        # Pipeline output (/idea, /script, /assets, /distribute)
+public/thumbnails/<VideoName>/      # AI-generated thumbnails (requires Replicate MCP)
 ```
 
 ## Remotion Conventions
-- Always use `useCurrentFrame()` for animations — NEVER CSS transitions
-- Spring configs: `{ damping: 200 }` smooth, `{ damping: 200, stiffness: 90 }` silky, `{ damping: 20, stiffness: 200 }` snappy, `{ damping: 8 }` bouncy, `{ damping: 15, stiffness: 80, mass: 2 }` heavy
+- Always use `useCurrentFrame()` + `interpolate()`/`spring()` — NEVER CSS transitions
 - Always `extrapolateRight: 'clamp'` on interpolations
-- Use `<AbsoluteFill>` + flexbox for layout
-- Use `<TransitionSeries>` for scene sequencing within sections
-- Use `<Series>` for chaining sections in explainer/tutorial videos
-- Load fonts via `@remotion/google-fonts`
-- Calculate `durationInFrames = seconds * fps`
-- All videos import shared scenes from `src/shared/scenes/`
-- Watermark position: `"top-right"` (avoids ProgressBar overlap)
-- Visual-first: 60%+ content scenes should be visual-heavy
-- Use `EndScreen` instead of basic `Outro` for polished end cards
-- Script-first pipeline: narration drives scene durations (155 WPM formula)
-- `/video` outputs `manifest.json` + `transcript.json` (pre-populated with narration from script.json)
-- Voiceover: `<Audio>` from `@remotion/media`, placed inside `<Sequence>` via `VoiceoverLayer`
-- Audio files in `public/vo/<VideoName>/`, referenced via `staticFile()`
-- Background music: `<Audio>` with breathing volume callback, placed via `BreathingMusicLayer`
-- Music files in `public/music/<VideoName>/`, referenced via `staticFile()`
-- Per-section color theming: use `SECTION_THEMES.get(index)` for section accent colors
-- Persistent overlays: `SectionTracker` (bottom-right), `FeatureCounter` (top-left, optional)
-- Prefer `springSilky` + `fadeUpSlow`/`fadeLeftSlow` for polished, slower animations
-- Use `ColorBorderCard` as the signature card element (left colored border)
-- Use `PillBadge` for ALL CAPS monospace labels
-- Use `GradientText` for key phrase emphasis
-- Negative space: content in left 60-65% for FeatureIntro/KeyRuleCard, 80px+ outer padding
-- **Short-form (9:16)**: `useLayoutMode()` from `formats.ts` provides responsive tokens
-- Short-form: flat `TransitionSeries`, no `<Series>` sections, `shortFade` (8f) transitions
-- Short-form: `CaptionOverlay` always on (bold style, 400ms combineMs)
-- Short-form: no ProgressBar, SectionTracker, FeatureCounter, Watermark overlays
-- Short-form: safe zones — 160px top, 350px bottom, 60px sides (auto via `useLayoutMode`)
-- Short-form: 170 WPM pacing, max 8s/scene, visual change every 3s
-- 6 scenes are responsive: CodeDisplay, ComparisonSplit, BeforeAfter, ThreeColumnCompare, MetricDashboard, SplitCodeComparison
+- `<AbsoluteFill>` + flexbox for layout, fonts via `@remotion/google-fonts`
+- `<TransitionSeries>` for scenes within sections, `<Series>` for chaining sections
+- Import shared scenes from `src/shared/scenes/`, extended from `src/shared/scenes/extended/`
+- Script-first pipeline: narration drives scene durations (155 WPM long-form, 170 WPM short-form)
+- `/video` outputs `manifest.json` + `transcript.json` (pre-populated from script.json)
+- Voiceover via `VoiceoverLayer`, music via `BreathingMusicLayer`
+- **Short-form (9:16)**: flat `TransitionSeries`, `useLayoutMode()` for safe zones, `CaptionOverlay` always on
+- Style details (spring configs, component preferences, overlays) in `.agents/skills/video/` rules
