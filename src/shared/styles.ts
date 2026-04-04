@@ -30,21 +30,35 @@ export const baseTokens = {
 
 /**
  * medevsmaker brand palette — used across all educational videos.
+ * Amber-first identity: primary #c8956c, brand mark #c07830
  */
 export const BRAND = {
-  indigo: "#6366f1",
-  violet: "#8b5cf6",
-  cyan: "#06b6d4",
-  amber: "#f59e0b",
+  // Primary amber palette
+  indigo: "#c07830",     // Brand mark amber (primary CTA, logos, high-definition)
+  violet: "#a87040",     // Amber dark (depth, secondary accent)
+  cyan: "#ddb896",       // Amber light (softer accents, info tints)
+  amber: "#c8956c",      // Main brand amber (versatile, integrated)
+  amberBrand: "#c07830", // Explicit brand mark variant
+  amberLight: "#ddb896", // Explicit light variant
+  amberDark: "#a87040",  // Explicit dark variant
+  amberGlow: "#c8956c40", // Transparent for glow effects
+
+  // Semantic colors
   green: "#10b981",
   red: "#ef4444",
-  bg: "#0f0f1a",
-  bgLight: "#1a1a2e",
-  text: "#f8fafc",
-  textMuted: "#94a3b8",
-  codeBg: "#1e1e2e",
-  cardBg: "#1e1e30",
-  border: "#2e2e44",
+
+  // Backgrounds & surfaces
+  bg: "#060606",         // Nearly pure black, dark-first
+  bgLight: "#111111",    // Warm dark for alternation/depth
+  surface: "#faf8f5",    // Light surface for contrast sections
+  text: "#f5f3f0",       // Warm off-white
+  textDark: "#1a1715",   // Dark ink for light backgrounds
+  textMuted: "#6b6560",  // Warm muted gray
+
+  // Code & cards
+  codeBg: "#0d0d0d",     // Very dark warm code background
+  cardBg: "#141414",     // Elevated surface (oklch(0.08 0 0))
+  border: "rgba(255, 255, 255, 0.08)", // Subtle light border
 } as const;
 
 /** Standard scene color overrides — every scene should accept this. */
@@ -59,7 +73,7 @@ export type SceneColors = {
 export const DEFAULT_SCENE_COLORS: Required<SceneColors> = {
   bg: BRAND.bg,
   text: BRAND.text,
-  accent: BRAND.indigo,
+  accent: BRAND.amber,
   muted: BRAND.textMuted,
 };
 
@@ -75,6 +89,7 @@ export const SHADOWS = {
     `0 0 20px ${color}88, 0 0 40px ${color}55, 0 0 60px ${color}33`,
   deepGlow: (color: string) =>
     `0 0 10px ${color}aa, 0 0 30px ${color}66, 0 0 80px ${color}22`,
+  amberGlow: "0 0 40px rgba(200,149,108,0.15), 0 0 80px rgba(200,149,108,0.05)",
 } as const;
 
 /**
@@ -98,6 +113,9 @@ export const GRADIENTS = {
           `radial-gradient(ellipse at ${20 + i * 25}% ${30 + ((i * 20) % 50)}%, ${c}44 0%, transparent 60%)`
       )
       .join(", ") + `, linear-gradient(135deg, ${BRAND.bg}, ${BRAND.bgLight})`,
+  /** Brand amber gradient for premium text & overlays */
+  brandGradient: () =>
+    `linear-gradient(135deg, ${BRAND.amberLight}, ${BRAND.amber}, ${BRAND.amberDark})`,
 } as const;
 
 /**
@@ -125,12 +143,12 @@ export const SCENE_DEFAULTS = {
  */
 export const SECTION_THEMES = {
   colors: [
-    BRAND.indigo,
-    BRAND.cyan,
-    BRAND.amber,
-    BRAND.green,
-    BRAND.violet,
-    BRAND.red,
+    BRAND.amber,         // Warm amber primary
+    BRAND.amberBrand,    // Brand amber (high definition)
+    BRAND.amberLight,    // Light amber
+    BRAND.amberDark,     // Dark amber
+    BRAND.green,         // Green for contrast
+    BRAND.red,           // Red for emphasis
   ] as readonly string[],
   get(index: number): string {
     return this.colors[index % this.colors.length];
@@ -178,7 +196,7 @@ export const GLASS = {
  */
 export const SCENE_ALTERNATION = {
   dark: BRAND.bg,
-  light: "#141428",
+  light: "#0d0d0d",
   get(index: number): string {
     return index % 2 === 0 ? this.dark : this.light;
   },
