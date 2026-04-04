@@ -4,6 +4,7 @@ import { Thumbnail } from "./shared/scenes/Thumbnail";
 import { GraphRAGExplained } from "./videos/GraphRAGExplained";
 import { FiveAiToolsDevsSleepingOn } from "./videos/FiveAiToolsDevsSleepingOn";
 import { ClaudeCodeMastery } from "./videos/ClaudeCodeMastery";
+import { ClaudeCodeLeak } from "./videos/ClaudeCodeLeak";
 
 export const Root: React.FC = () => {
   return (
@@ -41,6 +42,14 @@ export const Root: React.FC = () => {
         id="ClaudeCodeMastery"
         component={ClaudeCodeMastery}
         durationInFrames={12887}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      <Composition
+        id="ClaudeCodeLeak"
+        component={ClaudeCodeLeak}
+        durationInFrames={12590}
         fps={30}
         width={1920}
         height={1080}
