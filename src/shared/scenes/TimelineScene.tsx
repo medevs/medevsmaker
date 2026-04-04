@@ -186,7 +186,7 @@ const HorizontalTimeline: React.FC<{
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 17,
+                    fontSize: 20,
                     color: colors.muted,
                     textAlign: "center",
                     marginTop: 4,
@@ -371,7 +371,7 @@ const VerticalTimeline: React.FC<{
                   <span
                     style={{
                       fontFamily,
-                      fontSize: 18,
+                      fontSize: 20,
                       color: colors.muted,
                       textAlign: "left",
                       maxWidth: 400,

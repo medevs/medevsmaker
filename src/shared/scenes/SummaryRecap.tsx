@@ -140,7 +140,7 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
                 alignItems: "center",
                 justifyContent: "center",
                 fontFamily,
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: 700,
                 color: "#ffffff",
                 flexShrink: 0,

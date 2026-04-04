@@ -4,23 +4,27 @@
 
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const ThemeCyberpunk = ({ startDelay: _startDelay = 0, title = "CYBER", subtitle = "PUNK" }: {
+export const ThemeCyberpunk = ({ startDelay: _startDelay = 0, title = "CYBER", subtitle = "PUNK", colors: colorsProp, sectionColor }: {
   startDelay?: number;
   title?: string;
   subtitle?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
-  void _startDelay; // 未使用警告を抑制
+  void _startDelay;
   const frame = useCurrentFrame();
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const _accent = sectionColor || colors.accent;
 
   const glitchOffset = Math.sin(frame * 0.5) * 3;
   const neonPulse = 0.8 + Math.sin(frame * 0.2) * 0.2;
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* グリッドライン */}
       <AbsoluteFill
         style={{
@@ -78,7 +82,7 @@ export const ThemeCyberpunk = ({ startDelay: _startDelay = 0, title = "CYBER", s
             fontFamily,
             fontSize: 100,
             fontWeight: 900,
-            color: BRAND.text,
+            color: colors.text,
             textShadow: `
               0 0 10px #ff00ff,
               0 0 20px #ff00ff,

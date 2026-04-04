@@ -5,16 +5,28 @@
 import React from "react";
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const ShapeHelix = ({ startDelay = 0, text = "HELIX", color = BRAND.indigo }: {
+export const ShapeHelix = ({
+  startDelay = 0,
+  text = "HELIX",
+  color,
+  colors: colorsProp,
+  sectionColor,
+}: {
   startDelay?: number;
   text?: string;
   color?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
+  const helixColor = color ?? accent;
 
   const entryProgress = interpolate(frame, [startDelay, startDelay + 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   const rotation = (frame - startDelay) * 0.03;
@@ -23,7 +35,7 @@ export const ShapeHelix = ({ startDelay = 0, text = "HELIX", color = BRAND.indig
   const helixHeight = 500;
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg, perspective: 800 }}>
+    <AbsoluteFill style={{ background: colors.bg, perspective: 800 }}>
       <div
         style={{
           position: "absolute",
@@ -55,10 +67,10 @@ export const ShapeHelix = ({ startDelay = 0, text = "HELIX", color = BRAND.indig
                   top: "50%",
                   width: 16,
                   height: 16,
-                  background: color,
+                  background: helixColor,
                   borderRadius: "50%",
                   transform: `translate(-50%, -50%) translate3d(${x1}px, ${y}px, ${z1}px) scale(${pointProgress * entryProgress})`,
-                  boxShadow: `0 0 20px ${color}`,
+                  boxShadow: `0 0 20px ${helixColor}`,
                 }}
               />
               {/* 点2 */}
@@ -83,7 +95,7 @@ export const ShapeHelix = ({ startDelay = 0, text = "HELIX", color = BRAND.indig
                   top: "50%",
                   width: 160,
                   height: 2,
-                  background: `linear-gradient(90deg, ${color}, ${BRAND.violet})`,
+                  background: `linear-gradient(90deg, ${helixColor}, ${BRAND.violet})`,
                   transform: `translate(-50%, -50%) translate3d(0, ${y}px, 0) rotateY(${angle * 57}deg) scaleX(${pointProgress * entryProgress})`,
                   opacity: 0.4,
                 }}
@@ -102,7 +114,7 @@ export const ShapeHelix = ({ startDelay = 0, text = "HELIX", color = BRAND.indig
           fontFamily,
           fontSize: 60,
           fontWeight: 700,
-          color: BRAND.text,
+          color: colors.text,
           opacity: entryProgress,
         }}
       >

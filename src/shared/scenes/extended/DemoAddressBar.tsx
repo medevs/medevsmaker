@@ -3,14 +3,16 @@
  */
 
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 const { fontFamily } = loadFont();
 
-export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay = 0 }: {
+export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay = 0, colors: colorsProp, sectionColor }: {
   url?: string;
   title?: string;
   startDelay?: number;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
 
@@ -23,11 +25,14 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
   const enterFrame = startDelay + 90;
   const isNavigating = frame >= enterFrame;
 
-  // ページロード
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
+
+  // Page load
   const loadProgress = interpolate(frame, [enterFrame, enterFrame + 30], [0, 100], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <AbsoluteFill style={{ background: "#0f0f1a" }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* ブラウザウィンドウ */}
       <div
         style={{
@@ -36,17 +41,17 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
           top: 60,
           right: 80,
           bottom: 60,
-          background: "#1a1a2e",
+          background: BRAND.bgLight,
           borderRadius: 12,
           overflow: "hidden",
-          border: `1px solid ${"#1e1e30"}`,
+          border: `1px solid ${BRAND.cardBg}`,
         }}
       >
         {/* ブラウザヘッダー */}
         <div
           style={{
             height: 50,
-            background: "#1e1e30",
+            background: BRAND.cardBg,
             display: "flex",
             alignItems: "center",
             padding: "0 15px",
@@ -60,10 +65,10 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
             <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#28c840" }} />
           </div>
 
-          {/* ナビゲーションボタン */}
+          {/* Navigation buttons */}
           <div style={{ display: "flex", gap: 10 }}>
-            <span style={{ color: "#475569", fontSize: 18 }}>←</span>
-            <span style={{ color: "#334155", fontSize: 18 }}>→</span>
+            <span style={{ color: BRAND.textMuted, fontSize: 20 }}>←</span>
+            <span style={{ color: BRAND.border, fontSize: 20 }}>→</span>
           </div>
 
           {/* アドレスバー */}
@@ -71,35 +76,36 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
             style={{
               flex: 1,
               height: 32,
-              background: "#2e2e44",
+              background: BRAND.border,
               borderRadius: 6,
               display: "flex",
               alignItems: "center",
               padding: "0 12px",
               gap: 8,
-              border: typedChars > 0 && !isNavigating ? `1px solid ${BRAND.indigo}` : "1px solid transparent",
+              border: typedChars > 0 && !isNavigating ? `1px solid ${accent}` : "1px solid transparent",
             }}
           >
             {/* HTTPS アイコン */}
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <rect x="2" y="6" width="10" height="7" rx="1" stroke={"#475569"} strokeWidth="1.5" />
-              <path d="M4 6V4a3 3 0 116 0v2" stroke={"#475569"} strokeWidth="1.5" strokeLinecap="round" />
+              <rect x="2" y="6" width="10" height="7" rx="1" stroke={BRAND.textMuted} strokeWidth="1.5" />
+              <path d="M4 6V4a3 3 0 116 0v2" stroke={BRAND.textMuted} strokeWidth="1.5" strokeLinecap="round" />
             </svg>
 
-            <span style={{ fontFamily: fontFamily, fontSize: 13, color: BRAND.text }}>
+            {/* intentional: simulates browser UI */}
+            <span style={{ fontFamily: fontFamily, fontSize: 13, color: colors.text }}>
               {url.slice(0, typedChars)}
             </span>
 
             {!isNavigating && Math.floor(frame / 15) % 2 === 0 && (
-              <span style={{ width: 1, height: 14, background: BRAND.indigo }} />
+              <span style={{ width: 1, height: 14, background: accent }} />
             )}
           </div>
 
           {/* 更新ボタン */}
           <span
             style={{
-              color: "#475569",
-              fontSize: 16,
+              color: BRAND.textMuted,
+              fontSize: 20,
               transform: isNavigating ? `rotate(${(frame - enterFrame) * 10}deg)` : "none",
             }}
           >
@@ -112,14 +118,14 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
           <div
             style={{
               height: 3,
-              background: "#1a1a2e",
+              background: BRAND.bgLight,
             }}
           >
             <div
               style={{
                 width: `${loadProgress}%`,
                 height: "100%",
-                background: `linear-gradient(90deg, ${BRAND.indigo}, ${BRAND.violet})`,
+                background: `linear-gradient(90deg, ${accent}, ${BRAND.violet})`,
               }}
             />
           </div>
@@ -140,15 +146,15 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
                   fontFamily: fontFamily,
                   fontSize: 24,
                   fontWeight: 600,
-                  color: BRAND.text,
+                  color: colors.text,
                   marginBottom: 20,
                 }}
               >
                 {title}
               </div>
               <div style={{ display: "flex", gap: 20 }}>
-                <div style={{ flex: 1, height: 150, background: "#1e1e30", borderRadius: 8 }} />
-                <div style={{ flex: 1, height: 150, background: "#1e1e30", borderRadius: 8 }} />
+                <div style={{ flex: 1, height: 150, background: BRAND.cardBg, borderRadius: 8 }} />
+                <div style={{ flex: 1, height: 150, background: BRAND.cardBg, borderRadius: 8 }} />
               </div>
             </>
           )}
@@ -157,8 +163,9 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
             <div
               style={{
                 fontFamily: fontFamily,
+                /* intentional: simulates browser UI placeholder */
                 fontSize: 16,
-                color: "#334155",
+                color: BRAND.border,
                 textAlign: "center",
                 marginTop: 100,
               }}
@@ -184,11 +191,12 @@ export const DemoAddressBar = ({ url: urlProp, title = "Dashboard", startDelay =
         <div
           style={{
             padding: "6px 12px",
-            background: "#1e1e30",
+            background: BRAND.cardBg,
             borderRadius: 6,
             fontFamily: fontFamily,
+            /* intentional: simulates keyboard hint UI */
             fontSize: 12,
-            color: "#64748b",
+            color: BRAND.textMuted,
           }}
         >
           {isNavigating ? "Loading..." : "Press Enter ↵"}

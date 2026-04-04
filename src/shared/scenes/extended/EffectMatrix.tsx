@@ -4,12 +4,22 @@
 
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, random, interpolate } from "remotion";
+import { type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 const { fontFamily } = loadFont();
 
-export const EffectMatrix = ({ startDelay = 0, text = "THE MATRIX" }: {
+const MATRIX_DEFAULTS: Required<SceneColors> = {
+  bg: "#001100",
+  text: "#00ff00",
+  accent: "#00ff00",
+  muted: "#00ff00",
+};
+
+export const EffectMatrix = ({ startDelay = 0, text = "THE MATRIX", colors: colorsProp, sectionColor }: {
   startDelay?: number;
   text?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { height } = useVideoConfig();
@@ -29,10 +39,12 @@ export const EffectMatrix = ({ startDelay = 0, text = "THE MATRIX" }: {
     }));
   }, []);
 
+  const colors = { ...MATRIX_DEFAULTS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
   const textOpacity = interpolate(frame, [startDelay + 30, startDelay + 50], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <AbsoluteFill style={{ background: "#001100" }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* マトリックスレイン */}
       {columns.map((col, colIndex) => {
         const y = ((frame - startDelay) * col.speed + col.offset) % (height + 500) - 250;
@@ -80,8 +92,8 @@ export const EffectMatrix = ({ startDelay = 0, text = "THE MATRIX" }: {
             fontFamily,
             fontSize: 80,
             fontWeight: 700,
-            color: "#00ff00",
-            textShadow: "0 0 30px #00ff00",
+            color: accent,
+            textShadow: `0 0 30px ${accent}`,
             opacity: textOpacity,
           }}
         >

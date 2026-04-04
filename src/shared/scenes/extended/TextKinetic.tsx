@@ -4,22 +4,34 @@
 
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, Easing, interpolate, spring } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const TextKinetic = ({ text = "KINETIC", words, startDelay = 0 }: {
+export const TextKinetic = ({
+  text = "KINETIC",
+  words,
+  startDelay = 0,
+  colors: colorsProp,
+  sectionColor,
+}: {
   text?: string;
   words?: string[];
   startDelay?: number;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
+
   const displayText = words ? words.join("") : text;
   const chars = displayText.split("");
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       <div
         style={{
           position: "absolute",
@@ -48,7 +60,7 @@ export const TextKinetic = ({ text = "KINETIC", words, startDelay = 0 }: {
                 fontFamily,
                 fontSize: 120,
                 fontWeight: 800,
-                color: BRAND.text,
+                color: colors.text,
                 display: "inline-block",
                 transform: `
                   translateY(${interpolate(progress, [0, 1], [80, 0])}px)
@@ -74,7 +86,7 @@ export const TextKinetic = ({ text = "KINETIC", words, startDelay = 0 }: {
           transform: "translateX(-50%)",
           width: interpolate(frame, [startDelay + 30, startDelay + 50], [0, 400], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) }),
           height: 6,
-          background: BRAND.indigo,
+          background: accent,
           borderRadius: 3,
         }}
       />

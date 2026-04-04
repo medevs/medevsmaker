@@ -3,23 +3,35 @@
  */
 
 import { AbsoluteFill, interpolate, Easing, useCurrentFrame } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 const { fontFamily } = loadFont();
 
-export const DataGauge = ({ value = 78, label = "Performance Score", maxValue = 100, startDelay = 0 }: {
+export const DataGauge = ({
+  value = 78,
+  label = "Performance Score",
+  maxValue = 100,
+  startDelay = 0,
+  colors: colorsProp,
+  sectionColor,
+}: {
   value?: number;
   label?: string;
   maxValue?: number;
   startDelay?: number;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const progress = interpolate(frame, [startDelay, startDelay + 50], [0, value / maxValue], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   const angle = -135 + progress * 270; // -135度から+135度
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       <div
         style={{
           position: "absolute",
@@ -42,7 +54,7 @@ export const DataGauge = ({ value = 78, label = "Performance Score", maxValue = 
           <path
             d="M 50 250 A 150 150 0 1 1 350 250"
             fill="none"
-            stroke={"#1e1e30"}
+            stroke={BRAND.cardBg}
             strokeWidth={20}
             strokeLinecap="round"
           />
@@ -68,13 +80,13 @@ export const DataGauge = ({ value = 78, label = "Performance Score", maxValue = 
 
             return (
               <g key={`tick-${tick}`}>
-                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={"#334155"} strokeWidth={2} />
+                <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={BRAND.border} strokeWidth={2} />
                 <text
                   x={200 + 180 * Math.cos(rad)}
                   y={250 + 180 * Math.sin(rad)}
                   textAnchor="middle"
-                  fill={"#475569"}
-                  fontSize={14}
+                  fill={colors.muted}
+                  fontSize={20}
                   fontFamily={fontFamily}
                 >
                   {tick}
@@ -92,7 +104,7 @@ export const DataGauge = ({ value = 78, label = "Performance Score", maxValue = 
             top: 250,
             width: 4,
             height: 120,
-            background: BRAND.text,
+            background: colors.text,
             transformOrigin: "bottom center",
             transform: `translateX(-50%) rotate(${angle}deg)`,
             borderRadius: 2,
@@ -107,7 +119,7 @@ export const DataGauge = ({ value = 78, label = "Performance Score", maxValue = 
             top: 250,
             width: 20,
             height: 20,
-            background: BRAND.text,
+            background: colors.text,
             borderRadius: "50%",
             transform: "translate(-50%, -50%)",
           }}
@@ -128,7 +140,7 @@ export const DataGauge = ({ value = 78, label = "Performance Score", maxValue = 
               fontFamily: fontFamily,
               fontSize: 64,
               fontWeight: 800,
-              color: BRAND.text,
+              color: colors.text,
             }}
           >
             {Math.round(progress * maxValue)}
@@ -136,8 +148,8 @@ export const DataGauge = ({ value = 78, label = "Performance Score", maxValue = 
           <div
             style={{
               fontFamily: fontFamily,
-              fontSize: 18,
-              color: "#475569",
+              fontSize: 20,
+              color: colors.muted,
             }}
           >
             {label}

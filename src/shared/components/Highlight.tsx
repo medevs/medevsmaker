@@ -38,7 +38,7 @@ export const Highlight: React.FC<HighlightProps> = ({
           top: -30,
           left: 0,
           fontFamily,
-          fontSize: 12,
+          fontSize: 20,
           color,
           fontWeight: 600,
           whiteSpace: "nowrap",

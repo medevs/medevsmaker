@@ -4,20 +4,31 @@
 
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const ThemeHolographic = ({ startDelay = 0, text = "HOLOGRAM" }: {
+export const ThemeHolographic = ({
+  startDelay = 0,
+  text = "HOLOGRAM",
+  colors: colorsProp,
+  sectionColor,
+}: {
   startDelay?: number;
   text?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const shimmer = (frame - startDelay) * 3;
   const textOpacity = interpolate(frame, [startDelay + 10, startDelay + 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
-    <AbsoluteFill style={{ background: "#1a1a2e" }}>
+    <AbsoluteFill style={{ background: BRAND.bgLight }}>
       {/* ホログラフィック背景 */}
       <div
         style={{
@@ -82,7 +93,7 @@ export const ThemeHolographic = ({ startDelay = 0, text = "HOLOGRAM" }: {
           style={{
             marginTop: 40,
             fontFamily,
-            fontSize: 14,
+            fontSize: 20,
             color: "rgba(255, 255, 255, 0.7)",
             letterSpacing: 3,
           }}

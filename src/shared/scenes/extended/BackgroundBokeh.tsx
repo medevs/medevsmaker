@@ -4,7 +4,7 @@
 
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, random, interpolate } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 
 const { fontFamily } = loadFont();
@@ -12,11 +12,16 @@ const { fontFamily } = loadFont();
 export const BackgroundBokeh = ({
   startDelay = 0,
   colors,
+  sceneColors: sceneColorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   colors?: string[];
+  sceneColors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+  const sc = { ...DEFAULT_SCENE_COLORS, ...sceneColorsProp };
 
   const defaultColors = [BRAND.indigo, BRAND.violet, BRAND.cyan, BRAND.amber];
   const bokehColors = colors ?? defaultColors;
@@ -35,7 +40,7 @@ export const BackgroundBokeh = ({
   }, [bokehColors]);
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: sc.bg }}>
       {bokehs.map((bokeh) => {
         const x = (bokeh.x + (frame - startDelay) * bokeh.speedX) % 120 - 10;
         const y = (bokeh.y + (frame - startDelay) * bokeh.speedY) % 120 - 10;
@@ -72,7 +77,7 @@ export const BackgroundBokeh = ({
           fontFamily,
           fontSize: 80,
           fontWeight: 700,
-          color: BRAND.text,
+          color: sc.text,
           opacity: interpolate(frame, [startDelay + 20, startDelay + 50], [0, 1], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",

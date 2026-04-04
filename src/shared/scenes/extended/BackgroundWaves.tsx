@@ -3,7 +3,7 @@
  */
 
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 
 const { fontFamily } = loadFont();
@@ -12,14 +12,19 @@ export const BackgroundWaves = ({
   startDelay = 0,
   text = "WAVES",
   colors,
+  sceneColors: sceneColorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   text?: string;
   colors?: string[];
+  sceneColors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { width } = useVideoConfig();
 
+  const sc = { ...DEFAULT_SCENE_COLORS, ...sceneColorsProp };
   const waveColors = colors ?? [BRAND.indigo, BRAND.violet, BRAND.cyan];
 
   const generateWavePath = (offset: number, amplitude: number, frequency: number) => {
@@ -33,7 +38,7 @@ export const BackgroundWaves = ({
   };
 
   return (
-    <AbsoluteFill style={{ background: "#0f0f1a" }}>
+    <AbsoluteFill style={{ background: sc.bg }}>
       <svg
         width="100%"
         height="100%"
@@ -70,7 +75,7 @@ export const BackgroundWaves = ({
           fontFamily,
           fontSize: 80,
           fontWeight: 800,
-          color: BRAND.text,
+          color: sc.text,
           opacity: interpolate(frame, [startDelay, startDelay + 30], [0, 1], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",

@@ -4,15 +4,25 @@
 
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame, random } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const TextGlitch = ({ text = "GLITCH", startDelay = 0 }: {
+export const TextGlitch = ({
+  text = "GLITCH",
+  startDelay = 0,
+  colors: colorsProp,
+  sectionColor,
+}: {
   text?: string;
   startDelay?: number;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const entryProgress = interpolate(frame, [startDelay, startDelay + 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   const glitchActive = frame > startDelay + 25 && random(`glitch-${frame}`) < 0.15;
@@ -22,7 +32,7 @@ export const TextGlitch = ({ text = "GLITCH", startDelay = 0 }: {
   const skew = glitchActive ? (random(`gs-${frame}`) - 0.5) * 8 : 0;
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* 赤チャンネル */}
       <div
         style={{
@@ -74,7 +84,7 @@ export const TextGlitch = ({ text = "GLITCH", startDelay = 0 }: {
           fontFamily,
           fontSize: 140,
           fontWeight: 900,
-          color: BRAND.text,
+          color: colors.text,
         }}
       >
         {text}
@@ -107,7 +117,7 @@ export const TextGlitch = ({ text = "GLITCH", startDelay = 0 }: {
                 top: `${random(`nb-${frame}-${offset}`) * 100}%`,
                 width: "100%",
                 height: random(`nbh-${frame}-${offset}`) * 20 + 5,
-                background: BRAND.text,
+                background: colors.text,
                 opacity: 0.1,
               }}
             />

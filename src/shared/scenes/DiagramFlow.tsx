@@ -158,7 +158,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
                     <span
                       style={{
                         fontFamily,
-                        fontSize: 16,
+                        fontSize: 20,
                         color: colors.text + "99",
                       }}
                     >

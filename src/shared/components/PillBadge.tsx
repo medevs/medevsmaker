@@ -22,7 +22,7 @@ export const PillBadge: React.FC<PillBadgeProps> = ({
   color,
   variant = "filled",
   delay = 0,
-  fontSize = 14,
+  fontSize = 20,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();

@@ -4,20 +4,23 @@
 
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, random, interpolate, Easing } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 const { fontFamily } = loadFont();
 
-export const LiquidFluidWave = ({ startDelay = 0, text = "WAVE", colors }: {
+export const LiquidFluidWave = ({ startDelay = 0, text = "WAVE", colors, sceneColors: sceneColorsProp, sectionColor }: {
   startDelay?: number;
   text?: string;
   colors?: string[];
+  sceneColors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
 
   const waveOffset = (frame - startDelay) * 4;
 
+  const sc = { ...DEFAULT_SCENE_COLORS, ...sceneColorsProp };
   const accent = colors?.[0] ?? BRAND.indigo;
   const secondary = colors?.[1] ?? BRAND.violet;
   const tertiary = colors?.[2] ?? BRAND.cyan;
@@ -71,7 +74,7 @@ export const LiquidFluidWave = ({ startDelay = 0, text = "WAVE", colors }: {
   }, [width, height]);
 
   return (
-    <AbsoluteFill style={{ background: `linear-gradient(180deg, #0a0a1a 0%, #1a1a3a 100%)` }}>
+    <AbsoluteFill style={{ background: `linear-gradient(180deg, ${sc.bg} 0%, ${BRAND.bgLight} 100%)` }}>
       {/* 背景グロー */}
       <div
         style={{
@@ -134,10 +137,10 @@ export const LiquidFluidWave = ({ startDelay = 0, text = "WAVE", colors }: {
               top: splash.baseY + floatY,
               width: splash.size,
               height: splash.size,
-              background: BRAND.text,
+              background: sc.text,
               borderRadius: "50%",
               opacity: splashProgress * 0.6,
-              boxShadow: `0 0 20px ${BRAND.cyan}`,
+              boxShadow: `0 0 20px ${tertiary}`,
               transform: `scale(${splashProgress})`,
             }}
           />
@@ -154,7 +157,7 @@ export const LiquidFluidWave = ({ startDelay = 0, text = "WAVE", colors }: {
           fontFamily,
           fontSize: 120,
           fontWeight: 900,
-          color: BRAND.text,
+          color: sc.text,
           textShadow: `0 0 60px ${accent}, 0 0 120px ${secondary}`,
         }}
       >

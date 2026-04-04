@@ -3,14 +3,16 @@
  */
 
 import { AbsoluteFill, interpolate, Easing, useCurrentFrame, useVideoConfig, spring } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 import { Highlight } from "../../components/Highlight";
 const { fontFamily } = loadFont();
 
-export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
+export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0, colors: colorsProp, sectionColor }: {
   title?: string;
   startDelay?: number;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -27,10 +29,13 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
   const translateY = -100 * zoomProgress;
 
   // ハイライト
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
+
   const highlightProgress = interpolate(frame, [startDelay + 40, startDelay + 55], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 
   return (
-    <AbsoluteFill style={{ background: "#0f0f1a" }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* 画面コンテンツ */}
       <div
         style={{
@@ -55,7 +60,7 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
           {/* サイドバー */}
           <div
             style={{
-              background: "#1a1a2e",
+              background: BRAND.bgLight,
               borderRadius: 8,
               padding: 20,
             }}
@@ -65,7 +70,7 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
                 fontFamily: fontFamily,
                 fontSize: 14,
                 fontWeight: 600,
-                color: BRAND.text,
+                color: colors.text,
                 marginBottom: 20,
               }}
             >
@@ -77,9 +82,9 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
                 style={{
                   fontFamily: fontFamily,
                   fontSize: 13,
-                  color: i === 1 ? BRAND.indigo : "#475569",
+                  color: i === 1 ? accent : colors.muted,
                   padding: "10px 0",
-                  borderLeft: i === 1 ? `2px solid ${BRAND.indigo}` : "2px solid transparent",
+                  borderLeft: i === 1 ? `2px solid ${accent}` : "2px solid transparent",
                   paddingLeft: 12,
                 }}
               >
@@ -93,7 +98,7 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
             {/* ターゲットエリア（ズームフォーカス対象） */}
             <div
               style={{
-                background: "#1a1a2e",
+                background: BRAND.bgLight,
                 borderRadius: 8,
                 padding: 25,
                 position: "relative",
@@ -104,7 +109,7 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
                   fontFamily: fontFamily,
                   fontSize: 16,
                   fontWeight: 600,
-                  color: BRAND.text,
+                  color: colors.text,
                   marginBottom: 15,
                 }}
               >
@@ -112,10 +117,11 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
               </div>
               <div style={{ display: "flex", gap: 30 }}>
                 <div>
-                  <div style={{ fontFamily: fontFamily, fontSize: 32, fontWeight: 700, color: BRAND.indigo }}>
+                  <div style={{ fontFamily: fontFamily, fontSize: 32, fontWeight: 700, color: accent }}>
                     2,847
                   </div>
-                  <div style={{ fontFamily: fontFamily, fontSize: 12, color: "#475569" }}>
+                  {/* intentional: simulates dashboard UI label */}
+                  <div style={{ fontFamily: fontFamily, fontSize: 12, color: colors.muted }}>
                     Active Users
                   </div>
                 </div>
@@ -123,7 +129,8 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
                   <div style={{ fontFamily: fontFamily, fontSize: 32, fontWeight: 700, color: BRAND.green }}>
                     +12.5%
                   </div>
-                  <div style={{ fontFamily: fontFamily, fontSize: 12, color: "#475569" }}>
+                  {/* intentional: simulates dashboard UI label */}
+                  <div style={{ fontFamily: fontFamily, fontSize: 12, color: colors.muted }}>
                     Growth Rate
                   </div>
                 </div>
@@ -132,8 +139,8 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
 
             {/* その他のカード */}
             <div style={{ display: "flex", gap: 20, flex: 1 }}>
-              <div style={{ flex: 1, background: "#1a1a2e", borderRadius: 8 }} />
-              <div style={{ flex: 1, background: "#1a1a2e", borderRadius: 8 }} />
+              <div style={{ flex: 1, background: BRAND.bgLight, borderRadius: 8 }} />
+              <div style={{ flex: 1, background: BRAND.bgLight, borderRadius: 8 }} />
             </div>
           </div>
         </div>
@@ -162,14 +169,14 @@ export const DemoZoomFocus = ({ title = "Key Metrics", startDelay = 0 }: {
           gap: 10,
           fontFamily: fontFamily,
           fontSize: 12,
-          color: "#475569",
+          color: BRAND.textMuted,
           opacity: interpolate(frame, [startDelay, startDelay + 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <circle cx="8" cy="8" r="6" stroke={"#475569"} strokeWidth="2" />
-          <path d="M13 13L18 18" stroke={"#475569"} strokeWidth="2" strokeLinecap="round" />
-          <path d="M5 8H11M8 5V11" stroke={"#475569"} strokeWidth="1.5" strokeLinecap="round" />
+          <circle cx="8" cy="8" r="6" stroke={BRAND.textMuted} strokeWidth="2" />
+          <path d="M13 13L18 18" stroke={BRAND.textMuted} strokeWidth="2" strokeLinecap="round" />
+          <path d="M5 8H11M8 5V11" stroke={BRAND.textMuted} strokeWidth="1.5" strokeLinecap="round" />
         </svg>
         ZOOM: {Math.round(scale * 100)}%
       </div>

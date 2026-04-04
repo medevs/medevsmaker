@@ -4,22 +4,29 @@
 
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
-
-const COLORS = [BRAND.indigo, BRAND.violet, BRAND.cyan];
 
 export const ListFullscreenSequence = ({
   startDelay = 0,
   items: itemLabels,
   title,
+  colors: colorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   items?: string[];
   title?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
+
+  const COLORS = [accent, BRAND.violet, BRAND.cyan];
 
   const labels = itemLabels ?? ["INNOVATE", "CREATE", "DELIVER"];
   const items = labels.map((text, i) => ({
@@ -44,8 +51,11 @@ export const ListFullscreenSequence = ({
   const exitProgress = interpolate(sceneFrame, [20, 30], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   const progress = Math.min(enterProgress, exitProgress);
 
+  // title prop available for future heading use
+  void title;
+
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* メインテキスト */}
       <div
         style={{
@@ -59,8 +69,8 @@ export const ListFullscreenSequence = ({
         <div
           style={{
             fontFamily,
-            fontSize: 14,
-            color: "#334155",
+            fontSize: 20,
+            color: BRAND.border,
             letterSpacing: 4,
             marginBottom: 20,
           }}
@@ -97,9 +107,8 @@ export const ListFullscreenSequence = ({
             style={{
               width: i === sceneIndex ? 40 : 20,
               height: 4,
-              background: i === sceneIndex ? currentItem.color : "#1e1e30",
+              background: i === sceneIndex ? currentItem.color : BRAND.cardBg,
               borderRadius: 2,
-              transition: "width 0.3s, background 0.3s",
             }}
           />
         ))}
@@ -114,7 +123,7 @@ export const ListFullscreenSequence = ({
           fontFamily,
           fontSize: 200,
           fontWeight: 100,
-          color: "#1a1a2e",
+          color: BRAND.bgLight,
           opacity: progress,
         }}
       >

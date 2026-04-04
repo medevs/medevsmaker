@@ -3,7 +3,7 @@
  */
 
 import { AbsoluteFill, useCurrentFrame, interpolate, Easing } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 
 const { fontFamily } = loadFont();
@@ -13,13 +13,19 @@ export const CinematicDocumentary = ({
   title = "The Story",
   subtitle = "A Documentary Film",
   location = "2024",
+  colors: colorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   title?: string;
   subtitle?: string;
   location?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const lineProgress = interpolate(frame, [startDelay, startDelay + 30], [0, 100], {
     extrapolateLeft: "clamp",
@@ -32,13 +38,13 @@ export const CinematicDocumentary = ({
   });
 
   return (
-    <AbsoluteFill style={{ background: BRAND.text }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* Grid lines */}
       <AbsoluteFill
         style={{
           backgroundImage: `
-            linear-gradient(${"#cbd5e1"} 1px, transparent 1px),
-            linear-gradient(90deg, ${"#cbd5e1"} 1px, transparent 1px)
+            linear-gradient(${colors.muted}30 1px, transparent 1px),
+            linear-gradient(90deg, ${colors.muted}30 1px, transparent 1px)
           `,
           backgroundSize: "100px 100px",
           opacity: 0.5,
@@ -53,7 +59,7 @@ export const CinematicDocumentary = ({
           top: "50%",
           width: `${lineProgress * 0.8}%`,
           height: 2,
-          background: BRAND.bg,
+          background: accent,
         }}
       />
 
@@ -66,7 +72,7 @@ export const CinematicDocumentary = ({
           fontFamily,
           fontSize: 60,
           fontWeight: 300,
-          color: BRAND.bg,
+          color: colors.text,
           letterSpacing: 4,
           opacity: titleOpacity,
         }}
@@ -81,9 +87,9 @@ export const CinematicDocumentary = ({
           left: "10%",
           top: "42%",
           fontFamily,
-          fontSize: 14,
+          fontSize: 20,
           fontWeight: 500,
-          color: "#475569",
+          color: colors.muted,
           letterSpacing: 6,
           textTransform: "uppercase",
           opacity: interpolate(frame, [startDelay + 30, startDelay + 50], [0, 1], {
@@ -104,7 +110,7 @@ export const CinematicDocumentary = ({
           fontFamily,
           fontSize: 100,
           fontWeight: 100,
-          color: "#94a3b8",
+          color: colors.muted,
           opacity: interpolate(frame, [startDelay + 40, startDelay + 60], [0, 1], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",

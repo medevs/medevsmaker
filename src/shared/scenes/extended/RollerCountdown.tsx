@@ -4,7 +4,7 @@
 
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig, spring } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
@@ -12,13 +12,20 @@ export const RollerCountdown = ({
   startDelay = 0,
   targetNumber,
   label,
+  colors: colorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   targetNumber?: number;
   label?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const count = targetNumber ?? 5;
   const numbers = Array.from({ length: count }, (_, i) => String(count - i));
@@ -76,7 +83,7 @@ export const RollerCountdown = ({
     ? `rgb(${bgRed}, 10, 20)`
     : isStopping
       ? "#1a0a0a"
-      : BRAND.bg;
+      : colors.bg;
 
   // パルス効果（カウントダウン中）
   const pulseScale = isCountdown
@@ -99,7 +106,7 @@ export const RollerCountdown = ({
     <AbsoluteFill
       style={{
         background: isStopping
-          ? `radial-gradient(circle, #2a1a2e 0%, ${BRAND.bg} 100%)`
+          ? `radial-gradient(circle, #2a1a2e 0%, ${colors.bg} 100%)`
           : bgColor,
         transform: `scale(${pulseScale})`,
       }}
@@ -185,7 +192,7 @@ export const RollerCountdown = ({
                       fontFamily,
                       fontSize: 180,
                       fontWeight: 900,
-                      color: BRAND.text,
+                      color: colors.text,
                       height: wordHeight,
                       display: "flex",
                       alignItems: "center",
@@ -201,7 +208,7 @@ export const RollerCountdown = ({
                         fontFamily,
                         fontSize: 180,
                         fontWeight: 900,
-                        color: BRAND.text,
+                        color: colors.text,
                         height: wordHeight,
                         display: "flex",
                         alignItems: "center",
@@ -220,7 +227,7 @@ export const RollerCountdown = ({
                     fontFamily,
                     fontSize: 180,
                     fontWeight: 900,
-                    color: BRAND.text,
+                    color: colors.text,
                     height: wordHeight,
                     display: "flex",
                     alignItems: "center",
@@ -240,7 +247,7 @@ export const RollerCountdown = ({
             style={{
               fontFamily,
               fontSize: 20,
-              color: "#64748b",
+              color: colors.muted,
               marginTop: 30,
               opacity: launchProgress,
               letterSpacing: 5,

@@ -4,22 +4,32 @@
 
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const UILoading = ({ startDelay = 0, text = "LOADING STATES" }: {
+export const UILoading = ({
+  startDelay = 0,
+  text = "LOADING STATES",
+  colors: colorsProp,
+  sectionColor,
+}: {
   startDelay?: number;
   text?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const spinnerRotation = (frame - startDelay) * 6;
   const dotCount = 3;
   const dotDelay = 8;
 
   return (
-    <AbsoluteFill style={{ background: "#0f0f1a" }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       <div
         style={{
           position: "absolute",
@@ -37,8 +47,8 @@ export const UILoading = ({ startDelay = 0, text = "LOADING STATES" }: {
           style={{
             width: 60,
             height: 60,
-            border: `4px solid #1e1e30`,
-            borderTopColor: BRAND.indigo,
+            border: `4px solid ${BRAND.cardBg}`,
+            borderTopColor: accent,
             borderRadius: "50%",
             transform: `rotate(${spinnerRotation}deg)`,
           }}
@@ -54,7 +64,7 @@ export const UILoading = ({ startDelay = 0, text = "LOADING STATES" }: {
                 style={{
                   width: 12,
                   height: 12,
-                  background: BRAND.indigo,
+                  background: accent,
                   borderRadius: "50%",
                   transform: `translateY(${bounce}px)`,
                 }}
@@ -68,7 +78,7 @@ export const UILoading = ({ startDelay = 0, text = "LOADING STATES" }: {
           style={{
             width: 200,
             height: 6,
-            background: "#1e1e30",
+            background: BRAND.cardBg,
             borderRadius: 3,
             overflow: "hidden",
           }}
@@ -100,7 +110,7 @@ export const UILoading = ({ startDelay = 0, text = "LOADING STATES" }: {
                 style={{
                   width: `${width}%`,
                   height: 16,
-                  background: "#1e1e30",
+                  background: BRAND.cardBg,
                   borderRadius: 4,
                   position: "relative",
                   overflow: "hidden",
@@ -113,7 +123,7 @@ export const UILoading = ({ startDelay = 0, text = "LOADING STATES" }: {
                     top: 0,
                     width: 100,
                     height: "100%",
-                    background: `linear-gradient(90deg, transparent, #2e2e44, transparent)`,
+                    background: `linear-gradient(90deg, transparent, ${BRAND.border}, transparent)`,
                   }}
                 />
               </div>
@@ -129,8 +139,8 @@ export const UILoading = ({ startDelay = 0, text = "LOADING STATES" }: {
           left: "50%",
           transform: "translateX(-50%)",
           fontFamily,
-          fontSize: 14,
-          color: "#334155",
+          fontSize: 20, /* intentional: simulates UI */
+          color: colors.muted,
           letterSpacing: 2,
         }}
       >

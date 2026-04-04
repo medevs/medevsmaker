@@ -159,7 +159,7 @@ export const AnimatedDiagram: React.FC<AnimatedDiagramProps> = ({
                   <div
                     style={{
                       fontFamily,
-                      fontSize: 14,
+                      fontSize: 20,
                       fontWeight: 500,
                       color: colors.muted,
                       textAlign: "center",

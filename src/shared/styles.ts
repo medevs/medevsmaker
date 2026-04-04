@@ -4,7 +4,7 @@
  */
 export const baseTokens = {
   fontSizes: {
-    xs: 18,
+    xs: 20,
     sm: 24,
     md: 36,
     lg: 48,
@@ -46,6 +46,22 @@ export const BRAND = {
   cardBg: "#1e1e30",
   border: "#2e2e44",
 } as const;
+
+/** Standard scene color overrides — every scene should accept this. */
+export type SceneColors = {
+  bg: string;
+  text: string;
+  accent?: string;
+  muted?: string;
+};
+
+/** Default scene colors derived from BRAND. */
+export const DEFAULT_SCENE_COLORS: Required<SceneColors> = {
+  bg: BRAND.bg,
+  text: BRAND.text,
+  accent: BRAND.indigo,
+  muted: BRAND.textMuted,
+};
 
 /**
  * Shadow presets for depth and glow effects.

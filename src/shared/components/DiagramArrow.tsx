@@ -168,7 +168,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
           textAnchor="middle"
           fill={BRAND.textMuted}
           fontFamily={fontFamily}
-          fontSize={18}
+          fontSize={20}
           opacity={labelOpacity}
         >
           {label}

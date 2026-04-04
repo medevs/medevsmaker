@@ -4,7 +4,7 @@
 
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
@@ -12,12 +12,19 @@ export const LogoStroke = ({
   startDelay = 0,
   text,
   subtitle,
+  colors: colorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   text?: string;
   subtitle?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const easeOut = Easing.bezier(0.16, 1, 0.3, 1);
   const clampOpts = { extrapolateLeft: "clamp" as const, extrapolateRight: "clamp" as const };
@@ -28,7 +35,7 @@ export const LogoStroke = ({
   const displaySubtitle = subtitle ?? "BRAND TAGLINE";
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       <div
         style={{
           position: "absolute",
@@ -47,7 +54,7 @@ export const LogoStroke = ({
             fontSize="72"
             fontWeight="800"
             fill="none"
-            stroke={BRAND.indigo}
+            stroke={accent}
             strokeWidth="2"
             strokeDasharray="500"
             strokeDashoffset={500 - strokeProgress * 500}
@@ -61,7 +68,7 @@ export const LogoStroke = ({
             fontFamily={fontFamily}
             fontSize="72"
             fontWeight="800"
-            fill={BRAND.text}
+            fill={colors.text}
             opacity={fillProgress}
           >
             {displayText}
@@ -73,8 +80,8 @@ export const LogoStroke = ({
           style={{
             textAlign: "center",
             fontFamily,
-            fontSize: 16,
-            color: "#475569",
+            fontSize: 20,
+            color: colors.muted,
             letterSpacing: 6,
             marginTop: 20,
             opacity: interpolate(frame, [startDelay + 50, startDelay + 70], [0, 1], clampOpts),

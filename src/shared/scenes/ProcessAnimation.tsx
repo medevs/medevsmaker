@@ -163,7 +163,7 @@ export const ProcessAnimation: React.FC<ProcessAnimationProps> = ({
                 <div
                   style={{
                     fontFamily,
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: 700,
                     color: isActive ? stageColor : colors.text,
                     textAlign: "center",
@@ -208,7 +208,7 @@ export const ProcessAnimation: React.FC<ProcessAnimationProps> = ({
           <div
             style={{
               fontFamily,
-              fontSize: 16,
+              fontSize: 20,
               fontWeight: 600,
               color: sectionColor,
               textAlign: "center",

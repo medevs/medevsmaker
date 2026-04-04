@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { MONO, SCENE_DEFAULTS } from "../styles";
+import { BRAND, MONO, SCENE_DEFAULTS } from "../styles";
 
 type FeatureCounterVariant = "counter" | "breadcrumb";
 
@@ -67,11 +67,11 @@ export const FeatureCounter: React.FC<FeatureCounterProps> = ({
           <span
             style={{
               fontFamily: MONO.fontFamily,
-              fontSize: 13,
+              fontSize: 20,
               fontWeight: 700,
               letterSpacing: MONO.letterSpacing,
               textTransform: MONO.textTransform,
-              color: "#f8fafc",
+              color: BRAND.text,
             }}
           >
             {label}
@@ -81,16 +81,16 @@ export const FeatureCounter: React.FC<FeatureCounterProps> = ({
         <span
           style={{
             fontFamily: MONO.fontFamily,
-            fontSize: 13,
+            fontSize: 20,
             fontWeight: 700,
             letterSpacing: MONO.letterSpacing,
             textTransform: MONO.textTransform,
-            color: "#f8fafc",
+            color: BRAND.text,
           }}
         >
           <span style={{ color }}>{`FEATURE ${current}`}</span>
           {` OF ${total}`}
-          <span style={{ color: "#94a3b8" }}>{` — ${label}`}</span>
+          <span style={{ color: BRAND.textMuted }}>{` — ${label}`}</span>
         </span>
       )}
     </div>

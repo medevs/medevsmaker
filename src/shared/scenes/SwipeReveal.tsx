@@ -167,7 +167,7 @@ export const SwipeReveal: React.FC<SwipeRevealProps> = ({
             bottom: isVertical ? 400 : 100,
             opacity: interpolate(frame % 60, [0, 30, 60], [0.3, 0.6, 0.3]),
             fontFamily,
-            fontSize: 16,
+            fontSize: 20,
             color: colors.muted,
             textTransform: "uppercase",
             letterSpacing: 2,

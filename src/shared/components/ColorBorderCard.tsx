@@ -99,7 +99,7 @@ export const ColorBorderCard: React.FC<ColorBorderCardProps> = ({
             <span
               style={{
                 fontFamily: "JetBrains Mono, monospace",
-                fontSize: 13,
+                fontSize: 20,
                 fontWeight: 600,
                 letterSpacing: 1.5,
                 textTransform: "uppercase",

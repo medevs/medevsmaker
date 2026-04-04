@@ -125,7 +125,7 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
           style={{
             opacity: headOpacity,
             fontFamily: MONO.fontFamily,
-            fontSize: 15,
+            fontSize: 20,
             fontWeight: 700,
             letterSpacing: MONO.letterSpacing,
             textTransform: MONO.textTransform,

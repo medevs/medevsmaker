@@ -198,7 +198,7 @@ export const EndScreen: React.FC<EndScreenProps> = ({
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 16,
+                    fontSize: 20,
                     color: colors.muted,
                     textTransform: "uppercase",
                     letterSpacing: 1,

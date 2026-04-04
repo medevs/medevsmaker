@@ -4,7 +4,7 @@
 
 import React from "react";
 import { AbsoluteFill, useCurrentFrame, random, interpolate } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 
 const { fontFamily } = loadFont();
@@ -12,11 +12,18 @@ const { fontFamily } = loadFont();
 export const BackgroundGeometric = ({
   startDelay = 0,
   text = "GEOMETRIC",
+  colors: colorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   text?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const shapes = React.useMemo(() => {
     return Array.from({ length: 20 }).map((_, i) => ({
@@ -26,13 +33,13 @@ export const BackgroundGeometric = ({
       size: random(`geo-s-${i}`) * 100 + 50,
       rotation: random(`geo-r-${i}`) * 360,
       type: Math.floor(random(`geo-t-${i}`) * 3),
-      color: [BRAND.indigo, BRAND.violet, BRAND.cyan][i % 3],
+      color: [accent, BRAND.violet, BRAND.cyan][i % 3],
       speed: random(`geo-sp-${i}`) * 0.5 + 0.2,
     }));
-  }, []);
+  }, [accent]);
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {shapes.map((shape) => {
         const rotation = shape.rotation + (frame - startDelay) * shape.speed;
         const opacity = interpolate(frame, [startDelay, startDelay + 30], [0, 0.15], {
@@ -69,7 +76,7 @@ export const BackgroundGeometric = ({
           fontFamily,
           fontSize: 100,
           fontWeight: 900,
-          color: BRAND.text,
+          color: colors.text,
           opacity: interpolate(frame, [startDelay + 20, startDelay + 50], [0, 1], {
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",

@@ -136,7 +136,7 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
                     <div
                       style={{
                         fontFamily,
-                        fontSize: 18,
+                        fontSize: 20,
                         color: colors.muted,
                         lineHeight: 1.4,
                       }}

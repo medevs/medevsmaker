@@ -3,24 +3,28 @@
  */
 
 import { AbsoluteFill, useCurrentFrame, interpolate, Easing } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 const { fontFamily } = loadFont();
 
-export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUSTOMER SATISFACTION", description = "Based on 10,000+ reviews from verified customers worldwide." }: {
+export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUSTOMER SATISFACTION", description = "Based on 10,000+ reviews from verified customers worldwide.", colors: colorsProp, sectionColor }: {
   startDelay?: number;
   number?: string;
   label?: string;
   description?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const numberProgress = interpolate(frame, [startDelay, startDelay + 40], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.6, 0.01, 0.05, 0.95) });
   const textProgress = interpolate(frame, [startDelay + 20, startDelay + 50], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 
   return (
-    <AbsoluteFill style={{ background: BRAND.text }}>
-      {/* 巨大な数字（画面をはみ出す） */}
+    <AbsoluteFill style={{ background: colors.bg }}>
+      {/* Giant number (overflows screen) */}
       <div
         style={{
           position: "absolute",
@@ -30,7 +34,7 @@ export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUST
           fontFamily,
           fontSize: 500,
           fontWeight: 900,
-          color: "#e2e8f0",
+          color: `${colors.muted}40`,
           lineHeight: 0.8,
           opacity: numberProgress,
         }}
@@ -38,7 +42,7 @@ export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUST
         {number}
       </div>
 
-      {/* 左側のテキスト情報 */}
+      {/* Left side text */}
       <div
         style={{
           position: "absolute",
@@ -51,9 +55,9 @@ export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUST
         <div
           style={{
             fontFamily,
-            fontSize: 14,
+            fontSize: 20,
             fontWeight: 500,
-            color: BRAND.indigo,
+            color: accent,
             letterSpacing: 4,
             marginBottom: 20,
           }}
@@ -65,19 +69,19 @@ export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUST
             fontFamily,
             fontSize: 60,
             fontWeight: 700,
-            color: BRAND.bg,
+            color: colors.text,
             lineHeight: 1.1,
           }}
         >
           Percent
           <br />
-          <span style={{ color: BRAND.indigo }}>Happy</span>
+          <span style={{ color: accent }}>Happy</span>
         </div>
         <div
           style={{
             fontFamily,
-            fontSize: 16,
-            color: "#475569",
+            fontSize: 20,
+            color: colors.muted,
             marginTop: 30,
             maxWidth: 300,
             lineHeight: 1.7,
@@ -87,7 +91,7 @@ export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUST
         </div>
       </div>
 
-      {/* 上部のライン */}
+      {/* Top line */}
       <div
         style={{
           position: "absolute",
@@ -95,7 +99,7 @@ export const LayoutGiantNumber = ({ startDelay = 0, number = "97", label = "CUST
           top: 60,
           width: interpolate(frame, [startDelay + 30, startDelay + 60], [0, 200], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) }),
           height: 4,
-          background: BRAND.bg,
+          background: accent,
         }}
       />
     </AbsoluteFill>

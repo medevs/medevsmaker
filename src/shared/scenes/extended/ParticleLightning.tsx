@@ -4,18 +4,25 @@
 
 import { AbsoluteFill, useCurrentFrame, random } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
 export const ParticleLightning = ({
   startDelay = 0,
   text: displayText,
+  colors: colorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   text?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const lightningActive = (frame - startDelay) % 40 < 5;
   const flashIntensity = lightningActive ? random(`lightning-${Math.floor(frame / 5)}`) : 0;
@@ -38,7 +45,7 @@ export const ParticleLightning = ({
   };
 
   return (
-    <AbsoluteFill style={{ background: "#0a0a15" }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* 雲 */}
       <div
         style={{
@@ -47,7 +54,7 @@ export const ParticleLightning = ({
           left: 0,
           right: 0,
           height: 200,
-          background: `linear-gradient(to bottom, #1e1e30, transparent)`,
+          background: `linear-gradient(to bottom, ${BRAND.cardBg}, transparent)`,
         }}
       />
 
@@ -61,7 +68,7 @@ export const ParticleLightning = ({
         >
           <path
             d={generateLightningPath()}
-            stroke={BRAND.text}
+            stroke={colors.text}
             strokeWidth={4}
             fill="none"
             opacity={flashIntensity}
@@ -83,7 +90,7 @@ export const ParticleLightning = ({
       {lightningActive && (
         <AbsoluteFill
           style={{
-            background: BRAND.text,
+            background: colors.text,
             opacity: flashIntensity * 0.3,
           }}
         />
@@ -99,8 +106,8 @@ export const ParticleLightning = ({
           fontFamily,
           fontSize: 80,
           fontWeight: 800,
-          color: BRAND.text,
-          textShadow: lightningActive ? `0 0 30px ${BRAND.text}` : "none",
+          color: colors.text,
+          textShadow: lightningActive ? `0 0 30px ${colors.text}` : "none",
         }}
       >
         {displayText ?? "THUNDER"}

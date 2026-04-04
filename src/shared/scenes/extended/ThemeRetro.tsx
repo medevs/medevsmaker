@@ -3,22 +3,34 @@
  */
 
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
+import { type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 
 const { fontFamily } = loadFont();
 
-export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Classic Style Never Dies" }: {
+const RETRO_DEFAULTS: Required<SceneColors> = {
+  bg: "#f4e9d8",
+  text: "#3d3027",
+  accent: "#8b7355",
+  muted: "#6b5a47",
+};
+
+export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Classic Style Never Dies", colors: colorsProp, sectionColor }: {
   startDelay?: number;
   text?: string;
   subtitle?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+  const colors = { ...RETRO_DEFAULTS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const textProgress = interpolate(frame, [startDelay, startDelay + 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 
   return (
-    <AbsoluteFill style={{ background: "#f4e9d8" }}>
-      {/* ノイズテクスチャ */}
+    <AbsoluteFill style={{ background: colors.bg }}>
+      {/* Noise texture */}
       <AbsoluteFill
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
@@ -27,14 +39,14 @@ export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Class
         }}
       />
 
-      {/* ビネット */}
+      {/* Vignette */}
       <AbsoluteFill
         style={{
           background: "radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.3) 100%)",
         }}
       />
 
-      {/* メインコンテンツ */}
+      {/* Main content */}
       <div
         style={{
           position: "absolute",
@@ -47,8 +59,8 @@ export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Class
         <div
           style={{
             fontFamily,
-            fontSize: 14,
-            color: "#8b7355",
+            fontSize: 20,
+            color: accent,
             letterSpacing: 8,
             marginBottom: 20,
             opacity: textProgress,
@@ -61,7 +73,7 @@ export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Class
             fontFamily,
             fontSize: 80,
             fontWeight: 900,
-            color: "#3d3027",
+            color: colors.text,
             letterSpacing: -2,
             textTransform: "uppercase",
             opacity: textProgress,
@@ -75,7 +87,7 @@ export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Class
             fontFamily,
             fontSize: 24,
             fontWeight: 300,
-            color: "#6b5a47",
+            color: colors.muted,
             marginTop: 10,
             fontStyle: "italic",
             opacity: textProgress,
@@ -84,7 +96,7 @@ export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Class
           {subtitle}
         </div>
 
-        {/* 装飾線 */}
+        {/* Decorative lines */}
         <div
           style={{
             display: "flex",
@@ -95,16 +107,16 @@ export const ThemeRetro = ({ startDelay = 0, text = "Vintage", subtitle = "Class
             opacity: textProgress,
           }}
         >
-          <div style={{ width: 60, height: 1, background: "#8b7355" }} />
+          <div style={{ width: 60, height: 1, background: accent }} />
           <div
             style={{
               width: 8,
               height: 8,
-              background: "#8b7355",
+              background: accent,
               transform: "rotate(45deg)",
             }}
           />
-          <div style={{ width: 60, height: 1, background: "#8b7355" }} />
+          <div style={{ width: 60, height: 1, background: accent }} />
         </div>
       </div>
     </AbsoluteFill>

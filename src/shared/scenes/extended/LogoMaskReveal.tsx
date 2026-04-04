@@ -4,7 +4,7 @@
 
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
@@ -12,25 +12,32 @@ export const LogoMaskReveal = ({
   startDelay = 0,
   text,
   subtitle,
+  colors: colorsProp,
+  sectionColor,
 }: {
   startDelay?: number;
   text?: string;
   subtitle?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const maskProgress = interpolate(frame, [startDelay, startDelay + 40], [0, 100], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
 
   const displayText = text ?? "BRAND";
 
   return (
-    <AbsoluteFill style={{ background: "#0f0f1a" }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* 背景パターン */}
       <AbsoluteFill
         style={{
           backgroundImage: `
-            linear-gradient(#1a1a2e 1px, transparent 1px),
-            linear-gradient(90deg, #1a1a2e 1px, transparent 1px)
+            linear-gradient(${BRAND.bgLight} 1px, transparent 1px),
+            linear-gradient(90deg, ${BRAND.bgLight} 1px, transparent 1px)
           `,
           backgroundSize: "40px 40px",
           opacity: 0.5,
@@ -52,7 +59,7 @@ export const LogoMaskReveal = ({
             fontFamily,
             fontSize: 120,
             fontWeight: 900,
-            background: `linear-gradient(135deg, ${BRAND.indigo}, ${BRAND.violet})`,
+            background: `linear-gradient(135deg, ${accent}, ${BRAND.violet})`,
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
@@ -70,10 +77,10 @@ export const LogoMaskReveal = ({
           top: "50%",
           width: 4,
           height: 150,
-          background: BRAND.text,
+          background: colors.text,
           transform: "translateY(-50%)",
           opacity: maskProgress < 100 ? 1 : 0,
-          boxShadow: `0 0 20px ${BRAND.text}`,
+          boxShadow: `0 0 20px ${colors.text}`,
         }}
       />
     </AbsoluteFill>

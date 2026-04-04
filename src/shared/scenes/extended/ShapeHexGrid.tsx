@@ -4,17 +4,29 @@
 
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, random, spring, interpolate } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const ShapeHexGrid = ({ startDelay = 0, text = "HEXAGONAL", highlightColor = BRAND.indigo }: {
+export const ShapeHexGrid = ({
+  startDelay = 0,
+  text = "HEXAGONAL",
+  highlightColor,
+  colors: colorsProp,
+  sectionColor,
+}: {
   startDelay?: number;
   text?: string;
   highlightColor?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
+  const resolvedHighlight = highlightColor ?? accent;
 
   const hexagons: { id: string; x: number; y: number; delay: number }[] = [];
   const hexSize = 70;
@@ -35,7 +47,7 @@ export const ShapeHexGrid = ({ startDelay = 0, text = "HEXAGONAL", highlightColo
   }
 
   return (
-    <AbsoluteFill style={{ background: "#0f0f1a" }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {hexagons.map((hex) => {
         const progress = spring({
           frame: frame - startDelay - hex.delay,
@@ -59,8 +71,8 @@ export const ShapeHexGrid = ({ startDelay = 0, text = "HEXAGONAL", highlightColo
               height: hexSize * 1.15,
               clipPath: "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
               background: isHighlighted
-                ? `linear-gradient(135deg, ${highlightColor}, ${BRAND.violet})`
-                : "#1e1e30",
+                ? `linear-gradient(135deg, ${resolvedHighlight}, ${BRAND.violet})`
+                : BRAND.cardBg,
               transform: `scale(${progress * pulse})`,
               opacity: progress * 0.9,
             }}
@@ -77,13 +89,13 @@ export const ShapeHexGrid = ({ startDelay = 0, text = "HEXAGONAL", highlightColo
           fontFamily,
           fontSize: 48,
           fontWeight: 700,
-          color: BRAND.text,
+          color: colors.text,
           textAlign: "right",
           opacity: interpolate(frame, [startDelay + 30, startDelay + 50], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}
       >
         {text}
-        <div style={{ fontSize: 18, color: "#475569", marginTop: 10, letterSpacing: 4 }}>
+        <div style={{ fontSize: 20, color: colors.muted, marginTop: 10, letterSpacing: 4 }}>
           GRID PATTERN
         </div>
       </div>

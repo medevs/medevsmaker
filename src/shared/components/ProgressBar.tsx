@@ -92,7 +92,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                   left: "50%",
                   transform: "translateX(-50%)",
                   fontFamily,
-                  fontSize: 14,
+                  fontSize: 20,
                   color: BRAND.textMuted,
                   whiteSpace: "nowrap",
                 }}

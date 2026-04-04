@@ -4,16 +4,29 @@
 
 import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
 import { loadFont } from "@remotion/google-fonts/Inter";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 
 const { fontFamily } = loadFont();
 
-export const TransitionFlash = ({ startDelay = 0, flashColor = BRAND.text, text = "BEFORE" }: {
+export const TransitionFlash = ({
+  startDelay = 0,
+  flashColor,
+  text = "BEFORE",
+  colors: colorsProp,
+  sectionColor,
+}: {
   startDelay?: number;
   flashColor?: string;
   text?: string;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
+  // flashColor defaults to text color; preserve any explicit override passed by caller
+  const resolvedFlashColor = flashColor ?? colors.text;
 
   const phase1 = frame < startDelay + 15;
   const flashPhase = frame >= startDelay + 15 && frame < startDelay + 25;
@@ -24,7 +37,7 @@ export const TransitionFlash = ({ startDelay = 0, flashColor = BRAND.text, text 
     : 0;
 
   return (
-    <AbsoluteFill style={{ background: BRAND.bg }}>
+    <AbsoluteFill style={{ background: colors.bg }}>
       {/* シーン1 */}
       {phase1 && (
         <AbsoluteFill
@@ -34,7 +47,7 @@ export const TransitionFlash = ({ startDelay = 0, flashColor = BRAND.text, text 
             justifyContent: "center",
           }}
         >
-          <div style={{ fontFamily, fontSize: 80, fontWeight: 700, color: BRAND.text }}>
+          <div style={{ fontFamily, fontSize: 80, fontWeight: 700, color: colors.text }}>
             {text}
           </div>
         </AbsoluteFill>
@@ -44,7 +57,7 @@ export const TransitionFlash = ({ startDelay = 0, flashColor = BRAND.text, text 
       {phase2 && (
         <AbsoluteFill
           style={{
-            background: "#0f0f1a",
+            background: colors.bg,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -55,7 +68,7 @@ export const TransitionFlash = ({ startDelay = 0, flashColor = BRAND.text, text 
               fontFamily,
               fontSize: 80,
               fontWeight: 700,
-              color: BRAND.text,
+              color: colors.text,
             }}
           >
             AFTER
@@ -63,10 +76,10 @@ export const TransitionFlash = ({ startDelay = 0, flashColor = BRAND.text, text 
         </AbsoluteFill>
       )}
 
-      {/* フラッシュ */}
+      {/* フラッシュ — preserves full white-out flash effect */}
       <AbsoluteFill
         style={{
-          background: flashColor,
+          background: resolvedFlashColor,
           opacity: flashIntensity,
           pointerEvents: "none",
         }}

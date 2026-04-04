@@ -171,7 +171,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
               <span
                 style={{
                   fontFamily,
-                  fontSize: 16,
+                  fontSize: 20,
                   color: colors.muted,
                 }}
               >
@@ -238,7 +238,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 18,
+                    fontSize: 20,
                     fontWeight: 600,
                     color: colors.text,
                   }}
@@ -249,7 +249,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
                   <span
                     style={{
                       fontFamily,
-                      fontSize: 14,
+                      fontSize: 20,
                       color: colors.muted,
                     }}
                   >

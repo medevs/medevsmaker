@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { MONO, SCENE_DEFAULTS } from "../styles";
+import { BRAND, MONO, SCENE_DEFAULTS } from "../styles";
 
 export type FileTreeItem = {
   name: string;
@@ -30,7 +30,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
   items,
   delay = 0,
   stagger = SCENE_DEFAULTS.staggerDelaySlow,
-  sectionColor = "#6366f1",
+  sectionColor = BRAND.indigo,
   fontFamily,
 }) => {
   const frame = useCurrentFrame();
@@ -63,7 +63,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
         const icon = item.type === "folder" ? FOLDER_ICON : FILE_ICON;
         const itemColor = item.highlight
           ? item.color || sectionColor
-          : "#cbd5e1";
+          : BRAND.textMuted;
 
         return (
           <div
@@ -81,11 +81,11 @@ export const FileTree: React.FC<FileTreeProps> = ({
           >
             {/* Tree lines */}
             {item.indent > 0 && (
-              <span style={{ color: "#475569", fontSize: 16 }}>
+              <span style={{ color: BRAND.border, fontSize: 20 }}>
                 {"│ ".repeat(item.indent - 1)}├─
               </span>
             )}
-            <span style={{ fontSize: 18 }}>{icon}</span>
+            <span style={{ fontSize: 20 }}>{icon}</span>
             <span
               style={{
                 color: itemColor,

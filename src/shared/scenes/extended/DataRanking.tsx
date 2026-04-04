@@ -3,17 +3,28 @@
  */
 
 import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig, spring } from "remotion";
-import { BRAND } from "../../styles";
+import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors } from "../../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 const { fontFamily } = loadFont();
 
-export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay = 0 }: {
+export const DataRanking = ({
+  items: itemsProp,
+  title = "Top Cities",
+  startDelay = 0,
+  colors: colorsProp,
+  sectionColor,
+}: {
   items?: { name: string; score: number }[];
   title?: string;
   startDelay?: number;
+  colors?: SceneColors;
+  sectionColor?: string;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+
+  const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
+  const accent = sectionColor || colors.accent;
 
   const defaultItems = [
     { rank: 1, name: "Tokyo", value: "37.4M", change: "up" as const },
@@ -33,14 +44,14 @@ export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay
     : defaultItems;
 
   return (
-    <AbsoluteFill style={{ background: "#0f0f1a", padding: 60 }}>
+    <AbsoluteFill style={{ background: colors.bg, padding: 60 }}>
       {/* タイトル */}
       <div
         style={{
           fontFamily: fontFamily,
           fontSize: 40,
           fontWeight: 700,
-          color: BRAND.text,
+          color: colors.text,
           marginBottom: 15,
           opacity: interpolate(frame, [startDelay, startDelay + 20], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}
@@ -50,8 +61,8 @@ export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay
       <div
         style={{
           fontFamily: fontFamily,
-          fontSize: 16,
-          color: "#475569",
+          fontSize: 20,
+          color: colors.muted,
           marginBottom: 40,
           opacity: interpolate(frame, [startDelay + 10, startDelay + 30], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         }}
@@ -75,7 +86,7 @@ export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay
             ? BRAND.green
             : item.change === "down"
             ? BRAND.red
-            : "#475569";
+            : colors.muted;
 
         return (
           <div
@@ -85,7 +96,7 @@ export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay
               alignItems: "center",
               padding: "20px 30px",
               marginBottom: 15,
-              background: i === 0 ? BRAND.indigo : "#1a1a2e",
+              background: i === 0 ? accent : BRAND.bgLight,
               borderRadius: 12,
               transform: `translateX(${(1 - progress) * 100}px)`,
               opacity: progress,
@@ -97,7 +108,7 @@ export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay
                 fontFamily: fontFamily,
                 fontSize: 32,
                 fontWeight: 800,
-                color: i === 0 ? BRAND.text : "#475569",
+                color: i === 0 ? colors.text : colors.muted,
                 width: 60,
               }}
             >
@@ -111,7 +122,7 @@ export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay
                 fontFamily: fontFamily,
                 fontSize: 24,
                 fontWeight: 600,
-                color: BRAND.text,
+                color: colors.text,
               }}
             >
               {item.name}
@@ -135,7 +146,7 @@ export const DataRanking = ({ items: itemsProp, title = "Top Cities", startDelay
                 fontFamily: fontFamily,
                 fontSize: 24,
                 fontWeight: 700,
-                color: BRAND.text,
+                color: colors.text,
               }}
             >
               {item.value}
