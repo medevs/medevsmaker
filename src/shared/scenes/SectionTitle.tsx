@@ -10,6 +10,7 @@ import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { SectionBadge } from "../components/SectionBadge";
 import { NeonText } from "../components/NeonText";
 import { entrances } from "../animations";
+import { SceneBackground } from "../components/SceneBackground";
 
 type SectionTitleEntrance = "fadeUp" | "slideLeft" | "scaleBlur" | "neon";
 
@@ -106,30 +107,31 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
   });
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 80,
-        gap: 24,
-      }}
-    >
-      <SectionBadge number={sectionNumber} color={colors.accent} fontFamily={fontFamily} />
-      {titleContent}
-      {subtitle && (
-        <div
-          style={{
-            opacity: subOpacity,
-            fontFamily,
-            fontSize: 26,
-            color: colors.muted,
-            textAlign: "center",
-          }}
-        >
-          {subtitle}
-        </div>
-      )}
-    </AbsoluteFill>
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 80,
+          gap: 24,
+        }}
+      >
+        <SectionBadge number={sectionNumber} color={colors.accent} fontFamily={fontFamily} />
+        {titleContent}
+        {subtitle && (
+          <div
+            style={{
+              opacity: subOpacity,
+              fontFamily,
+              fontSize: 26,
+              color: colors.muted,
+              textAlign: "center",
+            }}
+          >
+            {subtitle}
+          </div>
+        )}
+      </AbsoluteFill>
+    </SceneBackground>
   );
 };

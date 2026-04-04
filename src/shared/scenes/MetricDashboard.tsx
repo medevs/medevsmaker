@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS, CARD } from "../styles";
 import { useLayoutMode } from "../formats";
+import { SceneBackground } from "../components/SceneBackground";
 
 type MetricDisplay = "counter" | "gauge" | "bar";
 
@@ -57,7 +58,8 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
   const visibleMetrics = isVertical ? safeMetrics.slice(0, 3) : safeMetrics;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: contentPadding, gap: isVertical ? 24 : 40 }}>
+    <SceneBackground bg={colors.bg}>
+    <AbsoluteFill style={{ padding: contentPadding, gap: isVertical ? 24 : 40 }}>
       <div
         style={{
           opacity: headP,
@@ -200,5 +202,6 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
         })}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

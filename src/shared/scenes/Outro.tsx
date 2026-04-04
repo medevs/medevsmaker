@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 
 type OutroProps = {
   channel?: string;
@@ -63,9 +64,9 @@ export const Outro: React.FC<OutroProps> = ({
   });
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         justifyContent: "center",
         alignItems: "center",
         padding: 80,
@@ -110,5 +111,6 @@ export const Outro: React.FC<OutroProps> = ({
         {tagline}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

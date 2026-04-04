@@ -26,7 +26,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
   to,
   delay = 0,
   color = BRAND.textMuted,
-  strokeWidth = 3,
+  strokeWidth = 4,
   label,
   fontFamily = "Inter",
   glow = false,
@@ -71,7 +71,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
   const evolved = evolvePath(drawProgress, pathD);
 
   // Arrow head at the tip
-  const headSize = 12;
+  const headSize = 16;
   const headAngle = Math.PI / 6;
   // For the arrow head position, interpolate along the line
   const tipX = from.x + (to.x - from.x) * Math.min(drawProgress, 1);

@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
 import { ColorBorderCard } from "../components/ColorBorderCard";
+import { SceneBackground } from "../components/SceneBackground";
 
 type ArchNode = {
   label: string;
@@ -61,12 +62,13 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
   // Layout: center at 960,540 (adjusted for heading), satellites in a circle
   const cx = 960;
   const cy = 560;
-  const radius = 260;
+  const radius = 300;
   const centerColor = center.color || sectionColor;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg }}>
-      {/* Heading */}
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill>
+        {/* Heading */}
       <div
         style={{
           position: "absolute",
@@ -121,7 +123,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
               x2={sx}
               y2={sy}
               stroke={sectionColor}
-              strokeWidth={2}
+              strokeWidth={3}
               opacity={lineOpacity}
               strokeDasharray="6 4"
             />
@@ -133,9 +135,9 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
       <div
         style={{
           position: "absolute",
-          left: cx - 120,
-          top: cy - 60,
-          width: 240,
+          left: cx - 140,
+          top: cy - 70,
+          width: 280,
           opacity: centerOpacity,
           transform: `scale(${centerScale})`,
         }}
@@ -211,9 +213,9 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
             key={`sat-${i}`}
             style={{
               position: "absolute",
-              left: sx - 100,
-              top: sy - 45,
-              width: 200,
+              left: sx - 120,
+              top: sy - 50,
+              width: 240,
               opacity: satOpacity,
               transform: `scale(${satScale})`,
             }}
@@ -261,6 +263,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
           </div>
         );
       })}
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </SceneBackground>
   );
 };

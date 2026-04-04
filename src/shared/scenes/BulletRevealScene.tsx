@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { BulletReveal } from "../components/BulletReveal";
 
 type BulletRevealSceneProps = {
@@ -37,9 +38,9 @@ export const BulletRevealScene: React.FC<BulletRevealSceneProps> = ({
   const headY = interpolate(headP, [0, 1], [30, 0]);
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         justifyContent: "center",
         padding: 80,
         gap: 32,
@@ -126,5 +127,6 @@ export const BulletRevealScene: React.FC<BulletRevealSceneProps> = ({
         />
       )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

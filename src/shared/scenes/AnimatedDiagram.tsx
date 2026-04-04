@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS, CARD } from "../styles";
 import { DiagramArrow } from "../components/DiagramArrow";
+import { SceneBackground } from "../components/SceneBackground";
 
 type DiagramNode = {
   id: string;
@@ -54,8 +55,9 @@ export const AnimatedDiagram: React.FC<AnimatedDiagramProps> = ({
   const nodeMap = new Map(nodes.map((n) => [n.id, n]));
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: 80 }}>
-      {/* Title */}
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill style={{ padding: 80 }}>
+        {/* Title */}
       <div
         style={{
           opacity: titleP,
@@ -129,15 +131,15 @@ export const AnimatedDiagram: React.FC<AnimatedDiagramProps> = ({
               <div
                 style={{
                   background: CARD.bg,
-                  border: `${CARD.borderWidth}px solid ${nodeColor}44`,
+                  border: `3px solid ${nodeColor}44`,
                   borderRadius: CARD.radius,
-                  padding: "16px 24px",
+                  padding: "20px 28px",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  gap: 6,
+                  gap: 8,
                   boxShadow: SHADOWS.glow(nodeColor),
-                  minWidth: 120,
+                  minWidth: 160,
                 }}
               >
                 {node.icon && (
@@ -173,6 +175,7 @@ export const AnimatedDiagram: React.FC<AnimatedDiagramProps> = ({
           );
         })}
       </div>
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </SceneBackground>
   );
 };

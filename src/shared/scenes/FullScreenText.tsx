@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { glowPulse } from "../animations";
 import { useLayoutMode } from "../formats";
 import { ParticleField } from "../components/ParticleField";
@@ -97,9 +98,9 @@ export const FullScreenText: React.FC<FullScreenTextProps> = ({
   }
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         justifyContent: "center",
         alignItems: "center",
         padding: contentPadding,
@@ -138,5 +139,6 @@ export const FullScreenText: React.FC<FullScreenTextProps> = ({
         </div>
       )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

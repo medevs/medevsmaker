@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
 import { useLayoutMode } from "../formats";
+import { SceneBackground } from "../components/SceneBackground";
 
 type SwipeRevealProps = {
   /** Content shown before the swipe */
@@ -90,15 +91,15 @@ export const SwipeReveal: React.FC<SwipeRevealProps> = ({
   const fontSize = Math.round(baseFontSize * fontScale);
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: contentPadding,
-        overflow: "hidden",
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          padding: contentPadding,
+          overflow: "hidden",
+        }}
+      >
       {/* Label */}
       {label && (
         <div
@@ -176,5 +177,6 @@ export const SwipeReveal: React.FC<SwipeRevealProps> = ({
         </div>
       )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

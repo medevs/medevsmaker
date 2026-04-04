@@ -26,9 +26,9 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
   sublabel,
   color = BRAND.indigo,
   delay = 0,
-  width = 220,
-  height = 100,
-  fontSize = 24,
+  width = 300,
+  height = 120,
+  fontSize = 26,
   fontFamily = "Inter",
   glow = false,
   gradient = false,
@@ -67,12 +67,12 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
         background: gradient
           ? GRADIENTS.cardGradient(color)
           : undefined,
-        border: `2px solid ${color}`,
+        border: `3px solid ${color}`,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        gap: 4,
+        gap: 8,
         boxShadow,
       }}
     >
@@ -91,7 +91,7 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
         <div
           style={{
             fontFamily,
-            fontSize: fontSize - 6,
+            fontSize: Math.max(fontSize - 4, 20),
             color: BRAND.textMuted,
             textAlign: "center",
           }}

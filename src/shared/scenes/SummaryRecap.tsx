@@ -10,6 +10,7 @@ import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { entrances } from "../animations";
 import { GradientText } from "../components/GradientText";
 import { ParticleField } from "../components/ParticleField";
+import { SceneBackground } from "../components/SceneBackground";
 
 type ItemEntrance = "left" | "scale" | "fade";
 
@@ -68,14 +69,14 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
   const headY = interpolate(headP, [0, 1], [30, 0]);
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        padding: 80,
-        gap: 28,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          justifyContent: "center",
+          padding: 80,
+          gap: 28,
+        }}
+      >
       {showParticles && (
         <ParticleField count={15} color={effectiveAccent} opacity={0.06} />
       )}
@@ -162,5 +163,6 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
         );
       })}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

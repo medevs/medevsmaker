@@ -9,6 +9,7 @@ import {
 import { BRAND, MONO, SCENE_DEFAULTS } from "../styles";
 import { GradientText } from "../components/GradientText";
 import { ColorBorderCard } from "../components/ColorBorderCard";
+import { SceneBackground } from "../components/SceneBackground";
 
 type KeyRuleCardProps = {
   preLabel?: string;
@@ -111,15 +112,15 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
   };
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "100px 160px",
-        gap: 28,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "100px 160px",
+          gap: 28,
+        }}
+      >
       {preLabel && (
         <div
           style={{
@@ -206,5 +207,6 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
         </div>
       )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

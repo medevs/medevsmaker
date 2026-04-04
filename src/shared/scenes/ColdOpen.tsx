@@ -11,6 +11,7 @@ import { entrances, glowPulse } from "../animations";
 import { ParticleField } from "../components/ParticleField";
 import { NeonText } from "../components/NeonText";
 import { CinematicOverlay } from "../components/CinematicOverlay";
+import { SceneBackground } from "../components/SceneBackground";
 
 type ColdOpenEntrance = "glow" | "gradient" | "typewriter" | "neon" | "cinematic";
 
@@ -64,85 +65,87 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
     );
 
     return (
-      <AbsoluteFill
-        style={{
-          backgroundColor: colors.bg,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 100,
-        }}
-      >
-        {showParticles && (
-          <ParticleField count={15} color={colors.accent} opacity={0.08} />
-        )}
-        <div
+      <SceneBackground bg={colors.bg}>
+        <AbsoluteFill
           style={{
-            fontFamily,
-            fontSize: 80,
-            fontWeight: 800,
-            color: colors.text,
-            textAlign: "center",
-            lineHeight: 1.15,
-            textShadow: SHADOWS.glow(colors.accent),
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 100,
           }}
         >
-          {statement.slice(0, charsToShow)}
-          <span
-            style={{
-              opacity: frame % 30 < 15 ? 1 : 0,
-              color: colors.accent,
-            }}
-          >
-            |
-          </span>
-        </div>
-        {subtext && (
+          {showParticles && (
+            <ParticleField count={15} color={colors.accent} opacity={0.08} />
+          )}
           <div
             style={{
-              opacity: subOpacity,
               fontFamily,
-              fontSize: 28,
-              color: colors.accent,
+              fontSize: 80,
+              fontWeight: 800,
+              color: colors.text,
               textAlign: "center",
-              marginTop: 24,
+              lineHeight: 1.15,
+              textShadow: SHADOWS.glow(colors.accent),
             }}
           >
-            {subtext}
+            {statement.slice(0, charsToShow)}
+            <span
+              style={{
+                opacity: frame % 30 < 15 ? 1 : 0,
+                color: colors.accent,
+              }}
+            >
+              |
+            </span>
           </div>
-        )}
-      </AbsoluteFill>
+          {subtext && (
+            <div
+              style={{
+                opacity: subOpacity,
+                fontFamily,
+                fontSize: 28,
+                color: colors.accent,
+                textAlign: "center",
+                marginTop: 24,
+              }}
+            >
+              {subtext}
+            </div>
+          )}
+        </AbsoluteFill>
+      </SceneBackground>
     );
   }
 
   if (entrance === "neon") {
     return (
-      <AbsoluteFill
-        style={{
-          backgroundColor: colors.bg,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 100,
-        }}
-      >
-        {showParticles && (
-          <ParticleField count={15} color={colors.accent} opacity={0.08} />
-        )}
-        <NeonText text={statement} color={colors.accent} fontSize={80} fontFamily={fontFamily} flickerIntensity="heavy" />
-        {subtext && (
-          <div
-            style={{
-              opacity: subOpacity,
-              fontFamily,
-              fontSize: 28,
-              color: colors.accent,
-              textAlign: "center",
-              marginTop: 24,
-            }}
-          >
-            {subtext}
-          </div>
-        )}
-      </AbsoluteFill>
+      <SceneBackground bg={colors.bg}>
+        <AbsoluteFill
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 100,
+          }}
+        >
+          {showParticles && (
+            <ParticleField count={15} color={colors.accent} opacity={0.08} />
+          )}
+          <NeonText text={statement} color={colors.accent} fontSize={80} fontFamily={fontFamily} flickerIntensity="heavy" />
+          {subtext && (
+            <div
+              style={{
+                opacity: subOpacity,
+                fontFamily,
+                fontSize: 28,
+                color: colors.accent,
+                textAlign: "center",
+                marginTop: 24,
+              }}
+            >
+              {subtext}
+            </div>
+          )}
+        </AbsoluteFill>
+      </SceneBackground>
     );
   }
 
@@ -157,19 +160,19 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
     };
 
     return (
-      <AbsoluteFill
-        style={{
-          backgroundColor: colors.bg,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 100,
-        }}
-      >
-        {showParticles && (
-          <ParticleField count={15} color={colors.accent} opacity={0.08} />
-        )}
-        <CinematicOverlay effect="filmGrain" intensity={0.3} />
-        <CinematicOverlay effect="vignette" intensity={0.6} />
+      <SceneBackground bg={colors.bg}>
+        <AbsoluteFill
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 100,
+          }}
+        >
+          {showParticles && (
+            <ParticleField count={15} color={colors.accent} opacity={0.08} />
+          )}
+          <CinematicOverlay effect="filmGrain" intensity={0.3} />
+          <CinematicOverlay effect="vignette" intensity={0.6} />
         <div
           style={{
             ...mainStyle,
@@ -196,7 +199,8 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
             {subtext}
           </div>
         )}
-      </AbsoluteFill>
+        </AbsoluteFill>
+      </SceneBackground>
     );
   }
 
@@ -225,43 +229,44 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
   }
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 100,
-      }}
-    >
-      {showParticles && (
-        <ParticleField count={15} color={colors.accent} opacity={0.08} />
-      )}
-      <div
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
         style={{
-          ...mainStyle,
-          fontFamily,
-          fontSize: 80,
-          fontWeight: 800,
-          textAlign: "center",
-          lineHeight: 1.15,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 100,
         }}
       >
-        {statement}
-      </div>
-      {subtext && (
+        {showParticles && (
+          <ParticleField count={15} color={colors.accent} opacity={0.08} />
+        )}
         <div
           style={{
-            opacity: subOpacity,
+            ...mainStyle,
             fontFamily,
-            fontSize: 28,
-            color: colors.accent,
+            fontSize: 80,
+            fontWeight: 800,
             textAlign: "center",
-            marginTop: 24,
+            lineHeight: 1.15,
           }}
         >
-          {subtext}
+          {statement}
         </div>
-      )}
-    </AbsoluteFill>
+        {subtext && (
+          <div
+            style={{
+              opacity: subOpacity,
+              fontFamily,
+              fontSize: 28,
+              color: colors.accent,
+              textAlign: "center",
+              marginTop: 24,
+            }}
+          >
+            {subtext}
+          </div>
+        )}
+      </AbsoluteFill>
+    </SceneBackground>
   );
 };

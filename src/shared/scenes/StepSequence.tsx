@@ -9,6 +9,7 @@ import {
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { SectionBadge } from "../components/SectionBadge";
 import { ColorBorderCard } from "../components/ColorBorderCard";
+import { SceneBackground } from "../components/SceneBackground";
 
 type Step = {
   title: string;
@@ -49,13 +50,13 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
   const headY = interpolate(headP, [0, 1], [30, 0]);
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        padding: 80,
-        gap: 28,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          padding: 80,
+          gap: 28,
+        }}
+      >
       <div
         style={{
           opacity: headOpacity,
@@ -187,5 +188,6 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
         })}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

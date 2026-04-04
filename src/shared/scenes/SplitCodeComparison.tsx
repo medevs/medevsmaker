@@ -9,6 +9,7 @@ import {
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { CodeBlock } from "../components/CodeBlock";
 import { useLayoutMode } from "../formats";
+import { SceneBackground } from "../components/SceneBackground";
 
 type CodePanel = {
   title: string;
@@ -63,7 +64,8 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
   });
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: contentPadding, gap: isVertical ? 16 : 32 }}>
+    <SceneBackground bg={colors.bg}>
+    <AbsoluteFill style={{ padding: contentPadding, gap: isVertical ? 16 : 32 }}>
       {heading && (
         <div
           style={{
@@ -198,5 +200,6 @@ export const SplitCodeComparison: React.FC<SplitCodeComparisonProps> = ({
         </div>
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

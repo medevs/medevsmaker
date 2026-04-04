@@ -276,11 +276,11 @@ function generateBreathingMusicModule(
   loop: boolean,
 ): string {
   const config = {
-    narrationVolume: 0.05,
-    gapVolume: 0.15,
-    transitionVolume: 0.25,
-    hookVolume: 0.30,
-    outroVolume: 0.30,
+    narrationVolume: 0.03,
+    gapVolume: 0.08,
+    transitionVolume: 0.15,
+    hookVolume: 0.18,
+    outroVolume: 0.18,
     hookFrames: Math.round(fps * 15),
     outroFrames: Math.round(fps * 30),
     transitionFrames: Math.round(fps * 4),

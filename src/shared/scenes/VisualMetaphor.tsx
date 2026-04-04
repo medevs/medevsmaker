@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { pulse } from "../animations";
+import { SceneBackground } from "../components/SceneBackground";
 
 type IconEffect = "pop" | "rotate" | "bounce";
 
@@ -82,15 +83,15 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
   });
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 100,
-        gap: 24,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 100,
+          gap: 24,
+        }}
+      >
       <div
         style={{
           transform: iconTransform,
@@ -128,5 +129,6 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
         {analogy}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

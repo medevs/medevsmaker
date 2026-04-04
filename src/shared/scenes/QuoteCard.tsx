@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, GLASS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { GlassCard } from "../components/GlassCard";
 
 type QuoteCardProps = {
@@ -53,9 +54,9 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
   });
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -133,5 +134,6 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
         )}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

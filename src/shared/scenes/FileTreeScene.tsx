@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { FileTree, FileTreeItem } from "../components/FileTree";
 import { ColorBorderCard } from "../components/ColorBorderCard";
 
@@ -43,9 +44,9 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
   });
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         padding: 80,
         gap: 32,
       }}
@@ -104,5 +105,6 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
         )}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

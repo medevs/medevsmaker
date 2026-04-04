@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS, CARD } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 
 type Stage = {
   label: string;
@@ -39,8 +40,8 @@ export const ProcessAnimation: React.FC<ProcessAnimationProps> = ({
 
   // Stage layout — horizontal
   const stageCount = stages.length;
-  const stageWidth = 180;
-  const gap = 60;
+  const stageWidth = 220;
+  const gap = 50;
   const totalWidth = stageCount * stageWidth + (stageCount - 1) * gap;
   const startX = (1920 - totalWidth) / 2;
 
@@ -53,8 +54,9 @@ export const ProcessAnimation: React.FC<ProcessAnimationProps> = ({
     : 0;
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, padding: 80 }}>
-      {/* Title */}
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill style={{ padding: 80 }}>
+        {/* Title */}
       <div
         style={{
           opacity: titleP,
@@ -127,13 +129,13 @@ export const ProcessAnimation: React.FC<ProcessAnimationProps> = ({
                       x2={gap - 25}
                       y2={10}
                       stroke={colors.muted}
-                      strokeWidth={2}
-                      opacity={0.4}
+                      strokeWidth={3}
+                      opacity={0.5}
                     />
                     <polygon
                       points={`${gap - 25},4 ${gap - 10},10 ${gap - 25},16`}
                       fill={colors.muted}
-                      opacity={0.4}
+                      opacity={0.5}
                     />
                   </svg>
                 </div>
@@ -146,7 +148,7 @@ export const ProcessAnimation: React.FC<ProcessAnimationProps> = ({
                   transform: `scale(${interpolate(stageP, [0, 1], [0.8, 1], { extrapolateRight: "clamp" })})`,
                   width: stageWidth,
                   background: isActive ? `${stageColor}15` : CARD.bg,
-                  border: `${CARD.borderWidth}px solid ${isActive ? `${stageColor}44` : CARD.border}`,
+                  border: `3px solid ${isActive ? `${stageColor}44` : CARD.border}`,
                   borderRadius: CARD.radius,
                   padding: "28px 20px",
                   display: "flex",
@@ -220,6 +222,7 @@ export const ProcessAnimation: React.FC<ProcessAnimationProps> = ({
           </div>
         </div>
       )}
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </SceneBackground>
   );
 };

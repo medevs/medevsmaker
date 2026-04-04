@@ -9,6 +9,7 @@ import {
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { ColorBorderCard } from "../components/ColorBorderCard";
 import { useLayoutMode } from "../formats";
+import { SceneBackground } from "../components/SceneBackground";
 
 type CompareColumn = {
   title: string;
@@ -46,13 +47,13 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
   });
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        padding: contentPadding,
-        gap: isVertical ? 20 : 32,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          padding: contentPadding,
+          gap: isVertical ? 20 : 32,
+        }}
+      >
       <div
         style={{
           opacity: headOpacity,
@@ -161,5 +162,6 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
         ))}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

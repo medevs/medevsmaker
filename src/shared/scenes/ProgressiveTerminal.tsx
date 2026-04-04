@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { ColorBorderCard } from "../components/ColorBorderCard";
+import { SceneBackground } from "../components/SceneBackground";
 
 type TerminalItem = {
   text: string;
@@ -50,13 +51,13 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
   });
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        padding: 80,
-        gap: 28,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          padding: 80,
+          gap: 28,
+        }}
+      >
       <div
         style={{
           opacity: headOpacity,
@@ -199,5 +200,6 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
         </div>
       )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

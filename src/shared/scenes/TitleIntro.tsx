@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, GRADIENTS } from "../styles";
 import { entrances } from "../animations";
+import { SceneBackground } from "../components/SceneBackground";
 
 type TitleEntrance = "fadeUp" | "scaleRotate" | "splitReveal";
 
@@ -72,15 +73,15 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
   });
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 80,
-        gap: 32,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 80,
+          gap: 32,
+        }}
+      >
       <div
         style={{
           ...titleStyle,
@@ -138,5 +139,6 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
         })}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

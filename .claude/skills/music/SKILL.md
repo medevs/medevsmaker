@@ -113,11 +113,11 @@ Music plays continuously but volume "breathes" with the content — matching how
 
 | Moment | Volume | Behavior |
 |--------|--------|----------|
-| **Hook** (first ~15s) | 0.30 | Moderate — establishes energy, sets the vibe |
-| **During narration** | 0.05 | Very low — felt, not heard. Doesn't compete with voice |
-| **Gaps between narration** | 0.15 | Rises to fill pauses — keeps energy flowing |
-| **Section transitions** (4s) | 0.25 | Swells briefly — signals topic change to viewer |
-| **Outro** (last ~30s) | 0.30 | Returns to moderate — carries the end card/CTA |
+| **Hook** (first ~15s) | 0.18 | Subtle presence — sets the vibe without overpowering |
+| **During narration** | 0.03 | Barely audible — felt, not heard. Never competes with voice |
+| **Gaps between narration** | 0.08 | Rises gently to fill pauses — keeps energy flowing |
+| **Section transitions** (4s) | 0.15 | Swells briefly — signals topic change to viewer |
+| **Outro** (last ~30s) | 0.18 | Returns to hook level — carries the end card/CTA |
 
 All transitions between volume levels ramp smoothly (no hard cuts). The music never fully drops out — it creates a continuous sonic foundation that makes intentional silence (if used) feel dramatic.
 
@@ -133,11 +133,11 @@ Default volumes are calibrated for tech explainer videos:
 
 | Parameter | Default | Adjust when... |
 |-----------|---------|----------------|
-| `narrationVolume` | 0.05 | Voice drowns out (lower) or music disappears (raise) |
-| `gapVolume` | 0.15 | Gaps between speech feel empty (raise) or music intrudes (lower) |
-| `transitionVolume` | 0.25 | Section transitions need more/less emphasis |
-| `hookVolume` | 0.30 | Intro energy too high/low |
-| `outroVolume` | 0.30 | Outro energy too high/low |
+| `narrationVolume` | 0.03 | Voice drowns out (lower) or music disappears (raise) |
+| `gapVolume` | 0.08 | Gaps between speech feel empty (raise) or music intrudes (lower) |
+| `transitionVolume` | 0.15 | Section transitions need more/less emphasis |
+| `hookVolume` | 0.18 | Intro energy too high/low |
+| `outroVolume` | 0.18 | Outro energy too high/low |
 | `hookFrames` | 450 (15s) | Hook feels too long/short |
 | `outroFrames` | 900 (30s) | Outro music starts too early/late |
 | `transitionFrames` | 120 (4s) | Transition swells feel too long/short |

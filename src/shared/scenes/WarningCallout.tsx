@@ -8,6 +8,7 @@ import {
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { AccentBox } from "../components/AccentBox";
+import { SceneBackground } from "../components/SceneBackground";
 
 type WarningCalloutProps = {
   heading: string;
@@ -40,15 +41,15 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
   const pulseScale = 1 + 0.03 * Math.sin(pulsePhase);
 
   return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 100,
-        gap: 32,
-      }}
-    >
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 100,
+          gap: 32,
+        }}
+      >
       <div
         style={{
           opacity: headOpacity,
@@ -72,5 +73,6 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
         />
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

@@ -6,9 +6,13 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { BRAND, CARD, GLASS, GRADIENTS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { useLayoutMode } from "../formats";
+import { glowPulse, shimmer } from "../animations";
+import { loadFont } from "@remotion/google-fonts/Inter";
+
+const { fontFamily: interFont } = loadFont();
 
 type ComparisonSide = {
   title: string;
@@ -37,7 +41,7 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
   variant = "split",
   sectionColor,
   colors = { bg: BRAND.bg, text: BRAND.text, muted: BRAND.textMuted },
-  fontFamily = "Inter",
+  fontFamily = interFont,
   entranceStyle = "slide",
 }) => {
   const frame = useCurrentFrame();
@@ -46,8 +50,8 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
+  const headY = interpolate(headP, [0, 1], [-20, 0], { extrapolateRight: "clamp" });
 
-  // Pick spring config based on entrance style
   const sideConfig =
     entranceStyle === "overshoot"
       ? SCENE_DEFAULTS.springBouncy
@@ -57,262 +61,306 @@ export const ComparisonSplit: React.FC<ComparisonSplitProps> = ({
 
   const sideDistance = entranceStyle === "overshoot" ? 100 : 60;
 
-  const leftP = spring({
-    frame: frame - 10,
-    fps,
-    config: sideConfig,
-  });
-  const leftX = interpolate(leftP, [0, 1], [-sideDistance, 0], {
-    extrapolateRight: "clamp",
-  });
-  const leftOpacity = interpolate(leftP, [0, 1], [0, 1], {
-    extrapolateRight: "clamp",
-  });
+  const leftP = spring({ frame: frame - 12, fps, config: sideConfig });
+  const leftX = interpolate(leftP, [0, 1], [-sideDistance, 0], { extrapolateRight: "clamp" });
+  const leftOpacity = interpolate(leftP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
 
-  const rightP = spring({
-    frame: frame - 10,
-    fps,
-    config: sideConfig,
-  });
-  const rightX = interpolate(rightP, [0, 1], [sideDistance, 0], {
-    extrapolateRight: "clamp",
-  });
-  const rightOpacity = interpolate(rightP, [0, 1], [0, 1], {
-    extrapolateRight: "clamp",
-  });
+  const rightP = spring({ frame: frame - 12, fps, config: sideConfig });
+  const rightX = interpolate(rightP, [0, 1], [sideDistance, 0], { extrapolateRight: "clamp" });
+  const rightOpacity = interpolate(rightP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
 
-  // Cards variant: each side in a ColorBorderCard
-  if (variant === "cards") {
-    const renderCardSide = (
-      side: ComparisonSide,
-      sideOpacity: number,
-      xOffset: number,
-      baseDelay: number
-    ) => (
-      <div style={{ flex: 1, opacity: sideOpacity, transform: `translateX(${xOffset}px)`, display: "flex" }}>
-        <ColorBorderCard
-          color={side.color}
-          delay={baseDelay}
-          fontFamily={fontFamily}
-        >
-          <div
-            style={{
-              fontFamily,
-              fontSize: 28,
-              fontWeight: 700,
-              color: side.color,
-              marginBottom: 4,
-            }}
-          >
-            {side.title}
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {side.items.map((item, i) => {
-              const itemP = spring({
-                frame: frame - baseDelay - 8 - i * SCENE_DEFAULTS.staggerDelay,
-                fps,
-                config: SCENE_DEFAULTS.springSilky,
-              });
-              const itemOpacity = interpolate(itemP, [0, 1], [0, 1], {
-                extrapolateRight: "clamp",
-              });
-              return (
-                <div
-                  key={i}
-                  style={{
-                    opacity: itemOpacity,
-                    fontFamily,
-                    fontSize: 24,
-                    color: colors.text,
-                    lineHeight: 1.4,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: "50%",
-                      backgroundColor: side.color,
-                      flexShrink: 0,
-                    }}
-                  />
-                  {item}
-                </div>
-              );
-            })}
-          </div>
-        </ColorBorderCard>
-      </div>
-    );
+  // VS divider animation
+  const vsP = spring({ frame: frame - 18, fps, config: SCENE_DEFAULTS.springSnappy });
+  const vsScale = interpolate(vsP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
+  const vsOpacity = interpolate(vsP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
 
-    return (
-      <AbsoluteFill
-        style={{
-          backgroundColor: colors.bg,
-          padding: contentPadding,
-          gap: isVertical ? 20 : 32,
-        }}
-      >
-        <div
-          style={{
-            opacity: headOpacity,
-            fontFamily,
-            fontSize: Math.round(48 * fontScale),
-            fontWeight: 800,
-            color: colors.text,
-            textAlign: "center",
-          }}
-        >
-          {heading}
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: isVertical ? "column" : "row",
-            gap: isVertical ? 16 : 32,
-            flex: 1,
-            alignItems: "stretch",
-          }}
-        >
-          {renderCardSide(left, leftOpacity, isVertical ? 0 : leftX, 15)}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontFamily,
-              fontSize: 24,
-              fontWeight: 700,
-              color: colors.muted,
-            }}
-          >
-            VS
-          </div>
-          {renderCardSide(right, rightOpacity, isVertical ? 0 : rightX, 15)}
-        </div>
-      </AbsoluteFill>
-    );
-  }
+  // Shimmer for subtle line glow
+  const lineShimmer = shimmer(frame, 120);
 
   const renderSide = (
     side: ComparisonSide,
     sideOpacity: number,
     xOffset: number,
-    baseDelay: number
+    baseDelay: number,
+    alignment: "left" | "right"
   ) => (
     <div
       style={{
         flex: 1,
         opacity: sideOpacity,
         transform: `translateX(${xOffset}px)`,
-        backgroundColor: `${side.color}10`,
-        borderRadius: 16,
-        border: `1px solid ${side.color}33`,
-        padding: "32px 36px",
         display: "flex",
         flexDirection: "column",
-        gap: 20,
+        borderRadius: GLASS.radius,
+        overflow: "hidden",
+        background: GLASS.bg,
+        border: `1px solid ${GLASS.border}`,
+        boxShadow: `${SHADOWS.md}, inset 0 1px 0 rgba(255,255,255,0.04)`,
       }}
     >
+      {/* Gradient header bar */}
+      <div
+        style={{
+          padding: "22px 32px",
+          background: `linear-gradient(135deg, ${side.color}30 0%, ${side.color}08 100%)`,
+          borderBottom: `1px solid ${side.color}25`,
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          position: "relative",
+        }}
+      >
+        {/* Accent dot */}
+        <div
+          style={{
+            width: 10,
+            height: 10,
+            borderRadius: "50%",
+            backgroundColor: side.color,
+            boxShadow: `0 0 8px ${side.color}88, 0 0 16px ${side.color}44`,
+            flexShrink: 0,
+          }}
+        />
+        <div
+          style={{
+            fontFamily,
+            fontSize: Math.round(28 * fontScale),
+            fontWeight: 700,
+            color: side.color,
+            letterSpacing: 0.3,
+          }}
+        >
+          {side.title}
+        </div>
+        {/* Subtle top-right glow */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            width: 120,
+            height: "100%",
+            background: `linear-gradient(90deg, transparent, ${side.color}08)`,
+            pointerEvents: "none",
+          }}
+        />
+      </div>
+
+      {/* Items list */}
+      <div
+        style={{
+          padding: "24px 32px 32px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 18,
+          flex: 1,
+        }}
+      >
+        {side.items.map((item, i) => {
+          const itemP = spring({
+            frame: frame - baseDelay - 8 - i * SCENE_DEFAULTS.staggerDelay,
+            fps,
+            config: SCENE_DEFAULTS.springSilky,
+          });
+          const itemOpacity = interpolate(itemP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
+          const itemY = interpolate(itemP, [0, 1], [12, 0], { extrapolateRight: "clamp" });
+
+          return (
+            <div
+              key={i}
+              style={{
+                opacity: itemOpacity,
+                transform: `translateY(${itemY}px)`,
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 14,
+                padding: "12px 16px",
+                borderRadius: 10,
+                background: `${side.color}06`,
+                border: `1px solid ${side.color}10`,
+              }}
+            >
+              {/* Numbered bullet */}
+              <div
+                style={{
+                  width: 26,
+                  height: 26,
+                  borderRadius: 8,
+                  backgroundColor: `${side.color}18`,
+                  border: `1px solid ${side.color}30`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily,
+                  fontSize: 20,
+                  fontWeight: 700,
+                  color: side.color,
+                  flexShrink: 0,
+                  marginTop: 2,
+                }}
+              >
+                {i + 1}
+              </div>
+              <div
+                style={{
+                  fontFamily,
+                  fontSize: Math.round(24 * fontScale),
+                  fontWeight: 500,
+                  color: colors.text,
+                  lineHeight: 1.5,
+                }}
+              >
+                {item}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  // VS divider component
+  const vsElement = isVertical ? null : (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 0,
+        width: 48,
+        flexShrink: 0,
+        opacity: vsOpacity,
+        transform: `scale(${vsScale})`,
+      }}
+    >
+      {/* Top line */}
+      <div
+        style={{
+          width: 2,
+          flex: 1,
+          background: `linear-gradient(180deg, transparent, ${colors.muted}${Math.round(30 + lineShimmer * 20).toString(16).padStart(2, "0")}, ${left.color}44)`,
+          borderRadius: 1,
+        }}
+      />
+      {/* VS badge */}
       <div
         style={{
           fontFamily,
-          fontSize: 32,
-          fontWeight: 700,
-          color: side.color,
+          fontSize: 20,
+          fontWeight: 800,
+          color: colors.muted,
+          letterSpacing: 2,
+          padding: "10px 6px",
         }}
       >
-        {side.title}
+        VS
       </div>
-      {side.items.map((item, i) => {
-        const itemP = spring({
-          frame: frame - baseDelay - i * SCENE_DEFAULTS.staggerDelay,
-          fps,
-          config: SCENE_DEFAULTS.springSmooth,
-        });
-        const itemOpacity = interpolate(itemP, [0, 1], [0, 1], {
-          extrapolateRight: "clamp",
-        });
-        return (
-          <div
-            key={i}
-            style={{
-              opacity: itemOpacity,
-              fontFamily,
-              fontSize: 26,
-              color: colors.text,
-              lineHeight: 1.4,
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-            }}
-          >
-            <div
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                backgroundColor: side.color,
-                flexShrink: 0,
-              }}
-            />
-            {item}
-          </div>
-        );
-      })}
+      {/* Bottom line */}
+      <div
+        style={{
+          width: 2,
+          flex: 1,
+          background: `linear-gradient(180deg, ${right.color}44, ${colors.muted}${Math.round(30 + lineShimmer * 20).toString(16).padStart(2, "0")}, transparent)`,
+          borderRadius: 1,
+        }}
+      />
     </div>
   );
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         padding: contentPadding,
-        gap: isVertical ? 20 : 32,
       }}
     >
+      {/* Background glow accents */}
       <div
         style={{
-          opacity: headOpacity,
-          fontFamily,
-          fontSize: Math.round(48 * fontScale),
-          fontWeight: 800,
-          color: colors.text,
-          textAlign: "center",
+          position: "absolute",
+          top: "20%",
+          left: "10%",
+          width: 400,
+          height: 400,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${left.color}08 0%, transparent 70%)`,
+          pointerEvents: "none",
         }}
-      >
-        {heading}
-      </div>
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: "20%",
+          right: "10%",
+          width: 400,
+          height: 400,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${right.color}08 0%, transparent 70%)`,
+          pointerEvents: "none",
+        }}
+      />
 
+      {/* Content */}
       <div
         style={{
           display: "flex",
-          flexDirection: isVertical ? "column" : "row",
-          gap: isVertical ? 16 : 32,
-          flex: 1,
-          alignItems: "stretch",
+          flexDirection: "column",
+          gap: isVertical ? 20 : 28,
+          height: "100%",
+          position: "relative",
+          zIndex: 1,
         }}
       >
-        {renderSide(left, leftOpacity, isVertical ? 0 : leftX, 20)}
-        {/* VS divider */}
+        {/* Heading */}
+        <div
+          style={{
+            opacity: headOpacity,
+            transform: `translateY(${headY}px)`,
+            textAlign: "center",
+            paddingTop: 8,
+          }}
+        >
+          <div
+            style={{
+              fontFamily,
+              fontSize: Math.round(48 * fontScale),
+              fontWeight: 800,
+              color: colors.text,
+              letterSpacing: -0.5,
+            }}
+          >
+            {heading}
+          </div>
+          {/* Subtle accent underline */}
+          <div
+            style={{
+              width: interpolate(headP, [0, 1], [0, 80], { extrapolateRight: "clamp" }),
+              height: 3,
+              borderRadius: 2,
+              background: `linear-gradient(90deg, ${left.color}, ${right.color})`,
+              margin: "12px auto 0",
+              opacity: 0.6,
+            }}
+          />
+        </div>
+
+        {/* Comparison columns */}
         <div
           style={{
             display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily,
-            fontSize: 24,
-            fontWeight: 700,
-            color: colors.muted,
+            flexDirection: isVertical ? "column" : "row",
+            gap: isVertical ? 16 : 0,
+            flex: 1,
+            alignItems: "stretch",
           }}
         >
-          VS
+          {renderSide(left, leftOpacity, isVertical ? 0 : leftX, 20, "left")}
+          {vsElement}
+          {renderSide(right, rightOpacity, isVertical ? 0 : rightX, 20, "right")}
         </div>
-        {renderSide(right, rightOpacity, isVertical ? 0 : rightX, 20)}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

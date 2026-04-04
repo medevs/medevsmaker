@@ -6,9 +6,11 @@ import {
   spring,
   interpolate,
 } from "remotion";
+import { evolvePath } from "@remotion/paths";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
 import { DiagramBox } from "../components/DiagramBox";
 import { DiagramArrow } from "../components/DiagramArrow";
+import { SceneBackground } from "../components/SceneBackground";
 
 type FlowNode = {
   label: string;
@@ -55,9 +57,9 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
 
   // Node positions
   const isHorizontal = direction === "horizontal";
-  const boxW = 220;
-  const boxH = 100;
-  const gap = isHorizontal ? 160 : 80;
+  const boxW = 300;
+  const boxH = 110;
+  const gap = isHorizontal ? 120 : 80;
   const totalW = nodes.length * boxW + (nodes.length - 1) * gap;
   const totalH = nodes.length * boxH + (nodes.length - 1) * gap;
   const startX = isHorizontal ? (1920 - totalW) / 2 : (1920 - boxW) / 2;
@@ -76,42 +78,43 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
 
   // Pipeline variant: horizontal rectangles with → text arrows
   if (variant === "pipeline") {
-    const pipeW = 200;
-    const pipeGap = 80;
+    const pipeW = 260;
+    const pipeGap = 60;
     const totalPipeW = nodes.length * pipeW + (nodes.length - 1) * pipeGap;
     const pipeStartX = (1920 - totalPipeW) / 2;
     const pipeY = 460;
 
     return (
-      <AbsoluteFill style={{ backgroundColor: colors.bg }}>
-        <div
-          style={{
-            position: "absolute",
-            top: 80,
-            left: 80,
-            right: 80,
-            opacity: titleOpacity,
-            transform: `translateY(${titleY}px)`,
-            fontFamily,
-            fontSize: 48,
-            fontWeight: 800,
-            color: colors.text,
-          }}
-        >
-          {title}
-        </div>
+      <SceneBackground bg={colors.bg}>
+        <AbsoluteFill>
+          <div
+            style={{
+              position: "absolute",
+              top: 80,
+              left: 80,
+              right: 80,
+              opacity: titleOpacity,
+              transform: `translateY(${titleY}px)`,
+              fontFamily,
+              fontSize: 48,
+              fontWeight: 800,
+              color: colors.text,
+            }}
+          >
+            {title}
+          </div>
 
-        <div
-          style={{
-            position: "absolute",
-            left: pipeStartX,
-            top: pipeY,
-            display: "flex",
-            alignItems: "center",
-            gap: 0,
-          }}
-        >
-          {nodes.map((node, i) => {
+          <div
+            style={{
+              position: "absolute",
+              left: pipeStartX,
+              top: pipeY,
+              display: "flex",
+              alignItems: "center",
+              gap: 0,
+            }}
+          >
+            {nodes.map((node, i) => {
             const nodeDelay = 10 + i * SCENE_DEFAULTS.staggerDelaySlow;
             const nodeP = spring({
               frame: frame - nodeDelay,
@@ -134,10 +137,10 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
                     opacity: nodeOpacity,
                     transform: `scale(${nodeScale})`,
                     width: pipeW,
-                    padding: "20px 16px",
+                    padding: "24px 20px",
                     backgroundColor: `${nodeColor}12`,
-                    border: `2px solid ${nodeColor}44`,
-                    borderRadius: 12,
+                    border: `3px solid ${nodeColor}44`,
+                    borderRadius: 14,
                     textAlign: "center",
                     display: "flex",
                     flexDirection: "column",
@@ -183,15 +186,17 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
                 )}
               </React.Fragment>
             );
-          })}
-        </div>
-      </AbsoluteFill>
+            })}
+          </div>
+        </AbsoluteFill>
+      </SceneBackground>
     );
   }
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg }}>
-      {/* Title */}
+    <SceneBackground bg={colors.bg}>
+      <AbsoluteFill>
+        {/* Title */}
       <div
         style={{
           position: "absolute",
@@ -209,19 +214,100 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
         {title}
       </div>
 
-      {/* Arrows */}
+      {/* Arrows — adjacent connections use DiagramArrow, bypass connections use custom SVG */}
       {connections.map((conn, i) => {
         const fromPos = nodePositions[conn.from];
         const toPos = nodePositions[conn.to];
         if (!fromPos || !toPos) return null;
 
+        const arrowGap = 14;
+        const span = Math.abs(conn.to - conn.from);
+
+        if (span > 1) {
+          // Bypass arrow: route around the side with a smooth cubic bezier
+          const connDelay = 15 + Math.max(conn.from, conn.to) * 12;
+          const connP = spring({
+            frame: frame - connDelay,
+            fps,
+            config: SCENE_DEFAULTS.springSmooth,
+          });
+          const drawProgress = interpolate(connP, [0, 1], [0, 1], {
+            extrapolateRight: "clamp",
+          });
+
+          const bowOut = 50 + span * 20;
+          let pathD: string;
+          let tipX: number;
+          let tipY: number;
+          let tipAngle: number;
+
+          if (isHorizontal) {
+            const sx = fromPos.centerX;
+            const sy = fromPos.centerY + boxH / 2 + 8;
+            const ex = toPos.centerX;
+            const ey = toPos.centerY + boxH / 2 + 8;
+            const cpY = Math.max(sy, ey) + bowOut;
+            pathD = `M ${sx} ${sy} C ${sx} ${cpY}, ${ex} ${cpY}, ${ex} ${ey}`;
+            tipX = ex;
+            tipY = ey;
+            tipAngle = -Math.PI / 2;
+          } else {
+            const sx = fromPos.centerX + boxW / 2 + 8;
+            const sy = fromPos.centerY;
+            const ex = toPos.centerX + boxW / 2 + 8;
+            const ey = toPos.centerY;
+            const cpX = sx + bowOut;
+            pathD = `M ${sx} ${sy} C ${cpX} ${sy}, ${cpX} ${ey}, ${ex} ${ey}`;
+            tipX = ex;
+            tipY = ey;
+            tipAngle = Math.PI;
+          }
+
+          const evolved = drawProgress > 0 ? evolvePath(drawProgress, pathD) : { strokeDasharray: "0 999999", strokeDashoffset: 0 };
+          const headSize = 14;
+          const headAngle = Math.PI / 6;
+          const arrowL = {
+            x: tipX - headSize * Math.cos(tipAngle - headAngle),
+            y: tipY - headSize * Math.sin(tipAngle - headAngle),
+          };
+          const arrowR = {
+            x: tipX - headSize * Math.cos(tipAngle + headAngle),
+            y: tipY - headSize * Math.sin(tipAngle + headAngle),
+          };
+
+          return (
+            <svg
+              key={`bypass-${i}`}
+              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+            >
+              <path
+                d={pathD}
+                fill="none"
+                stroke={effectiveAccent}
+                strokeWidth={3}
+                strokeLinecap="round"
+                opacity={0.4}
+                {...evolved}
+              />
+              {drawProgress > 0.1 && (
+                <polygon
+                  points={`${tipX},${tipY} ${arrowL.x},${arrowL.y} ${arrowR.x},${arrowR.y}`}
+                  fill={effectiveAccent}
+                  opacity={drawProgress * 0.5}
+                />
+              )}
+            </svg>
+          );
+        }
+
+        // Adjacent nodes: straight arrow between edges
         const fromPt = {
-          x: isHorizontal ? fromPos.centerX + boxW / 2 + 10 : fromPos.centerX,
-          y: isHorizontal ? fromPos.centerY : fromPos.centerY + boxH / 2 + 10,
+          x: isHorizontal ? fromPos.centerX + boxW / 2 + arrowGap : fromPos.centerX,
+          y: isHorizontal ? fromPos.centerY : fromPos.centerY + boxH / 2 + arrowGap,
         };
         const toPt = {
-          x: isHorizontal ? toPos.centerX - boxW / 2 - 10 : toPos.centerX,
-          y: isHorizontal ? toPos.centerY : toPos.centerY - boxH / 2 - 10,
+          x: isHorizontal ? toPos.centerX - boxW / 2 - arrowGap : toPos.centerX,
+          y: isHorizontal ? toPos.centerY : toPos.centerY - boxH / 2 - arrowGap,
         };
 
         return (
@@ -260,6 +346,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
           </div>
         );
       })}
-    </AbsoluteFill>
+      </AbsoluteFill>
+    </SceneBackground>
   );
 };

@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { CodeBlock } from "../components/CodeBlock";
 import { ColorBorderCard } from "../components/ColorBorderCard";
 import { useLayoutMode } from "../formats";
@@ -56,9 +57,9 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
   const titleY = interpolate(titleP, [0, 1], [30, 0]);
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         padding: contentPadding,
         gap: isVertical ? 16 : 24,
       }}
@@ -175,5 +176,6 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
         )}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

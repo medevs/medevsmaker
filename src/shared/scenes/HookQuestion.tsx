@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { entrances } from "../animations";
 
 type HookEntrance = "scale" | "blur" | "fadeUp";
@@ -73,9 +74,9 @@ export const HookQuestion: React.FC<HookQuestionProps> = ({
   });
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         justifyContent: "center",
         alignItems: "center",
         padding: 100,
@@ -109,5 +110,6 @@ export const HookQuestion: React.FC<HookQuestionProps> = ({
         </div>
       )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

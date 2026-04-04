@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { glowPulse, pulse } from "../animations";
 import { ParticleField } from "../components/ParticleField";
 
@@ -85,9 +86,9 @@ export const EndScreen: React.FC<EndScreenProps> = ({
   });
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         justifyContent: "center",
         alignItems: "center",
         padding: 80,
@@ -222,5 +223,6 @@ export const EndScreen: React.FC<EndScreenProps> = ({
         </div>
       )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

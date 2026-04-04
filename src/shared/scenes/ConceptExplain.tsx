@@ -5,10 +5,14 @@ import {
   useVideoConfig,
   spring,
   interpolate,
-  Easing,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
-import { entrances, EASINGS } from "../animations";
+import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
+import { entrances, EASINGS, shimmer } from "../animations";
+import { useLayoutMode } from "../formats";
+import { loadFont } from "@remotion/google-fonts/Inter";
+
+const { fontFamily: interFont } = loadFont();
 
 type HeadingEntrance = "fadeUp" | "fadeLeft" | "typewriter";
 
@@ -35,19 +39,30 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
     muted: BRAND.textMuted,
   },
   sectionColor,
-  fontFamily = "Inter",
+  fontFamily = interFont,
   headingEntrance = "fadeUp",
 }) => {
   const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
-  const clampedP = interpolate(headP, [0, 1], [0, 1], {
-    extrapolateRight: "clamp",
-  });
+  const clampedP = interpolate(headP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
 
+  const bodyP = spring({ frame: frame - 12, fps, config: SCENE_DEFAULTS.springSmooth });
+  const bodyOpacity = interpolate(bodyP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
+  const bodyY = interpolate(bodyP, [0, 1], [16, 0], { extrapolateRight: "clamp", easing: EASINGS.decelerate });
+
+  const analogyP = spring({ frame: frame - 25, fps, config: SCENE_DEFAULTS.springSilky });
+  const analogyOpacity = interpolate(analogyP, [0, 1], [0, 1], { extrapolateRight: "clamp" });
+  const analogyScale = interpolate(analogyP, [0, 1], [0.97, 1], { extrapolateRight: "clamp" });
+
+  const lineShimmer = shimmer(frame, 100);
+
+  // Heading style based on entrance type
   let headStyle: React.CSSProperties;
+  let headingText: React.ReactNode = heading;
 
   if (headingEntrance === "fadeLeft") {
     const s = entrances.fadeLeft(clampedP);
@@ -60,176 +75,164 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
       })
     );
     headStyle = { opacity: 1 };
-    // Render with typewriter
-    const bodyP = spring({
-      frame: frame - 12,
-      fps,
-      config: SCENE_DEFAULTS.springSmooth,
-    });
-    const bodyOpacity = interpolate(bodyP, [0, 1], [0, 1], {
-      extrapolateRight: "clamp",
-    });
-    const bodyY = interpolate(bodyP, [0, 1], [20, 0], {
-      extrapolateRight: "clamp",
-      easing: EASINGS.decelerate,
-    });
+    headingText = (
+      <>
+        {heading.slice(0, charsToShow)}
+        <span style={{ opacity: frame % 30 < 15 ? 1 : 0, color: effectiveAccent }}>|</span>
+      </>
+    );
+  } else {
+    const headY = interpolate(headP, [0, 1], [20, 0], { extrapolateRight: "clamp" });
+    headStyle = { opacity: clampedP, transform: `translateY(${headY}px)` };
+  }
 
-    const analogyP = spring({
-      frame: frame - 25,
-      fps,
-      config: SCENE_DEFAULTS.springSmooth,
-    });
-    const analogyOpacity = interpolate(analogyP, [0, 1], [0, 1], {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-    });
-
-    return (
-      <AbsoluteFill
+  return (
+    <SceneBackground bg={colors.bg}>
+    <AbsoluteFill
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        padding: contentPadding,
+      }}
+    >
+      {/* Ambient glow */}
+      <div
         style={{
-          backgroundColor: colors.bg,
-          justifyContent: "center",
-          padding: 80,
-          gap: 24,
+          position: "absolute",
+          top: "25%",
+          left: "50%",
+          width: 600,
+          height: 600,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${effectiveAccent}0a 0%, transparent 70%)`,
+          transform: "translateX(-50%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          position: "relative",
+          zIndex: 1,
+          display: "flex",
+          flexDirection: "column",
+          gap: 28,
+          maxWidth: 1000,
+          width: "100%",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          {icon && <span style={{ fontSize: 48 }}>{icon}</span>}
+        {/* Heading row */}
+        <div
+          style={{
+            ...headStyle,
+            display: "flex",
+            alignItems: "center",
+            gap: 18,
+          }}
+        >
+          {icon && (
+            <div
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 16,
+                backgroundColor: `${effectiveAccent}15`,
+                border: `1px solid ${effectiveAccent}30`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 36,
+                flexShrink: 0,
+                boxShadow: SHADOWS.glow(effectiveAccent),
+              }}
+            >
+              {icon}
+            </div>
+          )}
           <div
             style={{
               fontFamily,
-              fontSize: 52,
+              fontSize: Math.round(52 * fontScale),
               fontWeight: 800,
               color: colors.text,
               lineHeight: 1.15,
+              letterSpacing: -0.5,
             }}
           >
-            {heading.slice(0, charsToShow)}
-            <span
-              style={{
-                opacity: frame % 30 < 15 ? 1 : 0,
-                color: effectiveAccent,
-              }}
-            >
-              |
-            </span>
+            {headingText}
           </div>
         </div>
+
+        {/* Body card */}
         <div
           style={{
             opacity: bodyOpacity,
             transform: `translateY(${bodyY}px)`,
-            fontFamily,
-            fontSize: 30,
-            color: colors.text,
-            lineHeight: 1.6,
-            maxWidth: 1200,
+            borderRadius: GLASS.radius,
+            overflow: "hidden",
+            background: GLASS.bg,
+            border: `1px solid ${GLASS.border}`,
+            borderLeft: `4px solid ${effectiveAccent}`,
+            boxShadow: SHADOWS.md,
+            padding: "28px 36px",
           }}
         >
-          {body}
+          <div
+            style={{
+              fontFamily,
+              fontSize: Math.round(30 * fontScale),
+              fontWeight: 500,
+              color: colors.text,
+              lineHeight: 1.6,
+            }}
+          >
+            {body}
+          </div>
         </div>
+
+        {/* Analogy card */}
         {analogy && (
           <div
             style={{
               opacity: analogyOpacity,
-              fontFamily,
-              fontSize: 26,
-              color: effectiveAccent,
-              fontStyle: "italic",
-              marginTop: 8,
-              paddingLeft: 20,
-              borderLeft: `3px solid ${effectiveAccent}44`,
+              transform: `scale(${analogyScale})`,
+              borderRadius: GLASS.radius,
+              overflow: "hidden",
+              background: `${effectiveAccent}08`,
+              border: `1px solid ${effectiveAccent}20`,
+              boxShadow: `0 0 ${16 + lineShimmer * 8}px ${effectiveAccent}10`,
+              padding: "22px 32px",
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
             }}
           >
-            {analogy}
+            <div
+              style={{
+                width: 4,
+                height: 40,
+                borderRadius: 2,
+                backgroundColor: effectiveAccent,
+                flexShrink: 0,
+                opacity: 0.6,
+              }}
+            />
+            <div
+              style={{
+                fontFamily,
+                fontSize: Math.round(26 * fontScale),
+                fontWeight: 500,
+                color: effectiveAccent,
+                fontStyle: "italic",
+                lineHeight: 1.5,
+              }}
+            >
+              {analogy}
+            </div>
           </div>
         )}
-      </AbsoluteFill>
-    );
-  } else {
-    // Default "fadeUp" — original behavior
-    const headY = interpolate(headP, [0, 1], [30, 0]);
-    headStyle = { opacity: clampedP, transform: `translateY(${headY}px)` };
-  }
-
-  const bodyP = spring({
-    frame: frame - 12,
-    fps,
-    config: SCENE_DEFAULTS.springSmooth,
-  });
-  const bodyOpacity = interpolate(bodyP, [0, 1], [0, 1], {
-    extrapolateRight: "clamp",
-  });
-  const bodyY = interpolate(bodyP, [0, 1], [20, 0], {
-    extrapolateRight: "clamp",
-    easing: EASINGS.decelerate,
-  });
-
-  const analogyP = spring({
-    frame: frame - 25,
-    fps,
-    config: SCENE_DEFAULTS.springSmooth,
-  });
-  const analogyOpacity = interpolate(analogyP, [0, 1], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  return (
-    <AbsoluteFill
-      style={{
-        backgroundColor: colors.bg,
-        justifyContent: "center",
-        padding: 80,
-        gap: 24,
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        {icon && <span style={{ fontSize: 48 }}>{icon}</span>}
-        <div
-          style={{
-            ...headStyle,
-            fontFamily,
-            fontSize: 52,
-            fontWeight: 800,
-            color: colors.text,
-            lineHeight: 1.15,
-          }}
-        >
-          {heading}
-        </div>
       </div>
-
-      <div
-        style={{
-          opacity: bodyOpacity,
-          transform: `translateY(${bodyY}px)`,
-          fontFamily,
-          fontSize: 30,
-          color: colors.text,
-          lineHeight: 1.6,
-          maxWidth: 1200,
-        }}
-      >
-        {body}
-      </div>
-
-      {analogy && (
-        <div
-          style={{
-            opacity: analogyOpacity,
-            fontFamily,
-            fontSize: 26,
-            color: effectiveAccent,
-            fontStyle: "italic",
-            marginTop: 8,
-            paddingLeft: 20,
-            borderLeft: `3px solid ${effectiveAccent}44`,
-          }}
-        >
-          {analogy}
-        </div>
-      )}
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

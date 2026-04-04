@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { ColorBorderCard } from "../components/ColorBorderCard";
 import { PillBadge } from "../components/PillBadge";
 import { FeatureCounter } from "../components/FeatureCounter";
@@ -50,9 +51,9 @@ export const FeatureIntro: React.FC<FeatureIntroProps> = ({
   });
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         padding: "80px 100px",
       }}
     >
@@ -125,5 +126,6 @@ export const FeatureIntro: React.FC<FeatureIntroProps> = ({
         )}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };

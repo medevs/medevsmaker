@@ -75,7 +75,7 @@ Self-contained command (no separate skill). Spawns 3 parallel research agents, s
 
 **Default mode**: Breathing — continuous music bed with volume that breathes (rises at hook/transitions/outro, ducks during narration). Uses `BreathingMusicLayer` component.
 **Source**: Royalty-free library (preferred, free), manual MP3, or ElevenLabs Music API
-**Volume zones**: Hook (0.30) → Narration (0.05) → Gaps (0.15) → Transitions (0.25) → Outro (0.30)
+**Volume zones**: Hook (0.18) → Narration (0.03) → Gaps (0.08) → Transitions (0.15) → Outro (0.18)
 
 ### assets — Publishing Metadata + Thumbnail
 

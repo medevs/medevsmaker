@@ -7,6 +7,7 @@ import {
   interpolate,
 } from "remotion";
 import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { SceneBackground } from "../components/SceneBackground";
 import { ColorBorderCard } from "../components/ColorBorderCard";
 import { PillBadge } from "../components/PillBadge";
 
@@ -45,9 +46,9 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
   });
 
   return (
+    <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        backgroundColor: colors.bg,
         padding: 80,
         gap: 32,
       }}
@@ -129,5 +130,6 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
         })}
       </div>
     </AbsoluteFill>
+    </SceneBackground>
   );
 };
