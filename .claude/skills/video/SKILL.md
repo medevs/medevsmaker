@@ -73,7 +73,9 @@ Scene plan format:
 
 ### PHASE 5: NARRATION WRITING
 
-**Goal**: Write natural voiceover narration for every scene.
+**Goal**: Write natural, human-sounding voiceover narration for every scene.
+
+**Before writing narration**, load the **humanizer** skill into context. This ensures all narration avoids AI writing patterns from the start — no significance inflation, no AI vocabulary ("Additionally", "landscape", "showcasing"), no copula avoidance ("serves as" → "is"), no formulaic structures. The humanizer's 24 pattern detectors supplement the narration rules below.
 
 Full rules: [rules/narration-writing.md](rules/narration-writing.md) (patterns, TTS optimization, attribution, retention)
 
@@ -150,7 +152,7 @@ For short-form script.json format, see [rules/short-form.md](rules/short-form.md
 2. **Deep Research** (Phase 2) — Gather sourced facts via web search, save to research.md
 3. **Angle & Hook** (Phase 3) — Generate 3 hook variants, select strongest for search-first
 4. **Scene Planning** (Phase 4) — Create scene plan from [rules/educational-scenes.md](rules/educational-scenes.md)
-5. **Narration Writing** (Phase 5) — Write narration per [rules/narration-writing.md](rules/narration-writing.md) with source attribution + retention patterns
+5. **Narration Writing** (Phase 5) — Load `humanizer` skill into context, then write narration per [rules/narration-writing.md](rules/narration-writing.md) with source attribution + retention patterns
 6. **Output script.json** — Write to `src/videos/<VideoName>/script.json` (and copy to `productions/<date>-<slug>/`)
 7. **Quality Review** (Phase 6) — Dispatch `script-critic` agent, present findings alongside script
 8. **Present for review** — Show hook variants, scene plan, key narration excerpts, and critic feedback

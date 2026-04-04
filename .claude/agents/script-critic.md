@@ -71,6 +71,12 @@ Check narration across all scenes for:
 - **Em-dashes or exclamation marks**: Violates TTS optimization rules
 - **Staccato fragments**: "Step one. Step two. Step three." — needs rhythm variety
 - **Hedging**: "kind of", "sort of", "maybe", "perhaps" — should be confident
+- **AI vocabulary**: "Additionally", "Moreover", "testament", "landscape", "showcasing", "delve", "crucial", "foster", "leverage", "streamline", "comprehensive", "encompasses"
+- **Copula avoidance**: "serves as", "functions as", "stands as" — should just use "is"/"has"
+- **Significance inflation**: "groundbreaking", "revolutionary", "game-changing", "transformative" — should be specific
+- **Negative parallelisms**: "It's not just X, it's Y" — formulaic AI pattern
+- **Rule of three**: Defaulting to 3-item lists ("fast, efficient, and scalable") — vary list lengths
+- **Generic conclusions**: "The future looks bright", "exciting times ahead" — replace with specific facts
 
 **Output**: List each violation with scene index and the offending text.
 

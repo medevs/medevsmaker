@@ -7,7 +7,23 @@ metadata:
 
 # Narration Writing Rules
 
-Narration is written during `/script` Phase 3. These rules govern how to write natural, engaging voiceover narration for every scene.
+Narration is written during `/script` Phase 5. These rules govern how to write natural, engaging voiceover narration for every scene.
+
+## Humanizer Integration
+
+**Before writing any narration**, load the `humanizer` skill into context. The humanizer detects 24 AI writing patterns across 5 categories (content, language, style, communication, filler/hedging) and ensures narration sounds genuinely human-written.
+
+Key patterns to avoid in narration:
+- **AI vocabulary**: "Additionally", "Moreover", "testament", "landscape", "showcasing", "delve", "crucial", "foster", "leverage", "streamline", "comprehensive"
+- **Copula avoidance**: Don't write "serves as", "functions as", "features" — just use "is" and "has"
+- **Significance inflation**: Don't make everything "groundbreaking", "revolutionary", or "game-changing"
+- **Negative parallelisms**: Avoid "It's not just X, it's Y" constructions
+- **Rule of three overuse**: Don't default to 3-item lists ("fast, efficient, and scalable")
+- **False ranges**: Avoid vague "from X to Y" constructions
+- **Filler phrases**: "In order to" → "To", "Due to the fact that" → "Because"
+- **Generic conclusions**: Replace "The future looks bright" with specific facts
+
+The humanizer and narration-writing rules reinforce each other — both push toward concrete, specific, conversational prose with personality. When in doubt, read the narration aloud: if it sounds like a blog post or press release, rewrite it.
 
 ## Core Principles
 
