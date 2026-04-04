@@ -24,11 +24,15 @@
     "@remotion/paths": "^4.0.427",
     "@remotion/shapes": "^4.0.427",
     "@remotion/transitions": "4.0.427",
+    "@types/three": "^0.183.1",
+    "culori": "^4.0.2",
     "edge-tts-universal": "^1.3.3",
     "msedge-tts": "^2.0.4",
+    "prism-react-renderer": "^2.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remotion": "4.0.427",
+    "three": "^0.183.2",
     "zod": "4.3.6"
   },
   "devDependencies": {

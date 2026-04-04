@@ -1,686 +1,1141 @@
 ---
-name: educational-scenes
-description: Complete catalog of reusable scene types for educational videos
-metadata:
-  tags: scenes, educational, catalog, templates
+name: scene-catalog
+description: "Complete catalog of all 64 reusable scenes — flat, no hierarchy"
 ---
 
-# Scene Catalog
+# Scene Catalog (64 Scenes)
 
-All scene types available for video production. Each scene is a reusable React component in `src/shared/scenes/`.
+All scenes are first-class choices. No tiers, no hierarchy. Choose based on what the content needs visually and educationally.
 
-## Extended Scene Library
+## Selection Rules
 
-For visual enhancement scenes (backgrounds, cinematic opens, text effects, transitions, UI demos, data animations), see **[rules/scene-library.md](rules/scene-library.md)** — 30 curated extended scenes in `src/shared/scenes/extended/`.
+### Visual Variety (MANDATORY)
+- **Never use 2+ text-heavy scenes in a row** (text-heavy: ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout, SplitCodeComparison, ProgressiveTerminal)
+- **Every section needs at least one visually rich scene** with animation, particles, diagrams, or dynamic visuals
+- **Prefer scenes with movement** over static text layouts
+- **Use the full catalog** — if you find yourself reaching for the same scene a 3rd time, pick a different one
+- **Don't default to the same 13 scenes** — there are 64 available, use the variety
 
-The 35 educational scenes below are for **content delivery** (teaching concepts, explaining ideas, building knowledge). The 30 extended scenes are for **visual framing, atmosphere, and demonstration** (cinematic opens, transitions, atmospheric backgrounds, UI demos). A well-produced video blends both: educational scenes carry the teaching, extended scenes carry the style.
+### Visual Balance
+- Target **60%+ visual-heavy scenes** across the video
+- Visual-heavy includes ALL of: AnimatedDiagram, ArchitectureDiagram, BackgroundBokeh, BackgroundGeometric, BackgroundWaves, BeforeAfter, CinematicDocumentary, CinematicSciFi, ColdOpen, ComparisonSplit, DataChart, DataGauge, DataRanking, DemoAddressBar, DemoScroll, DemoTextInput, DemoZoomFocus, DiagramFlow, EffectChromaticAberration, EffectMatrix, LayoutFrameInFrame, LayoutGiantNumber, LiquidFluidWave, LogoMaskReveal, LogoStroke, MetricDashboard, ParticleLightning, ProcessAnimation, QuoteCard, RollerCountdown, ShapeHelix, ShapeHexGrid, StatHighlight, StepSequence, SwipeReveal, TextGlitch, TextKinetic, ThemeCyberpunk, ThemeHolographic, ThemeRetro, TimelineScene, TransitionFlash, VisualMetaphor
 
-> **Note**: Duration ranges listed below are **minimum animation times** — the time needed for entrance animations to complete. Actual scene durations are computed from narration word counts (see `duration-calculation.md`). Write narration naturally; the duration will follow.
+### Scene Preference Guidance
 
-## Universal Props
+When you find yourself repeating a scene type, use this table:
 
-All content scenes accept these common props:
+| Instead of repeating... | Consider... | When... |
+|------------------------|-------------|---------|
+| ConceptExplain (3rd+ use) | TextKinetic | Statement needs visual punch |
+| ConceptExplain | FeatureIntro | Introducing/defining something for first time |
+| StatHighlight | LayoutGiantNumber | The number IS the entire visual moment |
+| StatHighlight | DataGauge | Single metric with gauge visualization |
+| StatHighlight | RollerCountdown | Countdown or slot-machine number reveal |
+| BulletRevealScene | ListFullscreenSequence | Items need dramatic individual focus |
+| BulletRevealScene | DecisionTable | Content is Q&A or criteria pairs |
+| HookQuestion | ColdOpen | Dramatic statement instead of question |
+| HookQuestion | CinematicSciFi | AI/future tech topic with HUD aesthetic |
+| HookQuestion | ThemeCyberpunk | Dystopian/hacker/dark tech opener |
+| SectionTitle | TransitionFlash | High-impact moment between sections |
+| SectionTitle | ThemeHolographic | Shimmering section break |
+| CodeDisplay | EffectMatrix | Code-rain aesthetic for hacker topics |
+| CodeDisplay | DemoTextInput | Interactive code input visualization |
+| KeyTakeaway | KeyRuleCard | Gradient-emphasis key insight |
+| ComparisonSplit | ThreeColumnCompare | Comparing 3+ things |
+| DiagramFlow | ArchitectureDiagram | Hub-spoke/radial relationships |
+| DiagramFlow | ProcessAnimation | Animated item moving through stages |
+| Any text scene 3rd time | ParticleLightning | Energy/power/electricity emphasis |
+| Any text scene 3rd time | LiquidFluidWave | Flowing/organic transition moment |
+| Any text scene 3rd time | ShapeHelix | Scientific/DNA/spiral visual |
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `sectionColor` | `string?` | Per-section accent color override. Takes precedence over `colors.accent`. Pass this on every content scene to ensure consistent per-section theming. |
-| `colors` | `object?` | Theme colors (`bg`, `text`, `accent`, `muted`). Defaults to BRAND colors. |
-| `fontFamily` | `string?` | Font family. Defaults to `"Inter"`. |
+## Universal Props (all scenes)
 
-**Always pass `sectionColor`** — it's the primary way to apply per-section theming. The `colors.accent` serves as a fallback when `sectionColor` is not provided.
+Every scene accepts these props:
+- `sectionColor?: string` — Per-section accent color (from SECTION_THEMES rotation)
+- `colors?: { bg: string; text: string; accent: string; muted: string }` — Override default colors
+- `fontFamily?: string` — Override heading font
 
-## Scene Tiers
+Extended scenes (in `src/shared/scenes/extended/`) also accept:
+- `startDelay?: number` — Frames to delay animation start (default 0)
 
-Scenes are divided into two tiers. For daily production, prefer **Core** scenes. Use **Advanced** scenes for variety and specialized content.
-
-### Core (13) — Use by default
-
-| Scene | Category | Purpose |
-|-------|----------|---------|
-| HookQuestion | Structural | Opening hook |
-| TitleIntro | Structural | Title + objectives |
-| SectionTitle | Structural | Chapter marker |
-| ConceptExplain | Text | Heading + body + analogy (the workhorse) |
-| DiagramFlow | Visual | Animated process flow |
-| CodeDisplay | Text | Code with annotations |
-| ComparisonSplit | Visual | A vs B comparison |
-| StatHighlight | Visual | Big animated number |
-| BulletRevealScene | Text | Progressive bullet list |
-| VisualMetaphor | Visual | Icon + analogy |
-| KeyTakeaway | Structural | Section summary |
-| SummaryRecap | Structural | Numbered recap |
-| EndScreen | Structural | End card with CTA |
-
-### Advanced (19) — Use for variety
-
-| Scene | Category | Purpose |
-|-------|----------|---------|
-| ColdOpen | Visual | Dramatic opening statement |
-| BeforeAfter | Visual | Before/after wipe reveal |
-| TimelineScene | Visual | Horizontal/vertical timeline |
-| DataChart | Visual | Animated charts (bars, pie, donut, line, gauge) |
-| FeatureIntro | Visual | Feature with breadcrumb + pills |
-| ProgressiveTerminal | Text | Terminal-style reveal |
-| DecisionTable | Visual | Decision matrix |
-| ThreeColumnCompare | Visual | Three-way comparison |
-| FileTreeScene | Visual | Directory structure |
-| KeyRuleCard | Visual | Key insight with gradient |
-| ArchitectureDiagram | Visual | Hub-spoke layout |
-| WarningCallout | Text | Danger callout |
-| StepSequence | Visual | Numbered steps |
-| QuoteCard | Visual | Glass morphism quote card with attribution |
-| AnimatedDiagram | Visual | Curved bezier connections + data flow particles |
-| MetricDashboard | Visual | 2-4 stat cards grid with mini charts |
-| ProcessAnimation | Visual | Items moving through stages |
-| SplitCodeComparison | Text | Side-by-side code comparison (before/after) |
-| FullScreenText | Text | Full-screen statement with dramatic entrance |
-| SwipeReveal | Visual | Swipe transition with before/after content |
-| Outro | Structural | Basic channel branding (**deprecated** — use EndScreen) |
-
-> **Note**: `Thumbnail.tsx` is a special-purpose scene used by `/assets` for thumbnail generation, not for video content.
-
-### Scene Selection Rule
-
-**Core-first**: For daily production, compose videos primarily from Core scenes. Use Advanced scenes for variety (max 30% of content scenes) unless the content specifically demands them (e.g., ArchitectureDiagram for architecture topics, TimelineScene for historical timelines).
+> **Note**: Duration ranges listed below are **minimum animation times**. Actual scene durations are computed from narration word counts (see `duration-calculation.md`). Write narration naturally; the duration will follow.
 
 ---
 
-## Scene Visual Classification
+## All Scenes (A-Z)
 
-```
-VISUAL-HEAVY (target 60%+ of content scenes):
-  DiagramFlow, VisualMetaphor, ComparisonSplit, BeforeAfter,
-  TimelineScene, DataChart, StepSequence, StatHighlight, ColdOpen,
-  AnimatedDiagram, MetricDashboard, ProcessAnimation, QuoteCard
-
-TEXT-HEAVY (target 40% max of content scenes):
-  ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout,
-  SplitCodeComparison
-
-STRUCTURAL (don't count toward ratio):
-  HookQuestion, TitleIntro, SectionTitle, KeyTakeaway,
-  SummaryRecap, Outro, EndScreen
-```
-
----
-
-## 1. HookQuestion
-
-**Purpose**: Provocative opening to grab attention. Always Scene 1.
-**Tier**: Core
-**Duration**: 4-5s (120-150 frames at 30fps)
-**Layout**: Centered hero
-**Animation**: Spring scale-in (0.9→1) + opacity fade
-**Props**: `question: string`, `subtext?: string`, `entrance?: 'scale' | 'blur' | 'fadeUp'`
-
-**When to use**: Every video's first scene. Ask a question the viewer thinks they know the answer to.
-
-**narration example**: "Create curiosity gap — pose a question the viewer can't ignore"
-
-**Content constraints**:
-- Question max 8 words
-- Subtext max 12 words
-- Must create curiosity gap
-
-**Example**:
-```
-question: "What actually happens when you click a link?"
-subtext: "It's more complex than you think"
-```
+### AnimatedDiagram
+**Location**: `src/shared/scenes/AnimatedDiagram.tsx`
+**Purpose**: Curved bezier connections between positioned nodes with optional data-flow particles
+**Duration**: 8s minimum (curved bezier draw-on + node stagger)
+**Layout**: Title top, nodes positioned by x/y coordinates with curved SVG connections
+**Animation**: Title fade-up → nodes scale-in staggered → curved bezier connections draw on → optional particles flow along paths
+**Props**:
+- `title: string` — diagram heading
+- `nodes: { id: string; label: string; sublabel?: string; color?: string; icon?: string; x: number; y: number }[]` — positioned nodes (x/y in pixels)
+- `connections: { from: string; to: string; label?: string; curved?: boolean }[]` — connections by node id
+- `curvedConnections?: boolean` — enable curved bezier lines (default false)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Complex system diagrams where node positioning matters, data flow visualization, non-linear relationships
+**Narration example**: "Trace the data path from user input through the system — follow the arrows"
 
 ---
 
-## 2. TitleIntro
-
-**Purpose**: Video title + learning objectives. Always Scene 2.
-**Tier**: Core
-**Duration**: 6-8s (180-240 frames)
-**Layout**: Centered with underline divider
-**Animation**: Title fade-up → underline expand → objectives stagger-in
-**Props**: `title: string`, `objectives: string[]`, `entrance?: 'fadeUp' | 'scaleRotate' | 'splitReveal'`
-
-**When to use**: Immediately after the hook. Sets expectations.
-
-**narration example**: "Set expectations — tease what's coming without listing objectives verbatim"
-
-**Content constraints**:
-- Title max 8 words
-- 2-4 objectives, each max 10 words
-- Objectives should be outcomes ("Understand X", "Know when to use Y")
+### ArchitectureDiagram
+**Location**: `src/shared/scenes/ArchitectureDiagram.tsx`
+**Purpose**: Hub-spoke layout with central node and orbital satellites connected by dashed SVG lines
+**Duration**: 8s minimum (center + satellite stagger)
+**Layout**: Heading top, central glowing card in center, satellite cards arranged in circle, dashed connection lines
+**Animation**: Heading fade → center node scale-in with glow → connection lines fade → satellites stagger in (14f delay)
+**Props**:
+- `heading: string` — diagram title
+- `center: { label: string; icon?: string; sublabel?: string; color?: string }` — central hub node
+- `satellites: { label: string; icon?: string; sublabel?: string; color?: string }[]` — orbital nodes (max 6)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: System architectures, hub-spoke relationships, central concept with related components, microservice layouts
+**Narration example**: "Start from the center hub and explain outward — match the visual reveal rhythm"
 
 ---
 
-## 3. SectionTitle
-
-**Purpose**: Chapter marker at the start of each section.
-**Tier**: Core
-**Duration**: 3-4s (90-120 frames)
-**Layout**: Centered with section badge
-**Animation**: Badge pop-in → title fade-up → subtitle fade
-**Props**: `sectionNumber: number`, `title: string`, `subtitle?: string`, `entrance?: 'fadeUp' | 'slideLeft' | 'scaleBlur'`
-
-**When to use**: Start of every section (3-7 per video).
-
-**narration example**: "Brief transition — connect previous section to what's coming next"
-
-**Content constraints**:
-- Title max 5 words
-- Subtitle max 10 words
+### BackgroundBokeh
+**Location**: `src/shared/scenes/extended/BackgroundBokeh.tsx`
+**Purpose**: Floating bokeh light orbs with depth blur for atmospheric backgrounds
+**Duration**: 3-4s typical
+**Layout**: Full-screen particle field with depth-blurred circles
+**Animation**: 20 bokeh orbs float and pulse with randomized motion, depth blur creates layered feel
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `colors?: string[]` — custom bokeh colors (default: indigo, violet, cyan, amber)
+**When to use**: Creative/design topics, soft atmospheric mood, gentle intro backgrounds, overlay behind other content
+**Narration example**: "Set a contemplative tone before diving into the explanation"
 
 ---
 
-## 4. ConceptExplain
-
-**Purpose**: Core teaching scene — heading + body text + optional analogy.
-**Tier**: Core
-**Duration**: 6-8s (180-240 frames)
-**Layout**: Left-aligned with padding
-**Animation**: Head fade-up → body fade-up (12f delay) → analogy fade (25f delay)
-**Props**: `heading: string`, `body: string`, `analogy?: string`, `icon?: string`, `headingEntrance?: 'fadeUp' | 'fadeLeft' | 'typewriter'`
-
-**When to use**: The workhorse scene for explaining any concept.
-
-**narration example**: "Explain concept in own words — use the analogy to make it click"
-
-**Content constraints**:
-- Heading max 6 words
-- Body max 30 words (2 lines)
-- Analogy max 20 words, must start with a relatable comparison
+### BackgroundGeometric
+**Location**: `src/shared/scenes/extended/BackgroundGeometric.tsx`
+**Purpose**: Animated geometric shapes (triangles, squares, circles) on dark background with centered text
+**Duration**: 3-4s typical
+**Layout**: Full-screen dark background with 20 rotating/floating geometric shapes, text centered
+**Animation**: Shapes rotate and float with randomized speeds, text fades in
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — centered display text (default: "GEOMETRIC")
+**When to use**: Tech/engineering topics, architecture discussions, mathematical/structural content
+**Narration example**: "Introduce a technical concept with visual gravitas"
 
 ---
 
-## 5. DiagramFlow
-
-**Purpose**: Animated boxes + arrows showing processes/flows.
-**Tier**: Core
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Title top, diagram centered
-**Animation**: Nodes scale-in staggered → arrows draw-in between them
-**Props**: `title: string`, `nodes: {label: string, sublabel?: string}[]`, `connections: {from: number, to: number}[]`, `direction?: 'horizontal' | 'vertical'`
-
-**When to use**: Any process, pipeline, data flow, request lifecycle.
-
-**narration example**: "Walk through the flow step by step — connect each node to the next"
-
-**Content constraints**:
-- Max 5 nodes
-- Each node label max 3 words
-- Arrow labels optional, max 2 words
-- Horizontal preferred for 3-4 nodes, vertical for 4-5
+### BackgroundWaves
+**Location**: `src/shared/scenes/extended/BackgroundWaves.tsx`
+**Purpose**: Flowing sine-wave lines animation with text overlay
+**Duration**: 3-4s typical
+**Layout**: Full-screen dark background with layered wave SVG paths, text centered
+**Animation**: Multiple sine-wave layers animate horizontally with different frequencies and colors
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — centered display text (default: "WAVES")
+- `colors?: string[]` — custom wave colors (default: indigo, violet, cyan)
+**When to use**: Sound/audio topics, data flow visualization, gentle/fluid content, wave-related explanations
+**Narration example**: "Smooth transition into a flowing concept like data streams or audio processing"
 
 ---
 
-## 6. CodeDisplay
-
-**Purpose**: Code block with typewriter reveal and optional annotations.
-**Tier**: Core
-**Duration**: 8-15s (240-450 frames)
-**Layout**: Title top, code left, annotations right
-**Animation**: Title fade-up → code typewriter → annotations stagger-in
-**Props**: `title: string`, `code: string`, `annotations?: {line: number, text: string}[]`, `highlightLines?: number[]`
-
-**When to use**: Any time you show code, commands, or config.
-
-**narration example**: "Explain what the code does and why it matters — never read syntax"
-
-**Content constraints**:
-- Code max 8 lines
-- Each annotation max 10 words
-- Annotations tied to specific line numbers
-- Duration should scale with code length (1.5s per line)
-
----
-
-## 7. ComparisonSplit
-
-**Purpose**: Two-column A vs B comparison.
-**Tier**: Core
-**Duration**: 6-10s (180-300 frames)
-**Layout**: Heading top, two equal columns with VS divider
-**Animation**: Heading fade → left slide-in-from-left → right slide-in-from-right → items stagger
-**Props**: `heading: string`, `left: {title: string, items: string[], color: string}`, `right: {title: string, items: string[], color: string}`, `entranceStyle?: 'slide' | 'spring' | 'overshoot'`
-
-**When to use**: Good vs bad, before/after, old vs new, two approaches.
-
-**narration example**: "Highlight the key difference — make one side clearly better for the context"
-
-**Content constraints**:
-- Heading max 6 words
-- Each side: title max 3 words, max 4 items, each item max 8 words
-- Use red/amber for "bad" side, green/cyan for "good" side
-
----
-
-## 8. StatHighlight
-
-**Purpose**: Big animated number with context.
-**Tier**: Core
-**Duration**: 4-6s (120-180 frames)
-**Layout**: Centered hero
-**Animation**: Number counts from 0 → target with spring scale → label fade-up → context fade
-**Props**: `stat: number` ⚠️, `suffix?: string`, `prefix?: string`, `label: string`, `context?: string`, `emphasis?: 'default' | 'glow' | 'gradient'`
-
-> **⚠️ `stat` MUST be a raw number** (e.g., `stat={82}`, not `stat="82%"`). Use `suffix`/`prefix` for formatting. Strings crash `interpolate()`.
-
-**When to use**: Key statistics, percentages, performance numbers.
-
-**narration example**: "Build up to the number — frame why this stat should blow their mind"
-
-**Content constraints**:
-- One number per scene
-- Suffix: "%", "x", "ms", "K", "M"
-- Label max 6 words
-- Context max 15 words
-
----
-
-## 9. BulletRevealScene
-
-**Purpose**: Progressive list of items.
-**Tier**: Core
-**Duration**: 5-10s (150-300 frames)
-**Layout**: Heading top, bullets stacked below
-**Animation**: Heading fade-up → bullets stagger-in from left
-**Props**: `heading: string`, `items: string[]`, `bulletStyle?: 'dot' | 'check' | 'arrow' | 'number'`
-
-**When to use**: Lists of benefits, features, requirements, considerations.
-
-**narration example**: "Introduce the list, then highlight the 2 most important items"
-
-**Content constraints**:
-- Heading max 5 words
-- Max 5 bullets, each max 10 words
-- Duration should scale: 1.5s base + 1s per bullet
-
----
-
-## 10. VisualMetaphor
-
-**Purpose**: Large emoji/icon + analogy text for abstract concepts.
-**Tier**: Core
-**Duration**: 5-8s (150-240 frames)
-**Layout**: Centered — icon on top, heading middle, analogy below
-**Animation**: Icon pop-in (snappy spring) → heading fade-up → analogy fade
-**Props**: `icon: string`, `heading: string`, `analogy: string`, `iconEffect?: 'pop' | 'rotate' | 'bounce'`
-
-**When to use**: Breaking complex concepts with relatable analogies. Use after dense scenes.
-
-**narration example**: "Deliver the analogy with personality — make it funny and memorable"
-
-**Content constraints**:
-- Icon: single emoji
-- Heading max 5 words
-- Analogy max 25 words
-- Must connect to something the viewer already knows
-
----
-
-## 11. KeyTakeaway
-
-**Purpose**: End-of-section summary in an accent box.
-**Tier**: Core
-**Duration**: 4-6s (120-180 frames)
-**Layout**: Centered with accent box
-**Animation**: Heading fade-up → accent box scale-in
-**Props**: `heading?: string`, `takeaway: string`, `variant?: 'accent' | 'insight'`
-
-**When to use**: Last scene of each section. Distills the section into one memorable statement.
-
-**narration example**: "Reinforce the section's key point — one sentence the viewer remembers"
-
-**Content constraints**:
-- Takeaway max 25 words
-- Must be independently understandable without section context
-
----
-
-## 12. SummaryRecap
-
-**Purpose**: Numbered recap of everything covered.
-**Tier**: Core
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Heading top, numbered list stacked
-**Animation**: Heading fade-up → items stagger-in with number badges
-**Props**: `heading?: string`, `items: string[]`, `itemEntrance?: 'left' | 'scale' | 'fade'`
-
-**When to use**: Near the end of the video, before the outro.
-
-**narration example**: "Rapid-fire recap — hit the highlights from each section in order"
-
-**Content constraints**:
-- One item per section covered
-- Each item max 10 words
-- Should match section titles for recognition
-
----
-
-## 13. Outro (Deprecated)
-
-**Purpose**: Channel branding + CTA. **Deprecated** — use `EndScreen` instead for polished end cards with gradient text and glow CTA.
-**Tier**: Advanced
-**Duration**: 4-6s (120-180 frames)
-**Layout**: Centered — logo top, CTA button middle, tagline bottom
-**Animation**: Logo pop-in (snappy) → CTA button fade-up → tagline fade
-**Props**: `channel?: string`, `cta?: string`, `tagline?: string`
-
-**When to use**: Always the last scene.
-
-**narration example**: "Brief sign-off — keep it short, no generic 'thanks for watching'"
-
-**Content constraints**:
-- CTA max 4 words ("Subscribe for more")
-- Tagline max 6 words
-
----
-
-## 14. WarningCallout
-
-**Purpose**: Red/amber callout for common mistakes or dangers.
-**Tier**: Advanced
-**Duration**: 5-7s (150-210 frames)
-**Layout**: Centered with accent box
-**Animation**: Heading fade-up with subtle pulse → accent box scale-in
-**Props**: `heading: string`, `body: string`, `severity?: 'warning' | 'danger'`
-
-**When to use**: Common mistakes, pitfalls, security concerns, things to avoid.
-
-**narration example**: "Deliver with urgency — this is the one thing they absolutely must remember"
-
-**Content constraints**:
-- Heading max 6 words, should feel urgent
-- Body max 30 words
-- Use `danger` severity for security/critical, `warning` for common mistakes
-
----
-
-## 15. StepSequence
-
-**Purpose**: Numbered steps with badges for how-to content.
-**Tier**: Advanced
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Heading top, steps stacked with section badges
-**Animation**: Heading fade-up → steps stagger-in with badge pop-ins
-**Props**: `heading: string`, `steps: {title: string, description?: string}[]`
-
-**When to use**: Step-by-step processes, setup instructions, workflows.
-
-**narration example**: "Walk through steps in order — use connecting phrases, not just numbering"
-
-**Content constraints**:
-- Max 5 steps
-- Each step title max 5 words
-- Each step description max 12 words (optional)
-- Duration scales: 2s per step minimum
-
----
-
-## 16. EndScreen
-
-**Purpose**: Polished end card with gradient text, animated CTA, and optional social links. Replaces basic Outro.
-**Tier**: Core
-**Duration**: 4-6s (120-180 frames)
-**Layout**: Centered — channel name + underline + CTA button + tagline + social links
-**Animation**: Channel name bouncy spring → underline expand → CTA fade-up with glow pulse → tagline fade → social links stagger
-**Props**: `channel?: string`, `cta?: string`, `tagline?: string`, `socialLinks?: {label: string, handle: string}[]`, `showParticles?: boolean`
-
-**When to use**: As a premium replacement for Outro. Use for polished end cards with branding.
-
-**narration example**: "Conversational CTA — one sentence that feels natural, not salesy"
-
-**Content constraints**:
-- CTA max 4 words
-- Tagline max 6 words
-- Max 3 social links
-
----
-
-## 17. ColdOpen
-
-**Purpose**: Dramatic opening with bold statement, glow/gradient effects, and particle background.
-**Tier**: Advanced
-**Duration**: 4-6s (120-180 frames)
-**Layout**: Centered hero
-**Animation**: Heavy spring entrance with glow pulse or gradient text
-**Props**: `statement: string`, `subtext?: string`, `entrance?: 'glow' | 'gradient' | 'typewriter'`, `showParticles?: boolean`
-
-**When to use**: Alternative to HookQuestion for dramatic, statement-driven openings.
-
-**narration example**: "Dramatic attention grab — jump straight into a bold statement, no warmup"
-
-**Content constraints**:
-- Statement max 8 words
-- Subtext max 12 words
-
----
-
-## 18. BeforeAfter
-
-**Purpose**: Before/after comparison with animated wipe or split reveal.
-**Tier**: Advanced
-**Duration**: 8-12s (240-360 frames)
+### BeforeAfter
+**Location**: `src/shared/scenes/BeforeAfter.tsx`
+**Purpose**: Before/after comparison with animated wipe or split reveal
+**Duration**: 8-12s (two panels + reveal animation)
 **Layout**: Heading top, two panels side by side
 **Animation**: Before panel slides in → after panel wipe-reveals or slides in
-**Props**: `heading: string`, `before: {title: string, items: string[]}`, `after: {title: string, items: string[]}`, `reveal?: 'wipe' | 'split'`
-
-**When to use**: Showing improvements, transformations, old vs new approaches.
-
-**narration example**: "Emphasize the contrast — make the 'after' feel like a revelation"
-
-**Content constraints**:
-- Heading max 6 words
-- Each panel: title max 3 words, max 4 items, each max 8 words
-
----
-
-## 19. TimelineScene
-
-**Purpose**: Horizontal or vertical timeline with progressively drawn line and node pop-ins.
-**Tier**: Advanced
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Heading top, timeline centered
-**Animation**: Nodes pop-in staggered with connecting lines drawing between them
-**Props**: `heading: string`, `nodes: {label: string, description?: string}[]`, `layout?: 'horizontal' | 'vertical'`
-
-**When to use**: Historical progressions, evolution of technology, step sequences over time.
-
-**narration example**: "Narrate the progression — what happens at each stage and why it matters"
-
-**Content constraints**:
-- Horizontal layout: max 5 nodes, labels max 2 words. For 6+ nodes use vertical layout
-- Vertical layout: max 6 nodes
-- Each label max 3 words (vertical) / 2 words (horizontal)
-- Each description max 10 words
+**Props**:
+- `heading: string` — comparison title
+- `before: { title: string; items: string[] }` — before state
+- `after: { title: string; items: string[] }` — after state
+- `reveal?: 'wipe' | 'split'` — reveal animation style
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Showing improvements, transformations, old vs new approaches, migration stories
+**Narration example**: "Emphasize the contrast — make the 'after' feel like a revelation"
 
 ---
 
-## 20. DataChart
-
-**Purpose**: Animated bar chart with staggered spring-animated bars and value labels.
-**Tier**: Advanced
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Heading top, bars stacked vertically
-**Animation**: Heading fade → bars grow with spring + value counter
-**Props**: `heading: string`, `bars: {label: string, value: number, color?: string}[]` ⚠️, `maxValue?: number`, `suffix?: string`
-
-> **⚠️ `value` and `maxValue` MUST be raw numbers** (e.g., `value: 82`, not `value: "82"`). Strings crash `interpolate()`.
-
-**When to use**: Statistics, performance comparisons, survey results, market data.
-
-**narration example**: "Call out the most interesting data points — pick the standout numbers"
-
-**Content constraints**:
-- Max 6 bars
-- Each label max 3 words
-- Suffix: "%", "x", "ms", "K", etc.
+### BulletRevealScene
+**Location**: `src/shared/scenes/BulletRevealScene.tsx`
+**Purpose**: Progressive list of items with configurable bullet styles
+**Duration**: 5-10s (scales with item count: 1.5s base + 1s per bullet)
+**Layout**: Heading top, bullets stacked below with left alignment
+**Animation**: Heading fade-up → bullets stagger-in from left
+**Props**:
+- `heading: string` — list title
+- `items: string[]` — bullet items (max 5, each max 10 words)
+- `bulletStyle?: 'dot' | 'check' | 'arrow' | 'number'` — bullet icon style
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Lists of benefits, features, requirements, considerations
+**Narration example**: "Introduce the list, then highlight the 2 most important items"
 
 ---
 
----
-
-## 21. FeatureIntro
-
-**Purpose**: Polished feature introduction with left-aligned content, breadcrumb counter, and pill badges.
-**Tier**: Advanced
-**Duration**: 6-8s (180-240 frames)
-**Layout**: Content in left 65% of frame (negative space on right), breadcrumb top-left
-**Animation**: Heading fadeUpSlow → ColorBorderCard scale-in → PillBadge row stagger
-**Props**: `heading: string`, `definition: string`, `badge?: string`, `icon?: string`, `breadcrumb?: {current: number, total: number, label: string}`, `pills?: {label: string, color?: string}[]`, `sectionColor?: string`
-
-**When to use**: Introducing a new feature, concept, or topic at the start of a section. Prefer over ConceptExplain when defining something for the first time.
-
-**narration example**: "Build anticipation — explain why this feature matters before defining it"
-
-**Content constraints**:
-- Heading max 6 words
-- Definition max 30 words
-- Max 4 pills
-- Badge max 2 words (ALL CAPS)
+### CinematicDocumentary
+**Location**: `src/shared/scenes/extended/CinematicDocumentary.tsx`
+**Purpose**: Ken Burns-style documentary opening with sober tone, letterbox bars, and location stamp
+**Duration**: 4-6s typical
+**Layout**: Full-screen with expanding horizontal line, centered title/subtitle, location stamp bottom-right
+**Animation**: Line draws from center → title fades up → subtitle appears → location stamp fades in
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `title?: string` — main title (default: "The Story")
+- `subtitle?: string` — subtitle text (default: "A Documentary Film")
+- `location?: string` — location/date stamp (default: "2024")
+**When to use**: Historical/serious content, journalism pieces, investigative topics, documentary-style openers
+**Narration example**: "Set a serious, grounded tone — this is about something that matters"
 
 ---
 
-## 22. ProgressiveTerminal
-
-**Purpose**: Terminal-style progressive reveal of items inside a single card.
-**Tier**: Advanced
-**Duration**: 6-10s (180-300 frames)
-**Layout**: Heading top, single large ColorBorderCard with items appearing one by one
-**Animation**: Heading fadeUpSlow → card scale-in → items stagger with fadeLeftSlow (14f delay)
-**Props**: `heading: string`, `items: {text: string, icon?: string, highlight?: string}[]`, `summary?: string`, `sectionColor?: string`
-
-**When to use**: Listing capabilities, features, or sequential points that build on each other.
-
-**narration example**: "Highlight the 2-3 most interesting items — don't just read the list"
-
-**Content constraints**:
-- Heading max 6 words
-- Max 6 items, each max 12 words
-- Highlight keyword max 3 words per item
+### CinematicSciFi
+**Location**: `src/shared/scenes/extended/CinematicSciFi.tsx`
+**Purpose**: Sci-fi HUD/hologram style with perspective grid, scanning line, and HUD frame corners
+**Duration**: 4-6s typical
+**Layout**: Dark background with perspective grid floor, HUD corner brackets, centered title with status text
+**Animation**: HUD corners fade in → scanning line sweeps → "INITIALIZING SYSTEM" label → title with glow → status text
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `title?: string` — main display text (default: "NEXUS")
+- `status?: string` — status line below title (default: "SYSTEM ONLINE")
+**When to use**: AI/future tech topics, sci-fi vibe openers, system/infrastructure topics, cybersecurity
+**Narration example**: "Open with futuristic energy — set the stage for cutting-edge tech content"
 
 ---
 
-## 23. DecisionTable
-
-**Purpose**: Decision matrix with question/answer rows using pill badges.
-**Tier**: Advanced
-**Duration**: 6-10s (180-300 frames)
-**Layout**: Heading centered, stacked ColorBorderCard rows
-**Animation**: Heading fade → rows stagger in (14f delay), each row: question left + PillBadge answer right
-**Props**: `heading: string`, `rows: {icon?: string, question: string, answer: string, answerColor?: string}[]`, `sectionColor?: string`
-
-**When to use**: Decision criteria, FAQ-style content, when to use what, feature comparisons as rows.
-
-**narration example**: "Frame the decision context, then call out the most surprising answer"
-
-**Content constraints**:
-- Heading max 6 words
-- Max 5 rows
-- Each question max 10 words
-- Each answer max 3 words (pill badge)
+### CodeDisplay
+**Location**: `src/shared/scenes/CodeDisplay.tsx`
+**Purpose**: Code block with typewriter reveal, syntax coloring, and optional line annotations
+**Duration**: 8s minimum (typewriter reveal scales with code length, ~1.5s per line)
+**Layout**: Title top, code block left, annotations right
+**Animation**: Title fade-up → code typewriter line by line → annotations stagger-in pointing to highlighted lines
+**Props**:
+- `title: string` — code example title
+- `code: string` — the code to display (max 8 lines)
+- `annotations?: { line: number; text: string }[]` — line-specific annotations (each max 10 words)
+- `highlightLines?: number[]` — lines to highlight with accent color
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Any time you show code, commands, config files, or terminal output
+**Narration example**: "Explain what the code does and why it matters — never read syntax aloud"
 
 ---
 
-## 24. ThreeColumnCompare
-
-**Purpose**: Three-way comparison with colored cards side by side.
-**Tier**: Advanced
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Heading top, three equal ColorBorderCards (gap 24px)
-**Animation**: Heading fade → cards stagger in → items stagger within each card
-**Props**: `heading: string`, `columns: {title: string, icon?: string, items: string[], color: string}[]` (3 columns)
-
-**When to use**: Comparing three approaches, tools, or categories. When ComparisonSplit's two columns aren't enough.
-
-**narration example**: "Highlight what makes each option distinct — create a narrative arc across the three"
-
-**Content constraints**:
-- Heading max 6 words
-- Each column: title max 3 words, max 4 items, each item max 8 words
-- Each column gets its own color
+### ColdOpen
+**Location**: `src/shared/scenes/ColdOpen.tsx`
+**Purpose**: Dramatic opening with bold statement, glow/gradient effects, and particle background
+**Duration**: 4-6s (fast entrance for immediate impact)
+**Layout**: Centered hero with particle field background
+**Animation**: Heavy spring entrance with glow pulse, gradient text, or typewriter effect
+**Props**:
+- `statement: string` — bold opening statement (max 8 words)
+- `subtext?: string` — supporting text (max 12 words)
+- `entrance?: 'glow' | 'gradient' | 'typewriter'` — entrance animation style
+- `showParticles?: boolean` — enable particle background
+- `colors?: { bg: string; text: string; accent: string }`
+- `fontFamily?: string`
+**When to use**: Alternative to HookQuestion for dramatic, statement-driven openings. Best for provocative claims.
+**Narration example**: "Dramatic attention grab — jump straight into a bold statement, no warmup"
 
 ---
 
-## 25. FileTreeScene
+### ComparisonSplit
+**Location**: `src/shared/scenes/ComparisonSplit.tsx`
+**Purpose**: Two-column A vs B comparison with VS divider
+**Duration**: 6-10s (two columns + item stagger)
+**Layout**: Heading top, two equal columns with VS divider between them
+**Animation**: Heading fade → left slides in from left → right slides in from right → items stagger
+**Props**:
+- `heading: string` — comparison title (max 6 words)
+- `left: { title: string; items: string[]; color: string }` — left column (title max 3 words, max 4 items)
+- `right: { title: string; items: string[]; color: string }` — right column
+- `entranceStyle?: 'slide' | 'spring' | 'overshoot'` — entrance animation variant
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Good vs bad, before/after, old vs new, two competing approaches
+**Narration example**: "Highlight the key difference — make one side clearly better for the context"
 
-**Purpose**: Directory/file structure visualization with annotations.
-**Tier**: Advanced
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Heading top, FileTree left (2/3), optional annotation card right (1/3)
+---
+
+### ConceptExplain
+**Location**: `src/shared/scenes/ConceptExplain.tsx`
+**Purpose**: Core teaching scene — heading + body text + optional analogy with icon
+**Duration**: 6-8s (three-part stagger animation)
+**Layout**: Left-aligned with generous padding
+**Animation**: Heading fade-up → body fade-up (12f delay) → analogy fade (25f delay)
+**Props**:
+- `heading: string` — concept name (max 6 words)
+- `body: string` — explanation text (max 30 words, 2 lines)
+- `analogy?: string` — relatable comparison (max 20 words)
+- `icon?: string` — emoji or symbol
+- `headingEntrance?: 'fadeUp' | 'fadeLeft' | 'typewriter'` — heading animation
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: The workhorse for explaining any concept. But avoid 3+ in a row — switch to TextKinetic or FeatureIntro.
+**Narration example**: "Explain concept in own words — use the analogy to make it click"
+
+---
+
+### DataChart
+**Location**: `src/shared/scenes/DataChart.tsx`
+**Purpose**: Animated bar chart with spring-animated bars and value counter labels
+**Duration**: 8-12s (bar stagger + counter animation)
+**Layout**: Heading top, bars stacked vertically with labels left and values right
+**Animation**: Heading fade → bars grow with spring + value counter animates to target
+**Props**:
+- `heading: string` — chart title
+- `bars: { label: string; value: number; color?: string }[]` — chart data (max 6 bars). **value MUST be a raw number** (e.g., `value: 82`, not `value: "82"`). Strings crash `interpolate()`.
+- `maxValue?: number` — scale maximum (raw number)
+- `suffix?: string` — value suffix ("%", "x", "ms", "K")
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Statistics, performance comparisons, survey results, market data, benchmarks
+**Narration example**: "Call out the most interesting data points — pick the standout numbers"
+
+---
+
+### DataGauge
+**Location**: `src/shared/scenes/extended/DataGauge.tsx`
+**Purpose**: Radial gauge meter (speedometer style) with animated needle and gradient arc
+**Duration**: 4-6s typical
+**Layout**: Centered gauge with arc from green→amber→red, needle points to value, value + label below
+**Animation**: Arc draws in → needle sweeps to target position → value counter appears
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `value?: number` — gauge value (default: 78)
+- `label?: string` — metric label below value (default: "Performance Score")
+- `maxValue?: number` — gauge maximum (default: 100)
+**When to use**: Single-metric emphasis, performance scores, health checks, satisfaction ratings
+**Narration example**: "Build anticipation as the needle sweeps — reveal whether the score is good or bad"
+
+---
+
+### DataRanking
+**Location**: `src/shared/scenes/extended/DataRanking.tsx`
+**Purpose**: Animated ranking list with numbered entries and score bars
+**Duration**: 4-6s typical
+**Layout**: Title top, ranked items stacked vertically with position numbers and animated score bars
+**Animation**: Title fades → items stagger in from left with spring → bars grow to score width
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `items?: { name: string; score: number }[]` — ranking entries (default: top cities by population)
+- `title?: string` — ranking title (default: "Top Cities")
+**When to use**: Leaderboards, top-N lists, ranked comparisons, popularity charts
+**Narration example**: "Count down from least to most — or reveal the winner first for drama"
+
+---
+
+### DecisionTable
+**Location**: `src/shared/scenes/DecisionTable.tsx`
+**Purpose**: Decision matrix with question/answer rows using pill badges
+**Duration**: 6-10s (row stagger animation)
+**Layout**: Heading centered, stacked card rows with question left and pill badge answer right
+**Animation**: Heading fade → rows stagger in (14f delay), each row: question left + pill badge answer right
+**Props**:
+- `heading: string` — table title (max 6 words)
+- `rows: { icon?: string; question: string; answer: string; answerColor?: string }[]` — decision rows (max 5)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Decision criteria, FAQ-style content, "when to use what" guides, feature comparison as rows
+**Narration example**: "Frame the decision context, then call out the most surprising answer"
+
+---
+
+### DemoAddressBar
+**Location**: `src/shared/scenes/extended/DemoAddressBar.tsx`
+**Purpose**: Browser address bar with typing animation simulating URL entry
+**Duration**: 4-6s typical
+**Layout**: Centered browser chrome mockup with address bar, page title below
+**Animation**: Browser frame appears → URL types character by character → page content loads
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `url?: string` — URL to type (default: "app.example.com/dashboard")
+- `title?: string` — page title (default: "Dashboard")
+**When to use**: URL/HTTP topics, web navigation demos, DNS explanations, API endpoint demonstrations
+**Narration example**: "Walk through what happens as you type a URL into the browser"
+
+---
+
+### DemoScroll
+**Location**: `src/shared/scenes/extended/DemoScroll.tsx`
+**Purpose**: Scroll behavior animation showing content scrolling within a viewport
+**Duration**: 4-6s typical
+**Layout**: Centered viewport container with scrollable content items
+**Animation**: Content scrolls vertically through the viewport with eased motion
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `title?: string` — viewport title (default: "SCROLL")
+**When to use**: Scroll UX tutorials, infinite scroll explanations, scroll event handling, viewport behavior
+**Narration example**: "Show how content flows as the user scrolls — connect to the technical concept"
+
+---
+
+### DemoTextInput
+**Location**: `src/shared/scenes/extended/DemoTextInput.tsx`
+**Purpose**: Form text input with cursor and typing animation
+**Duration**: 4-6s typical
+**Layout**: Centered form card with label, input field, and typing cursor
+**Animation**: Form card appears → cursor blinks → text types character by character
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `placeholder?: string` — input placeholder text (default: "Email Address")
+- `typedText?: string` — text to type (default: "hello@example.com")
+- `label?: string` — form label (default: "Create Account")
+**When to use**: Form UX tutorials, input validation demos, interactive code input visualization
+**Narration example**: "Show the user experience of filling out a form — connect to the validation logic"
+
+---
+
+### DemoZoomFocus
+**Location**: `src/shared/scenes/extended/DemoZoomFocus.tsx`
+**Purpose**: Zoom-in focus on a specific UI element with highlight overlay
+**Duration**: 4-6s typical
+**Layout**: Full dashboard mockup that zooms into a specific metric card with highlight box
+**Animation**: Full view shows → camera zooms into target element → highlight box appears with label
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `title?: string` — dashboard/target title (default: "Key Metrics")
+**When to use**: Detail emphasis, pointing out specific UI elements, magnification of important data
+**Narration example**: "Direct attention to exactly the thing that matters — zoom reveals the detail"
+
+---
+
+### DiagramFlow
+**Location**: `src/shared/scenes/DiagramFlow.tsx`
+**Purpose**: Animated boxes + arrows showing linear processes and pipelines
+**Duration**: 8s minimum (node stagger + arrow draw)
+**Layout**: Title top, diagram centered horizontally or vertically
+**Animation**: Nodes scale-in staggered → arrows draw between them with optional labels
+**Props**:
+- `title: string` — flow diagram title
+- `nodes: { label: string; sublabel?: string; color?: string }[]` — flow nodes (max 5)
+- `connections: { from: number; to: number; label?: string }[]` — connections by node index
+- `direction?: 'horizontal' | 'vertical'` — layout direction (horizontal for 3-4 nodes, vertical for 4-5)
+- `variant?: 'boxes' | 'pipeline'` — visual style (pipeline = rounded connected tubes)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string }`
+- `fontFamily?: string`
+**When to use**: Any process, pipeline, data flow, request lifecycle, CI/CD pipeline
+**Narration example**: "Walk through the flow step by step — connect each node to the next"
+
+---
+
+### EffectChromaticAberration
+**Location**: `src/shared/scenes/extended/EffectChromaticAberration.tsx`
+**Purpose**: RGB channel separation glitch effect on large text
+**Duration**: 3-4s typical
+**Layout**: Centered large text with three offset color layers (red, green, blue)
+**Animation**: Text fades in → RGB channels oscillate apart creating aberration effect
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — display text (default: "CHROMATIC")
+**When to use**: Glitch/error topics, digital artifacts, broken/corrupted data themes, visual emphasis moments
+**Narration example**: "Something went wrong — use the glitch to emphasize a failure or corruption"
+
+---
+
+### EffectMatrix
+**Location**: `src/shared/scenes/extended/EffectMatrix.tsx`
+**Purpose**: Green falling code rain (Matrix style) with centered text overlay
+**Duration**: 3-4s typical
+**Layout**: Full-screen dark background with 30 columns of falling green characters, text centered
+**Animation**: Character columns fall at different speeds → text appears over the rain
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — centered display text (default: "THE MATRIX")
+**When to use**: Hacking/security topics, code-rain aesthetic, digital world metaphors, encryption themes
+**Narration example**: "Set the hacker mood — this is about what happens behind the scenes in code"
+
+---
+
+### EndScreen
+**Location**: `src/shared/scenes/EndScreen.tsx`
+**Purpose**: Polished end card with gradient text, animated CTA button with glow, and social links
+**Duration**: 5s minimum (logo + CTA + social links animation)
+**Layout**: Centered — channel name with underline → CTA button → tagline → social links row
+**Animation**: Channel name bouncy spring → underline expand → CTA fade-up with glow pulse → tagline fade → social links stagger
+**Props**:
+- `channel?: string` — channel name (default: "medevsmaker")
+- `cta?: string` — call-to-action text (max 4 words)
+- `tagline?: string` — channel tagline (max 6 words)
+- `socialLinks?: { label: string; handle: string }[]` — social media links (max 3)
+- `showParticles?: boolean` — enable particle background
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Always the last scene. Preferred over Outro for polished end cards.
+**Narration example**: "Conversational CTA — one sentence that feels natural, not salesy"
+
+---
+
+### FeatureIntro
+**Location**: `src/shared/scenes/FeatureIntro.tsx`
+**Purpose**: Polished feature introduction with breadcrumb counter, definition card, and pill badges
+**Duration**: 6-8s (multi-element stagger)
+**Layout**: Content in left 65% of frame (negative space on right), breadcrumb counter top-left
+**Animation**: Heading fadeUpSlow → definition card scale-in → pill badge row stagger-in
+**Props**:
+- `heading: string` — feature name (max 6 words)
+- `definition: string` — feature definition (max 30 words)
+- `badge?: string` — category badge (max 2 words, ALL CAPS)
+- `icon?: string` — emoji or symbol
+- `breadcrumb?: { current: number; total: number; label: string }` — position counter (e.g., "2 of 5")
+- `pills?: { label: string; color?: string }[]` — category/tag pills (max 4)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Introducing a new feature, concept, or topic. Prefer over ConceptExplain when defining something for the first time.
+**Narration example**: "Build anticipation — explain why this feature matters before defining it"
+
+---
+
+### FileTreeScene
+**Location**: `src/shared/scenes/FileTreeScene.tsx`
+**Purpose**: Directory/file structure visualization with annotations
+**Duration**: 8s minimum (tree items stagger + annotation)
+**Layout**: Heading top, file tree left (2/3), optional annotation card right (1/3)
 **Animation**: Heading fadeUpSlow → tree items stagger with fadeLeftSlow → annotation card fades in last
-**Props**: `heading: string`, `items: {name: string, type: string, indent: number, color?: string, highlight?: boolean}[]`, `annotation?: string`, `sectionColor?: string`
-
-**When to use**: Showing project structure, file organization, config layouts, directory hierarchies.
-
-**narration example**: "Explain the architecture reasoning — why it's organized this way, not just what's there"
-
-**Content constraints**:
-- Heading max 6 words
-- Max 12 tree items
-- Max 3 indent levels
-- Annotation max 25 words
+**Props**:
+- `heading: string` — tree title (max 6 words)
+- `items: { name: string; type: string; indent: number; color?: string; highlight?: boolean }[]` — tree entries (max 12, max 3 indent levels)
+- `annotation?: string` — side annotation (max 25 words)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Project structure, file organization, config layouts, directory hierarchies, monorepo structures
+**Narration example**: "Explain the architecture reasoning — why it's organized this way, not just what's there"
 
 ---
 
-## 26. KeyRuleCard
+### FullScreenText
+**Location**: `src/shared/scenes/FullScreenText.tsx`
+**Purpose**: Single large statement filling the screen with dramatic entrance for punchlines
+**Duration**: 3-5s (fast impact)
+**Layout**: Centered hero with particle field background, safe-zone aware for short-form
+**Animation**: Scale, gradient, or slam entrance with optional glow pulse
+**Props**:
+- `text: string` — the statement (bold, large)
+- `subtext?: string` — supporting text below
+- `entrance?: 'scale' | 'gradient' | 'slam'` — entrance animation
+- `colors?: { bg: string; text: string; accent: string }`
+- `fontFamily?: string`
+**When to use**: Short-form hook moments, mid-video punchlines, dramatic one-liner reveals
+**Narration example**: "Deliver the punchline — let the text do the visual work"
 
-**Purpose**: Key insight/rule with gradient text emphasis and optional detail cards.
-**Tier**: Advanced
-**Duration**: 5-7s (150-210 frames)
+---
+
+### HookQuestion
+**Location**: `src/shared/scenes/HookQuestion.tsx`
+**Purpose**: Provocative opening question to grab attention. Typically Scene 1.
+**Duration**: 4s minimum (spring scale-in + subtext)
+**Layout**: Centered hero with large question text and smaller subtext below
+**Animation**: Spring scale-in (0.9 to 1) + opacity fade → subtext fades in after 15 frames
+**Props**:
+- `question: string` — the hook question (max 8 words)
+- `subtext?: string` — supporting text (max 12 words)
+- `entrance?: 'scale' | 'blur' | 'fadeUp'` — entrance animation (avoid 'typewriter' for hooks — too slow)
+- `colors?: { bg: string; text: string; accent: string }`
+- `fontFamily?: string`
+**When to use**: Every video's first scene. Ask a question the viewer thinks they know the answer to.
+**Narration example**: "Create curiosity gap — pose a question the viewer can't ignore"
+
+---
+
+### KeyRuleCard
+**Location**: `src/shared/scenes/KeyRuleCard.tsx`
+**Purpose**: Key insight with gradient text emphasis, pre-label, and optional detail cards
+**Duration**: 5-7s (multi-element stagger)
 **Layout**: Centered — preLabel (monospace caps) → large statement with gradient highlight → subtitle → optional detail cards
 **Animation**: Labels fade → statement with gradient text glow → subtitle fade → cards stagger
-**Props**: `preLabel?: string`, `statement: string`, `highlightWord?: string`, `subtitle?: string`, `cards?: {text: string, icon?: string}[]`, `sectionColor?: string`
-
-**When to use**: Key rules, important insights, memorable one-liners. Use instead of KeyTakeaway when you want gradient emphasis.
-
-**narration example**: "Deliver with conviction — short, punchy, let the statement breathe"
-
-**Content constraints**:
-- preLabel max 3 words (ALL CAPS)
-- Statement max 12 words
-- highlightWord: 1-3 words from the statement
-- Subtitle max 20 words
-- Max 3 detail cards, each max 8 words
-
----
-
-## 27. ArchitectureDiagram
-
-**Purpose**: Hub-spoke architecture layout with central node and satellites.
-**Tier**: Advanced
-**Duration**: 8-12s (240-360 frames)
-**Layout**: Heading top, central ColorBorderCard with glow, satellite cards arranged in circle, SVG dashed connection lines
-**Animation**: Heading fade → center node scale-in → connection lines fade → satellites stagger in (14f delay)
-**Props**: `heading: string`, `center: {label: string, icon?: string, sublabel?: string, color?: string}`, `satellites: {label: string, icon?: string, sublabel?: string, color?: string}[]`, `sectionColor?: string`
-
-**When to use**: System architectures, hub-spoke relationships, central concept with related components.
-
-**narration example**: "Start from the center hub and explain outward — match the visual reveal rhythm"
-
-**Content constraints**:
-- Heading max 6 words
-- Center label max 3 words
-- Max 6 satellites
-- Each satellite label max 3 words
+**Props**:
+- `preLabel?: string` — category label (max 3 words, ALL CAPS)
+- `statement: string` — the key rule/insight (max 12 words)
+- `highlightWord?: string` — 1-3 words from statement to apply gradient
+- `subtitle?: string` — supporting detail (max 20 words)
+- `cards?: { text: string; icon?: string }[]` — detail cards below (max 3, each max 8 words)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Key rules, important insights, memorable one-liners. Use instead of KeyTakeaway for gradient emphasis.
+**Narration example**: "Deliver with conviction — short, punchy, let the statement breathe"
 
 ---
 
-## Scene Selection Priorities
+### KeyTakeaway
+**Location**: `src/shared/scenes/KeyTakeaway.tsx`
+**Purpose**: End-of-section summary in an accent box
+**Duration**: 4-6s (heading + box entrance)
+**Layout**: Centered with accent-colored box containing the takeaway text
+**Animation**: Heading fade-up → accent box scale-in with takeaway text
+**Props**:
+- `heading?: string` — optional section label
+- `takeaway: string` — the key takeaway (max 25 words, must be independently understandable)
+- `variant?: 'accent' | 'insight'` — style variant (insight = gradient text)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Last scene of each section. Distills the section into one memorable statement.
+**Narration example**: "Reinforce the section's key point — one sentence the viewer remembers"
 
-When planning scenes, prefer the polished Advanced scene types when the content fits:
+---
 
-| Instead of... | Prefer... | When... |
-|--------------|-----------|---------|
-| ConceptExplain | **FeatureIntro** | Introducing/defining something for the first time |
-| BulletRevealScene | **DecisionTable** | Content is question/answer or criteria pairs |
-| ComparisonSplit | **ThreeColumnCompare** | Comparing 3 things |
-| DiagramFlow | **ArchitectureDiagram** | Hub-spoke/radial relationships |
-| KeyTakeaway | **KeyRuleCard** | Gradient-emphasis key insights |
-| — | **FileTreeScene** | Showing project structure or file organization |
-| — | **ProgressiveTerminal** | Listing capabilities that build on each other |
-| StepSequence | **StepSequence `variant="card"`** | Polished step-by-step with card styling |
-| DiagramFlow | **DiagramFlow `variant="pipeline"`** | Linear horizontal pipelines |
-| KeyTakeaway | **KeyTakeaway `variant="insight"`** | Gradient text takeaways |
+### LayoutFrameInFrame
+**Location**: `src/shared/scenes/extended/LayoutFrameInFrame.tsx`
+**Purpose**: Nested frame composition — frames within frames creating a recursive visual
+**Duration**: 3-4s typical
+**Layout**: Centered nested rectangles with title and subtitle positioned between frames
+**Animation**: Outer frames scale in → inner frames follow → text appears
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `title?: string` — main text (default: "FRAME")
+- `subtitle?: string` — subtitle text (default: "INTRODUCING")
+**When to use**: Meta/recursion topics, nesting concepts, inception-style reveals, composition patterns
+**Narration example**: "Introduce a concept about nesting, recursion, or layers within layers"
 
-### Transition Variety
+---
+
+### LayoutGiantNumber
+**Location**: `src/shared/scenes/extended/LayoutGiantNumber.tsx`
+**Purpose**: Oversized number as a design element filling the right side, with text info on left
+**Duration**: 4-6s typical
+**Layout**: Giant number (500px font) overflows right edge, label + description on left side
+**Animation**: Number scales in from 80% to 100% → left text slides in from left with delay
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `number?: string` — the giant number to display (default: "97")
+- `label?: string` — small label above description (default: "CUSTOMER SATISFACTION")
+- `description?: string` — supporting text (default: "Based on 10,000+ reviews...")
+**When to use**: When the number IS the visual moment — milestone stats, dramatic percentages, hero metrics
+**Narration example**: "Let the number speak — pause before explaining what it means"
+
+---
+
+### LiquidFluidWave
+**Location**: `src/shared/scenes/extended/LiquidFluidWave.tsx`
+**Purpose**: Fluid wave distortion with 7 layered wave paths and splash particles
+**Duration**: 4-6s typical
+**Layout**: Dark gradient background with layered SVG wave paths rising from bottom, text at top 20%, splash particles
+**Animation**: Wave layers spring in staggered (3f apart) → splash particles float and pulse → text scales in
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — display text above waves (default: "WAVE")
+- `colors?: string[]` — up to 3 custom wave colors (default: indigo, violet, cyan)
+**When to use**: Physics/wave topics, flowing/organic transitions, water/fluid metaphors, dramatic visual breather
+**Narration example**: "Take a breath — use the flowing visual to transition into a new concept"
+
+---
+
+### ListFullscreenSequence
+**Location**: `src/shared/scenes/extended/ListFullscreenSequence.tsx`
+**Purpose**: Full-screen sequential item reveals — one item fills the entire screen at a time
+**Duration**: 4-8s (scales with item count)
+**Layout**: Each item takes the full screen one at a time with large centered text and color background
+**Animation**: Items crossfade with scale entrance, each getting its own color from the palette
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `items?: string[]` — items to reveal sequentially (default: ["INNOVATE", "CREATE", "DELIVER"])
+- `title?: string` — optional title overlay
+**When to use**: When items need dramatic individual focus, manifesto-style reveals, core values
+**Narration example**: "Give each item its own dramatic moment — short pause between each"
+
+---
+
+### LogoMaskReveal
+**Location**: `src/shared/scenes/extended/LogoMaskReveal.tsx`
+**Purpose**: Masked wipe reveal of text/brand with horizontal mask sweep
+**Duration**: 3-4s typical
+**Layout**: Centered text with horizontal mask that sweeps to reveal, optional subtitle below
+**Animation**: Horizontal mask sweeps left to right revealing text → subtitle fades in
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — text to reveal (default: "BRAND")
+- `subtitle?: string` — subtitle below revealed text
+**When to use**: Clean brand reveals, professional openers, section introductions with polish
+**Narration example**: "Clean reveal — let the brand name land with purpose"
+
+---
+
+### LogoStroke
+**Location**: `src/shared/scenes/extended/LogoStroke.tsx`
+**Purpose**: SVG stroke-draw reveal — text outline draws on then fills in
+**Duration**: 3-4s typical
+**Layout**: Centered text with SVG stroke animation, subtitle below
+**Animation**: SVG stroke draws the text outline → fill fades in → subtitle appears
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — text to stroke-draw (default: "BRAND")
+- `subtitle?: string` — subtitle text
+**When to use**: Technical/precision brand reveals, clean minimal openers, engineering-themed introductions
+**Narration example**: "Precision reveal — the text draws itself into existence"
+
+---
+
+### MetricDashboard
+**Location**: `src/shared/scenes/MetricDashboard.tsx`
+**Purpose**: 2-4 stat cards in a grid, each with counter animation, optional gauge/bar mini-chart
+**Duration**: 6s minimum (multiple counter animations)
+**Layout**: Heading top, 2-4 metric cards in responsive grid
+**Animation**: Heading fade → cards stagger in → counters animate to target values → mini charts fill
+**Props**:
+- `heading: string` — dashboard title
+- `metrics: { label: string; value: number; suffix?: string; prefix?: string; color?: string; display?: 'counter' | 'gauge' | 'bar'; maxValue?: number }[]` — 2-4 metrics. **value MUST be a raw number**.
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Multiple related stats, performance dashboards, before/after metric sets, KPI overviews
+**Narration example**: "Call out the headline metric, then connect the others to tell a story"
+
+---
+
+### Outro
+**Location**: `src/shared/scenes/Outro.tsx`
+**Purpose**: Basic channel branding + CTA. **Deprecated** — use EndScreen instead.
+**Duration**: 4-6s
+**Layout**: Centered — logo top, CTA button middle, tagline bottom
+**Animation**: Logo pop-in (snappy) → CTA button fade-up → tagline fade
+**Props**:
+- `channel?: string` — channel name
+- `cta?: string` — call-to-action text
+- `tagline?: string` — channel tagline
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Legacy only. Use EndScreen for all new videos.
+**Narration example**: "Brief sign-off — keep it short, no generic 'thanks for watching'"
+
+---
+
+### ParticleLightning
+**Location**: `src/shared/scenes/extended/ParticleLightning.tsx`
+**Purpose**: Electric lightning bolts striking across the screen with flash intensity
+**Duration**: 3-4s typical
+**Layout**: Full-screen dark background with procedurally generated lightning paths, optional text centered
+**Animation**: Lightning bolts fire every 40 frames with 5-frame flash bursts, random paths from top
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — centered display text
+**When to use**: Power/energy topics, electricity metaphors, dramatic emphasis, "lightning round" moments
+**Narration example**: "Hit them with energy — this is the electrifying part of the explanation"
+
+---
+
+### ProcessAnimation
+**Location**: `src/shared/scenes/ProcessAnimation.tsx`
+**Purpose**: Items animate through horizontal stages showing a process pipeline
+**Duration**: 8s minimum (stage stagger + item animation)
+**Layout**: Title top, stages arranged horizontally with connecting arrows, items move through stages
+**Animation**: Title fade → stages stagger in → arrows draw → items animate left to right through stages
+**Props**:
+- `title: string` — process title
+- `stages: { label: string; color?: string; icon?: string }[]` — process stages
+- `items?: { label: string; icon?: string }[]` — items that animate through the stages
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Manufacturing/build pipelines, data transformation chains, CI/CD, request processing
+**Narration example**: "Follow the item as it moves through each stage — build understanding sequentially"
+
+---
+
+### ProgressiveTerminal
+**Location**: `src/shared/scenes/ProgressiveTerminal.tsx`
+**Purpose**: Terminal-style progressive reveal of items inside a single card
+**Duration**: 6-10s (item stagger)
+**Layout**: Heading top, single large card with items appearing one by one inside it
+**Animation**: Heading fadeUpSlow → card scale-in → items stagger with fadeLeftSlow (14f delay)
+**Props**:
+- `heading: string` — terminal heading (max 6 words)
+- `items: { text: string; icon?: string; highlight?: string }[]` — items to reveal (max 6, each max 12 words)
+- `summary?: string` — optional summary after all items
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Listing capabilities that build on each other, sequential reveals, terminal-output aesthetic
+**Narration example**: "Highlight the 2-3 most interesting items — don't just read the list"
+
+---
+
+### QuoteCard
+**Location**: `src/shared/scenes/QuoteCard.tsx`
+**Purpose**: Glass morphism quote card with large quotation marks and attribution
+**Duration**: 4s minimum (glass card entrance + quote)
+**Layout**: Centered glass card with oversized quotation mark, quote text, and attribution below
+**Animation**: Quotation mark spring-in → glass card fades up → quote text appears → attribution fades
+**Props**:
+- `quote: string` — the quote text
+- `attribution?: string` — who said it
+- `cardStyle?: 'glass' | 'solid'` — card appearance (glass = frosted blur)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Expert quotes, famous sayings, key statements that deserve visual framing
+**Narration example**: "Let the quote land — pause briefly before and after reading it"
+
+---
+
+### RollerCountdown
+**Location**: `src/shared/scenes/extended/RollerCountdown.tsx`
+**Purpose**: Large number countdown with 3-phase state machine (counting, reveal, final word)
+**Duration**: 4-6s typical
+**Layout**: Centered large number that counts down, then reveals a final word
+**Animation**: Numbers count down with spring transitions → flash → final word appears with impact
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `targetNumber?: number` — countdown start number (default: 5)
+- `label?: string` — final word revealed after countdown (default: "LAUNCH")
+**When to use**: Countdowns, dramatic number reveals, "top N" list intros, slot-machine moments
+**Narration example**: "Build tension with the countdown — the final word is the payoff"
+
+---
+
+### SectionTitle
+**Location**: `src/shared/scenes/SectionTitle.tsx`
+**Purpose**: Chapter marker at the start of each section with numbered badge
+**Duration**: 3s minimum (badge pop-in + title)
+**Layout**: Centered with section number badge, title below, optional subtitle
+**Animation**: Badge pop-in → title fade-up → subtitle fade
+**Props**:
+- `sectionNumber: number` — section number for badge
+- `title: string` — section title (max 5 words)
+- `subtitle?: string` — section subtitle (max 10 words)
+- `entrance?: 'fadeUp' | 'slideLeft' | 'scaleBlur'` — entrance animation (alternate between these)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Start of every section (3-7 per video). Brief transition connecting previous section to what's next.
+**Narration example**: "Brief transition — connect previous section to what's coming next"
+
+---
+
+### ShapeHelix
+**Location**: `src/shared/scenes/extended/ShapeHelix.tsx`
+**Purpose**: DNA-style double helix rotation with 3D perspective
+**Duration**: 3-4s typical
+**Layout**: Centered rotating double helix with connected node pairs, text below
+**Animation**: Helix rotates continuously with nodes oscillating in 3D space
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — display text (default: "HELIX")
+- `color?: string` — helix color (default: BRAND.indigo)
+**When to use**: Biology/DNA topics, structural/scientific content, spiral/recursive concepts
+**Narration example**: "Connect the helix visual to the concept of intertwined or evolving ideas"
+
+---
+
+### ShapeHexGrid
+**Location**: `src/shared/scenes/extended/ShapeHexGrid.tsx`
+**Purpose**: Animated hexagonal grid with random highlight pulses
+**Duration**: 3-4s typical
+**Layout**: Full-screen hexagonal grid pattern with some cells highlighted, text centered
+**Animation**: Hexagons appear → random cells pulse with highlight color → text fades in
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — centered display text (default: "HEXAGONAL")
+- `highlightColor?: string` — pulse highlight color (default: BRAND.indigo)
+**When to use**: Network/mesh topics, data structures, distributed systems, honeycomb patterns
+**Narration example**: "Use the grid to represent interconnected nodes or distributed systems"
+
+---
+
+### SplitCodeComparison
+**Location**: `src/shared/scenes/SplitCodeComparison.tsx`
+**Purpose**: Side-by-side code comparison with VS divider (before/after code)
+**Duration**: 8s minimum (two code panels + VS divider)
+**Layout**: Optional heading top, two code panels side by side with VS divider
+**Animation**: Heading fade → left panel slides in → VS divider appears → right panel slides in
+**Props**:
+- `heading?: string` — comparison title
+- `left: { title: string; code: string; language?: string; highlightLines?: number[] }` — left code panel
+- `right: { title: string; code: string; language?: string; highlightLines?: number[] }` — right code panel
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Before/after code refactoring, comparing two implementations, showing migration changes
+**Narration example**: "Point out the key differences between the two versions — don't describe every line"
+
+---
+
+### StatHighlight
+**Location**: `src/shared/scenes/StatHighlight.tsx`
+**Purpose**: Big animated number with label and context, multiple emphasis and counter modes
+**Duration**: 4-6s (counter animation + label)
+**Layout**: Centered hero — large animated number with suffix/prefix, label below, context at bottom
+**Animation**: Number counts from 0 → target with spring scale → label fade-up → context fade
+**Props**:
+- `stat: number` — the number to display. **MUST be a raw number** (e.g., `stat: 82`, not `stat: "82%"`). Strings crash `interpolate()`.
+- `suffix?: string` — text after number ("%", "x", "ms", "K", "M")
+- `prefix?: string` — text before number ("$", "#")
+- `label: string` — metric label (max 6 words)
+- `context?: string` — supporting context (max 15 words)
+- `emphasis?: 'default' | 'glow' | 'gradient'` — visual emphasis style
+- `mode?: 'spring' | 'slot' | 'splitFlap'` — counter animation style (slot = slot machine, splitFlap = airport board)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Key statistics, percentages, performance numbers. Use `emphasis: 'glow'` for dramatic stats, `mode: 'splitFlap'` for retro feel.
+**Narration example**: "Build up to the number — frame why this stat should blow their mind"
+
+---
+
+### StepSequence
+**Location**: `src/shared/scenes/StepSequence.tsx`
+**Purpose**: Numbered steps with badges and optional descriptions for how-to content
+**Duration**: 8-12s (2s per step minimum)
+**Layout**: Heading top, steps stacked vertically with number badges
+**Animation**: Heading fade-up → steps stagger-in with badge pop-ins
+**Props**:
+- `heading: string` — sequence title
+- `steps: { title: string; description?: string }[]` — numbered steps (max 5)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Step-by-step processes, setup instructions, workflows, "how to" sequences
+**Narration example**: "Walk through steps in order — use connecting phrases, not just numbering"
+
+---
+
+### SummaryRecap
+**Location**: `src/shared/scenes/SummaryRecap.tsx`
+**Purpose**: Numbered recap of everything covered, one item per section
+**Duration**: 8-12s (item stagger)
+**Layout**: Heading top, numbered list stacked with badges
+**Animation**: Heading fade-up → items stagger-in with number badges
+**Props**:
+- `heading?: string` — recap title
+- `items: string[]` — recap items (one per section, each max 10 words)
+- `itemEntrance?: 'left' | 'scale' | 'fade'` — item entrance animation
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Near the end of the video, before the EndScreen. Rapid-fire recap of key points.
+**Narration example**: "Rapid-fire recap — hit the highlights from each section in order"
+
+---
+
+### SwipeReveal
+**Location**: `src/shared/scenes/SwipeReveal.tsx`
+**Purpose**: Swipe gesture animation — before text slides up, after text rises from below
+**Duration**: 4-6s (swipe transition at configurable frame)
+**Layout**: Centered text with optional label, before/after content swaps via vertical swipe
+**Animation**: Before text displays → at swipeAt frame, before slides up → after rises from below
+**Props**:
+- `before: string` — content shown before swipe
+- `after: string` — content revealed after swipe
+- `label?: string` — optional label above before text
+- `swipeAt?: number` — frame number when swipe begins (default: 45)
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Before/after reveals in short-form, myth-busting, expectation vs reality, surprising reveals
+**Narration example**: "Set up the expectation, then swipe to reveal the surprising truth"
+
+---
+
+### TextGlitch
+**Location**: `src/shared/scenes/extended/TextGlitch.tsx`
+**Purpose**: RGB channel glitch effect with scanlines and noise bars on large text
+**Duration**: 3-4s typical
+**Layout**: Centered large text (140px) with red/cyan channel separation layers, scanline overlay, random noise bars
+**Animation**: Text scales in → random glitch frames fire (15% probability) with RGB offset, skew, scanlines, and noise bars
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — display text (default: "GLITCH")
+**When to use**: Tech/hacker topics, error states, digital corruption themes, dramatic text reveals
+**Narration example**: "Something is broken or under attack — the glitch sells the drama"
+
+---
+
+### TextKinetic
+**Location**: `src/shared/scenes/extended/TextKinetic.tsx`
+**Purpose**: Kinetic typography — characters animate individually with staggered springs
+**Duration**: 3-5s typical
+**Layout**: Centered large text with each character animating independently
+**Animation**: Characters stagger in with individual spring animations, creating a wave-like typing feel
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — single text to animate character-by-character (default: "KINETIC")
+- `words?: string[]` — array of words (joined, then animated per-character)
+**When to use**: Impactful statements, narration highlights, key phrases that need visual punch
+**Narration example**: "Deliver the statement word by word — let each word land with the animation"
+
+---
+
+### ThemeCyberpunk
+**Location**: `src/shared/scenes/extended/ThemeCyberpunk.tsx`
+**Purpose**: Neon grid cyberpunk aesthetic with glowing title and subtitle
+**Duration**: 3-4s typical
+**Layout**: Dark background with neon grid lines, large glowing title centered, subtitle below
+**Animation**: Grid appears → title glows in with neon effect → subtitle fades in
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `title?: string` — main text (default: "CYBER")
+- `subtitle?: string` — subtitle text (default: "PUNK")
+**When to use**: Future/dystopian tech topics, cyberpunk fiction, dark web/hacking themes, neon-aesthetic openers
+**Narration example**: "Set a dystopian or futuristic tone — this is the dark side of tech"
+
+---
+
+### ThemeHolographic
+**Location**: `src/shared/scenes/extended/ThemeHolographic.tsx`
+**Purpose**: Holographic foil shimmer effect on text with rainbow gradient animation
+**Duration**: 3-4s typical
+**Layout**: Centered text with animated holographic/rainbow gradient overlay
+**Animation**: Text appears with sweeping holographic shimmer that moves across the surface
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — display text (default: "HOLOGRAM")
+**When to use**: Premium/futuristic reveals, shimmering section breaks, tech product announcements
+**Narration example**: "Reveal something special — the shimmer adds a premium, futuristic feel"
+
+---
+
+### ThemeRetro
+**Location**: `src/shared/scenes/extended/ThemeRetro.tsx`
+**Purpose**: 70s-80s CRT retro visual style with scanlines and warm color palette
+**Duration**: 3-4s typical
+**Layout**: Warm-toned background with CRT scanline overlay, retro-styled text centered, subtitle below
+**Animation**: CRT effect loads → text appears with retro styling → subtitle fades in
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — main text (default: "Vintage")
+- `subtitle?: string` — subtitle text (default: "Classic Style Never Dies")
+**When to use**: Tech history topics, retro nostalgia, "how it used to work" segments, throwback moments
+**Narration example**: "Take viewers back in time — set up the contrast with modern approaches"
+
+---
+
+### ThreeColumnCompare
+**Location**: `src/shared/scenes/ThreeColumnCompare.tsx`
+**Purpose**: Three-way comparison with colored cards side by side
+**Duration**: 8s minimum (three cards + items stagger)
+**Layout**: Heading top, three equal cards with gap between them
+**Animation**: Heading fade → cards stagger in → items stagger within each card
+**Props**:
+- `heading: string` — comparison title (max 6 words)
+- `columns: { title: string; icon?: string; items: string[]; color: string }[]` — exactly 3 columns (each: title max 3 words, max 4 items, each item max 8 words)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Comparing three approaches, tools, or categories. When ComparisonSplit's two columns aren't enough.
+**Narration example**: "Highlight what makes each option distinct — create a narrative arc across the three"
+
+---
+
+### TimelineScene
+**Location**: `src/shared/scenes/TimelineScene.tsx`
+**Purpose**: Horizontal or vertical timeline with progressively drawn line and node pop-ins
+**Duration**: 8s minimum (node pop-ins + line draw)
+**Layout**: Heading top, timeline centered with nodes connected by drawn line
+**Animation**: Nodes pop-in staggered with connecting lines drawing between them
+**Props**:
+- `heading: string` — timeline title
+- `nodes: { label: string; description?: string }[]` — timeline events (horizontal max 5, vertical max 6)
+- `layout?: 'horizontal' | 'vertical'` — timeline orientation
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Historical progressions, evolution of technology, step sequences over time, version histories
+**Narration example**: "Narrate the progression — what happens at each stage and why it matters"
+
+---
+
+### TitleIntro
+**Location**: `src/shared/scenes/TitleIntro.tsx`
+**Purpose**: Video title + learning objectives. Typically Scene 2.
+**Duration**: 6-8s (title + objectives stagger)
+**Layout**: Centered with title, underline divider, and objectives list
+**Animation**: Title fade-up → underline expand → objectives stagger-in
+**Props**:
+- `title: string` — video title (max 8 words)
+- `objectives: string[]` — learning objectives (2-4 items, each max 10 words, outcomes like "Understand X")
+- `entrance?: 'fadeUp' | 'scaleRotate' | 'splitReveal'` — entrance animation
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Immediately after the hook. Sets viewer expectations for the video.
+**Narration example**: "Set expectations — tease what's coming without listing objectives verbatim"
+
+---
+
+### TransitionFlash
+**Location**: `src/shared/scenes/extended/TransitionFlash.tsx`
+**Purpose**: White flash burst transition between two states with text
+**Duration**: 3-4s typical
+**Layout**: Three phases: before text → white flash → after state
+**Animation**: Phase 1 shows text → bright flash fills screen → phase 2 reveals new state
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `flashColor?: string` — flash color (default: white)
+- `text?: string` — text shown before flash (default: "BEFORE")
+**When to use**: High-impact moment between sections, dramatic reveals, "everything changes" transitions
+**Narration example**: "Use the flash as a dramatic beat — the moment everything shifts"
+
+---
+
+### UILoading
+**Location**: `src/shared/scenes/extended/UILoading.tsx`
+**Purpose**: Loading spinner, skeleton screens, and animated dots showing loading states
+**Duration**: 3-4s typical
+**Layout**: Centered loading animation with text label, multiple loading variants displayed
+**Animation**: Spinner rotates continuously, dots pulse in sequence, skeleton shimmer effect
+**Props**:
+- `startDelay?: number` — frames to delay animation start
+- `text?: string` — label text (default: "LOADING STATES")
+**When to use**: Loading state tutorials, async operation explanations, UX pattern discussions
+**Narration example**: "Show what the user sees while they wait — connect to the technical process behind it"
+
+---
+
+### VisualMetaphor
+**Location**: `src/shared/scenes/VisualMetaphor.tsx`
+**Purpose**: Large emoji/icon + analogy text for breaking complex concepts with relatable comparisons
+**Duration**: 5-8s (icon + heading + analogy stagger)
+**Layout**: Centered — icon on top, heading middle, analogy below
+**Animation**: Icon pop-in (snappy spring) → heading fade-up → analogy fade
+**Props**:
+- `icon: string` — single emoji
+- `heading: string` — concept name (max 5 words)
+- `analogy: string` — relatable comparison (max 25 words)
+- `iconEffect?: 'pop' | 'rotate' | 'bounce'` — icon entrance animation (rotate between these)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Breaking complex concepts with relatable analogies. Use after dense technical scenes for relief.
+**Narration example**: "Deliver the analogy with personality — make it funny and memorable"
+
+---
+
+### WarningCallout
+**Location**: `src/shared/scenes/WarningCallout.tsx`
+**Purpose**: Red/amber callout box for common mistakes, dangers, or security concerns
+**Duration**: 5-7s (heading + body animation)
+**Layout**: Centered with colored accent box
+**Animation**: Heading fade-up with subtle pulse → accent box scale-in with body text
+**Props**:
+- `heading: string` — warning title (max 6 words, should feel urgent)
+- `body: string` — warning details (max 30 words)
+- `severity?: 'warning' | 'danger'` — color intensity (danger = red for security/critical, warning = amber for common mistakes)
+- `sectionColor?: string`
+- `colors?: { bg: string; text: string; accent: string; muted: string }`
+- `fontFamily?: string`
+**When to use**: Common mistakes, pitfalls, security concerns, things to avoid, "don't do this" moments
+**Narration example**: "Deliver with urgency — this is the one thing they absolutely must remember"
+
+---
+
+## Transition Variety
+
 Plan 2-3 different transition types per video:
 - **fade** (15 frames) — default, most transitions
 - **slideLeft/slideRight** (20 frames) — after section titles or conceptual shifts
@@ -688,9 +1143,14 @@ Plan 2-3 different transition types per video:
 - **wipeRight** (18 frames) — after diagram/stat scenes
 - **clockWipe** (25 frames) — sparingly, for major section changes
 
-### Entrance Variety
+## Entrance Variety
+
 - HookQuestion: `fadeUp`, `blur`, or `scale` (never `typewriter` — too slow for hooks)
 - TitleIntro: `scaleRotate` or `splitReveal`
 - SectionTitle: alternate `fadeUp`, `slideLeft`, `scaleBlur`
 - VisualMetaphor: rotate `iconEffect` between `pop`, `rotate`, `bounce`
-- StatHighlight: use `glow` or `gradient` emphasis
+- StatHighlight: use `emphasis: 'glow'` or `'gradient'`, try `mode: 'splitFlap'` for retro
+- ColdOpen: vary between `glow`, `gradient`, `typewriter`
+- FullScreenText: vary between `scale`, `gradient`, `slam`
+
+> **Note**: `Thumbnail.tsx` is a special-purpose scene used by `/assets` for thumbnail generation, not for video content.

@@ -86,7 +86,7 @@ These scenes support vertical layout via `useLayoutMode()`:
 - DataChart (complex charts hard to read on mobile)
 
 ### Extended Scenes for Shorts
-For scroll-stopping visual enhancement (text effects, atmospheric backgrounds, emphasis moments), see [scene-library.md](scene-library.md). Useful for shorts: TextGlitch, TextKinetic (text effects), BackgroundBokeh, BackgroundWaves (atmosphere), CinematicSciFi (dramatic opens), TransitionFlash (impact moments).
+For scroll-stopping visual enhancement (text effects, atmospheric backgrounds, emphasis moments), see [educational-scenes.md](educational-scenes.md). Useful for shorts: TextGlitch, TextKinetic (text effects), BackgroundBokeh, BackgroundWaves (atmosphere), CinematicSciFi (dramatic opens), TransitionFlash (impact moments).
 
 ## Pacing Rules
 

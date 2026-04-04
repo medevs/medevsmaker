@@ -1,7 +1,8 @@
 ---
 name: script-critic
 description: "Read-only agent that reviews script.json for quality issues after /script generation."
-model: claude-sonnet-4-20250514
+model: haiku
+maxTurns: 10
 tools:
   - Read
   - Glob

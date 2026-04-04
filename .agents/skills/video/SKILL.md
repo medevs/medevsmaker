@@ -59,9 +59,15 @@ Full rules: [rules/hook-selection.md](rules/hook-selection.md)
 
 **Goal**: Convert the production brief into a concrete scene plan. **No durations** — durations come from narration in Phase 7.
 
-Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (35 educational scene catalog + selection priorities + sequencing)
+Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (complete 65-scene catalog, flat — no hierarchy, no tiers).
 
-For visual enhancement, backgrounds, text effects, transitions, cinematic opens, UI demos, and data animations, also consult [rules/scene-library.md](rules/scene-library.md) (30 extended scenes). When content demands cinematic impact or atmospheric visuals (opening hook that needs drama, section transition that needs polish, background that needs visual richness), blend in appropriate extended scenes.
+All 65 scenes are first-class choices. Pick based on what the content needs:
+- **Atmospheric/cinematic scenes** (CinematicSciFi, ThemeCyberpunk, ThemeHolographic, BackgroundBokeh) for openers and section transitions
+- **Visual effect scenes** (TextGlitch, TextKinetic, ParticleLightning, LiquidFluidWave, EffectMatrix) for emphasis moments
+- **Data scenes** (DataGauge, DataRanking, LayoutGiantNumber, RollerCountdown) alongside StatHighlight and DataChart
+- **Demo scenes** (DemoAddressBar, DemoTextInput, DemoScroll, DemoZoomFocus) for tutorial/UX content
+- **Never 2+ text-heavy scenes in a row** — insert a visual scene between them
+- **Every section needs at least one visually rich scene** with animation/movement
 
 For **short** (10-90s): flat TransitionSeries (3-8 scenes), single section, see [rules/short-form.md](rules/short-form.md).
 For **news** (1-4 min): flat TransitionSeries (5-15 scenes) or section-based (one per news item).
@@ -173,6 +179,8 @@ Triggered when the user runs `/video <VideoName>`. Reads script.json and generat
 
 **Goal**: Compute scene durations from narration word counts.
 
+**Agent dispatch**: Dispatch the `manifest-builder` agent (haiku) to compute durations and generate manifest.json. Provide it the path to the video directory.
+
 Full rules: [rules/duration-calculation.md](rules/duration-calculation.md)
 
 For each scene in script.json:
@@ -188,6 +196,8 @@ For each scene in script.json:
 ### PHASE 8: CODE GENERATION
 
 **Goal**: Generate clean, working Remotion code from the script + computed durations.
+
+**Agent dispatch**: Dispatch the `code-generator` agent (sonnet) to generate all Remotion files. Provide it the path to the video directory containing script.json and manifest.json.
 
 #### Output File Structure — Short-Form (type: "short")
 
@@ -256,7 +266,7 @@ All video types use shared building-block components from `src/shared/`:
 
 **Scene Templates** (`src/shared/scenes/`):
 - *Educational scenes* (flat `src/shared/scenes/SceneName`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram, QuoteCard, AnimatedDiagram, MetricDashboard, ProcessAnimation, SplitCodeComparison (35 scenes)
-- *Extended scenes* (`src/shared/scenes/extended/SceneName`): 30 curated scenes for visual enhancement — backgrounds, text effects, cinematic opens, data visualizations, UI demos, transitions. See [rules/scene-library.md](rules/scene-library.md) for complete catalog.
+- *Extended scenes* (`src/shared/scenes/extended/SceneName`): 30 scenes for visual enhancement — backgrounds, text effects, cinematic opens, data visualizations, UI demos, transitions. All documented in [rules/educational-scenes.md](rules/educational-scenes.md).
 
 Import format for extended scenes:
 ```tsx
@@ -307,6 +317,8 @@ export const TIMING = {
 ### PHASE 9: MANIFEST + TRANSCRIPT GENERATION
 
 **Goal**: Output manifest.json (for voiceover pipeline) and transcript.json (pre-populated with narration from script).
+
+**Agent dispatch**: Dispatch the `transcript-populator` agent (haiku) to generate transcript.json from script.json + manifest.json.
 
 #### manifest.json
 
@@ -500,7 +512,36 @@ Use `<AbsoluteFill>` + flexbox for layout (not manual `position: absolute`) beca
 - Vary transitions: import presets from `src/shared/transitions.ts` — use `flip` for dramatic changes, light leak overlays for major section breaks (1-2 per video max)
 - `DataChart` variants: `"bars"` (default), `"pie"`/`"donut"` for proportions, `"line"` for trends, `"gauge"` for single metrics
 - `DiagramArrow curved` prop for organic-feeling flow diagrams
-- Scene constraints: see `educational-scenes.md` for selection priorities and sequencing rules
+- Scene constraints: see `educational-scenes.md` for the full 65-scene catalog and sequencing rules
+
+### Rich Props Usage (IMPORTANT)
+- **StatHighlight**: ALWAYS set `emphasis: 'glow'` or `'gradient'` and `mode: 'splitFlap'` or `'slot'` — never use bare defaults
+- **Background**: VARY per section — use `aurora` for openers, `noiseField` for technical, `perspectiveGrid` for retro/tech, `bokeh` for atmospheric
+- **CinematicOverlay**: ADD `filmGrain` or `vignette` overlay on at least 1-2 sections for production polish
+- **DramaticCounter**: use `mode: 'splitFlap'` or `'slot'` for stat reveals
+- **Entrance animations**: VARY — don't default to `fadeUp` for everything. Use `scaleRotate`, `blurFade`, `zoomBlur`, `dropBounce`, `slideAndFade`
+- **SectionTitle**: use `entrance` variants — `'neon'`, `'scaleBlur'`, `'slideLeft'`
+- **HookQuestion**: use `entrance: 'scale'` or `'blur'` for drama
+
+### Visual Layering (IMPORTANT)
+- Layer Background component with dynamic variants behind every section — no section should have a plain flat background
+- Add ParticleField or BackgroundBokeh behind text-heavy scenes to compensate for visual simplicity
+- Use CinematicOverlay (filmGrain, scanlines, vignette) on themed/cinematic sections
+- Use PerspectiveGrid for retro/tech-themed sections
+- Combine extended scenes as atmospheric backgrounds with educational scenes as content overlays
+
+### remotion-bits Building Blocks
+Import from `src/shared/components/bits/` for enhanced animation primitives:
+- **AnimatedText** (bits version): word/char/line split animations, glitch text effects, text cycling
+- **TypeWriter**: terminal typing with error simulation, variable speed, cursor blink
+- **StaggeredMotion**: wrap child elements for coordinated staggered entrance animations
+- **ParticleSystem** (Particles, Spawner, Behavior): declarative physics-based particle backgrounds (gravity, drag, wiggle)
+- **GradientTransition**: smooth gradient interpolation between scenes using perceptual color space
+- **AnimatedCounter**: keyframe-animated number counters with hold frames
+- **Scene3D**: 3D perspective scenes, carousels, Ken Burns zooms
+- **CodeBlock** (bits version): syntax-highlighted code with line-by-line reveal, focus regions
+
+Import pattern: `import { AnimatedText } from "../../../shared/components/bits/AnimatedText";`
 
 ## Reference Files
 
@@ -509,8 +550,7 @@ Use `<AbsoluteFill>` + flexbox for layout (not manual `position: absolute`) beca
 - [rules/hook-selection.md](rules/hook-selection.md) — Phase 3: youtube hook frameworks, variant selection
 - [rules/video-types.md](rules/video-types.md) — 3 active video types (news, explainer, tutorial) with defaults, scenes, rules, palettes
 - [rules/audience-profile.md](rules/audience-profile.md) — Target audience, tone rules, retention engineering
-- [rules/educational-scenes.md](rules/educational-scenes.md) — Educational scene catalog (35 types), selection priorities, sequencing
-- [rules/scene-library.md](rules/scene-library.md) — Extended visual scene library (30 scenes), when to use, quick reference by video type
+- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete 64-scene catalog (A-Z), selection rules, visual variety guidance
 - [rules/narration-writing.md](rules/narration-writing.md) — Narration writing, source attribution, retention patterns
 - [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for explainer/tutorial videos
 - [rules/duration-calculation.md](rules/duration-calculation.md) — Duration calculation from narration
