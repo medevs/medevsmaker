@@ -21,6 +21,7 @@ type FileTreeProps = {
   stagger?: number;
   sectionColor?: string;
   fontFamily?: string;
+  fontScale?: number;
 };
 
 const FOLDER_ICON = "\uD83D\uDCC1";
@@ -32,6 +33,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
   stagger = SCENE_DEFAULTS.staggerDelaySlow,
   sectionColor = BRAND.indigo,
   fontFamily,
+  fontScale = 1,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -41,7 +43,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: baseTokens.spacing.xs,
+        gap: baseTokens.spacing.md,
         fontFamily: fontFamily || MONO.fontFamily,
       }}
     >
@@ -75,17 +77,17 @@ export const FileTree: React.FC<FileTreeProps> = ({
               alignItems: "center",
               gap: 10,
               paddingLeft: indentPx,
-              fontSize: baseTokens.fontSizes.xs,
+              fontSize: Math.round(baseTokens.fontSizes.sm * fontScale),
               lineHeight: TYPOGRAPHY.lineHeights.relaxed,
             }}
           >
             {/* Tree lines */}
             {item.indent > 0 && (
-              <span style={{ color: BRAND.border, fontSize: baseTokens.fontSizes.xs }}>
+              <span style={{ color: BRAND.border, fontSize: Math.round(baseTokens.fontSizes.sm * fontScale) }}>
                 {"│ ".repeat(item.indent - 1)}├─
               </span>
             )}
-            <span style={{ fontSize: baseTokens.fontSizes.xs }}>{icon}</span>
+            <span style={{ fontSize: Math.round(baseTokens.fontSizes.sm * fontScale) }}>{icon}</span>
             <span
               style={{
                 color: itemColor,

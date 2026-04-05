@@ -6,7 +6,8 @@ import { FiveAiToolsDevsSleepingOn } from "./videos/FiveAiToolsDevsSleepingOn";
 import { ClaudeCodeMastery } from "./videos/ClaudeCodeMastery";
 import { ClaudeCodeLeak } from "./videos/ClaudeCodeLeak";
 import { ObsidianSecondBrain } from "./videos/ObsidianSecondBrain";
-import { OpenClawBan } from "./videos/OpenClawBan";
+import { ObsidianClaudeSecondBrain } from "./videos/ObsidianClaudeSecondBrain";
+
 
 export const Root: React.FC = () => {
   return (
@@ -65,9 +66,9 @@ export const Root: React.FC = () => {
         height={1080}
       />
       <Composition
-        id="OpenClawBan"
-        component={OpenClawBan}
-        durationInFrames={11185}
+        id="ObsidianClaudeSecondBrain"
+        component={ObsidianClaudeSecondBrain}
+        durationInFrames={24336}
         fps={30}
         width={1920}
         height={1080}

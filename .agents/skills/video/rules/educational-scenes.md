@@ -1039,3 +1039,25 @@ Plan 2-3 different transition types per video:
 - FullScreenText: vary between `scale`, `gradient`, `slam`
 
 > **Note**: `Thumbnail.tsx` is a special-purpose scene used by `/assets` for thumbnail generation, not for video content.
+
+## Component Quality Standards
+
+### Minimum Font Sizes (at 1080p, before fontScale)
+- **Body text**: >= 24px (`baseTokens.fontSizes.sm` or larger)
+- **Headings**: >= 40px (`baseTokens.fontSizes.lg` or larger)
+- **Labels/annotations**: >= 20px (`baseTokens.fontSizes.xs`)
+- **Always multiply by `fontScale`** from `useLayoutMode()` for responsive sizing
+- **Never pass raw text as `{children}` to Card** — wrap in a styled div with explicit `fontSize`, `color`, and `lineHeight`
+
+### Layout Requirements
+- All `AbsoluteFill` containers holding content **must** have `display: "flex"` and `flexDirection: "column"` — without these, gap and alignment properties are ignored
+- Multi-word kinetic/animated text must preserve spaces and scale font size based on character count to prevent overflow
+
+### Z-Index Discipline
+- SVG overlay layers (connection lines, decorative paths): `zIndex: 1`
+- Card/node elements rendered on top of lines: `zIndex: 2`
+- Heading/decorative elements: no z-index needed (natural stacking order)
+
+### Scene Entrance Opacity
+- Scenes using `SceneBackground` get a built-in 3-frame fade-in that prevents transition bleed during TransitionSeries premounting
+- Scenes NOT using SceneBackground must add their own 3-frame opacity guard: `interpolate(frame, [0, 3], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })` on their outer AbsoluteFill

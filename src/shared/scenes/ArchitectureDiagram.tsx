@@ -97,6 +97,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
           width,
           height,
           pointerEvents: "none",
+          zIndex: 1,
         }}
       >
         {satellites.map((_, i) => {
@@ -140,6 +141,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
           left: cx - 140,
           top: cy - 70,
           width: 280,
+          zIndex: 2,
           opacity: centerOpacity,
           transform: `scale(${centerScale})`,
         }}
@@ -218,6 +220,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
               left: sx - 120,
               top: sy - 50,
               width: 240,
+              zIndex: 2,
               opacity: satOpacity,
               transform: `scale(${satScale})`,
             }}

@@ -418,6 +418,9 @@ The `narration` field is **pre-populated** from script.json — no need for a se
 - [ ] `<Series>` for chaining sections in explainer/tutorial videos
 - [ ] `<Sequence>` with `premountFor` for element timing within scenes
 - [ ] `extrapolateRight: 'clamp'` on all interpolations
+- [ ] Scenes using SceneBackground get transition-bleed protection automatically; scenes without it must add a 3-frame opacity guard
+- [ ] Card `{children}` must be wrapped in a styled div with explicit `fontSize >= 24px` — never pass raw text
+- [ ] `AbsoluteFill` containers must include `display: "flex"` and `flexDirection: "column"` for layout
 - [ ] Fonts loaded via `@remotion/google-fonts`
 - [ ] `type` declarations for props (not `interface`)
 - [ ] `durationInFrames = seconds * fps` calculated from narration-derived durations

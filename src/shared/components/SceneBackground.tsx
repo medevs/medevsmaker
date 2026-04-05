@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
 import { GridPattern } from "./GridPattern";
 import { BRAND } from "../styles";
 
@@ -29,8 +29,11 @@ export const SceneBackground: React.FC<SceneBackgroundProps> = ({
   gridOpacity = 0.4,
   children,
 }) => {
+  const frame = useCurrentFrame();
+  const sceneEntrance = interpolate(frame, [0, 3], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
   return (
-    <AbsoluteFill style={{ backgroundColor: bg }}>
+    <AbsoluteFill style={{ backgroundColor: bg, opacity: sceneEntrance }}>
       {gridOpacity > 0 && (
         <GridPattern
           variant="lines"

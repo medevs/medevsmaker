@@ -49,6 +49,8 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
     <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
+        display: "flex",
+        flexDirection: "column",
         padding: contentPadding,
         gap: 32,
       }}
@@ -79,6 +81,7 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
             items={items}
             delay={SCENE_DEFAULTS.elementEntry}
             sectionColor={sectionColor}
+            fontScale={fontScale}
           />
         </div>
 

@@ -29,11 +29,13 @@ export const DataGauge = ({
   const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
   const accent = sectionColor || colors.accent;
 
+  const sceneEntrance = interpolate(frame, [0, 3], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
   const progress = interpolate(frame, [startDelay, startDelay + 50], [0, value / maxValue], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   const angle = -135 + progress * 270; // -135度から+135度
 
   return (
-    <AbsoluteFill style={{ background: colors.bg }}>
+    <AbsoluteFill style={{ background: colors.bg, opacity: sceneEntrance }}>
       <div
         style={{
           position: "absolute",

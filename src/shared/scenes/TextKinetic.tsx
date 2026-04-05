@@ -3,6 +3,7 @@
  */
 
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, Easing, interpolate, spring } from "remotion";
+
 import { loadFont } from "@remotion/google-fonts/Inter";
 import { BRAND, DEFAULT_SCENE_COLORS, type SceneColors, baseTokens } from "../styles";
 import { useLayoutMode } from "../formats";
@@ -29,11 +30,13 @@ export const TextKinetic = ({
   const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
   const accent = sectionColor || colors.accent;
 
-  const displayText = words ? words.join("") : text;
+  const sceneEntrance = interpolate(frame, [0, 3], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
+  const displayText = words ? words.join(" ") : text;
   const chars = displayText.split("");
 
   return (
-    <AbsoluteFill style={{ background: colors.bg }}>
+    <AbsoluteFill style={{ background: colors.bg, opacity: sceneEntrance }}>
       <div
         style={{
           position: "absolute",
@@ -41,6 +44,8 @@ export const TextKinetic = ({
           top: "50%",
           transform: "translate(-50%, -50%)",
           display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
           gap: 8,
         }}
       >
@@ -60,7 +65,7 @@ export const TextKinetic = ({
               key={`kinetic-${i}-${char}`}
               style={{
                 fontFamily,
-                fontSize: Math.round(120 * fontScale),
+                fontSize: Math.round((chars.length > 30 ? 48 : chars.length > 15 ? 72 : 120) * fontScale),
                 fontWeight: 800,
                 color: colors.text,
                 display: "inline-block",

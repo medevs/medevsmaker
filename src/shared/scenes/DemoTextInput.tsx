@@ -32,6 +32,7 @@ export const DemoTextInput = ({ placeholder = "Email Address", typedText, label 
   // カーソル点滅
   const colors = { ...DEFAULT_SCENE_COLORS, ...colorsProp };
   const accent = sectionColor || colors.accent;
+  const sceneEntrance = interpolate(frame, [0, 3], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const cursorVisible = Math.floor(frame / 15) % 2 === 0;
 
   // 入力フィールドフォーカス
@@ -39,7 +40,7 @@ export const DemoTextInput = ({ placeholder = "Email Address", typedText, label 
   const field2Focused = frame >= typing2Start;
 
   return (
-    <AbsoluteFill style={{ background: colors.bg }}>
+    <AbsoluteFill style={{ background: colors.bg, opacity: sceneEntrance }}>
       {/* フォームコンテナ */}
       <div
         style={{

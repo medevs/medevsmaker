@@ -72,7 +72,15 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
           delay={12}
           fontFamily={fontFamily}
         >
-          {body}
+          <div style={{
+            fontFamily,
+            fontSize: Math.round(28 * fontScale),
+            fontWeight: 500,
+            color: colors.text,
+            lineHeight: TYPOGRAPHY.lineHeights.relaxed,
+          }}>
+            {body}
+          </div>
         </Card>
       </div>
     </AbsoluteFill>
