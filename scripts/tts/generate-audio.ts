@@ -32,6 +32,7 @@ const VOICE_ID_ENV: Record<string, { envVar: string; fallback: string }> = {
   "elevenlabs": { envVar: "ELEVENLABS_VOICE_ID", fallback: "" },
   "cartesia": { envVar: "CARTESIA_VOICE_ID", fallback: "" },
   "edge-tts": { envVar: "EDGE_TTS_VOICE", fallback: "en-US-AndrewNeural" },
+  "kokoro": { envVar: "KOKORO_VOICE", fallback: "af_heart" },
 };
 
 // ─── Per-scene diagnostics ───────────────────────────────────
