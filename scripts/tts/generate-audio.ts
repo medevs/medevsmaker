@@ -11,7 +11,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { createProvider } from "./providers/index.ts";
-import { getAudioDuration, buildVoiceoverScenes, computeFrameOffsets, wordTimestampsToCaptions, syncTimings } from "./utils.ts";
+import { getAudioDuration, buildVoiceoverScenes, computeFrameOffsets, wordTimestampsToCaptions, syncTimings, syncSectionFiles } from "./utils.ts";
 import type { VideoManifest, Transcript, VoiceoverScene, WordTimestamp } from "./types.ts";
 import type { CaptionEntry } from "./utils.ts";
 
@@ -193,7 +193,14 @@ async function main() {
       for (const line of report) console.log(line);
       console.log(`  manifest.json updated.`);
     } else {
-      console.log(`\n  Auto-sync: no adjustments needed.`);
+      console.log(`\n  Auto-sync: no duration adjustments needed.`);
+    }
+
+    // Always sync source files to match manifest (catches prior unsynced runs too)
+    const { updatedFiles, report: fileReport } = syncSectionFiles(manifest, rootDir);
+    if (updatedFiles.length > 0) {
+      console.log(`  Source files synced:`);
+      for (const line of fileReport) console.log(`    ${line}`);
     }
   }
 

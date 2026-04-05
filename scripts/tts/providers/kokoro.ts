@@ -65,7 +65,7 @@ export class KokoroProvider implements TTSProvider {
     const wavPath = join(tmpDir, "audio.wav");
     const mp3Path = join(tmpDir, "audio.mp3");
 
-    audio.save(wavPath);
+    await audio.save(wavPath);
 
     execSync(`ffmpeg -y -i "${wavPath}" -b:a 128k "${mp3Path}"`, {
       stdio: "pipe",
