@@ -6,7 +6,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { GradientText } from "../components/GradientText";
 import { useLayoutMode } from "../formats";
@@ -151,7 +151,7 @@ export const KeyTakeaway: React.FC<KeyTakeawayProps> = ({
               fontSize: Math.round(44 * fontScale),
               fontWeight: 800,
               textAlign: "center",
-              lineHeight: 1.3,
+              lineHeight: TYPOGRAPHY.lineHeights.normal,
             }}
           >
             {renderInsightText()}
@@ -283,7 +283,7 @@ export const KeyTakeaway: React.FC<KeyTakeawayProps> = ({
                 fontSize: Math.round(32 * fontScale),
                 fontWeight: 600,
                 color: colors.text,
-                lineHeight: 1.6,
+                lineHeight: TYPOGRAPHY.lineHeights.relaxed,
               }}
             >
               {takeaway}

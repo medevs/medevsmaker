@@ -114,14 +114,13 @@ src/
   index.ts                          # registerRoot entry point
   Root.tsx                          # Composition registry (all videos)
   shared/
-    styles.ts                       # baseTokens, BRAND, SECTION_THEMES, CARD, MONO
+    styles.ts                       # baseTokens, BRAND, SECTION_THEMES, CARD, MONO, TYPOGRAPHY, CONTAINERS, SCENE_TIERS
     animations.ts                   # EASINGS, entrances, pulse, float, shimmer, breathe
-    transitions.ts                  # TRANSITIONS presets (fade, slide, wipe, clockWipe, shortFade)
+    transitions.ts                  # TRANSITIONS presets (fade, slide, wipe, clockWipe, shortFade), flashOverlay()
     formats.ts                      # FORMAT_PRESETS, SAFE_ZONES, useLayoutMode() hook
     utils/                          # blobUtils (SVG blob path generation)
-    components/                     # Core components (Background, StatCounter, TextEffect, etc.)
-    scenes/                         # 35 educational scenes (HookQuestion, TitleIntro, CodeDisplay, etc.)
-      extended/                     # 30 extended scenes (flat directory, no subdirs)
+    components/                     # Core components (Background, Card, StatCounter, TextEffect, GradientText, etc.)
+    scenes/                         # All scenes flat (HookQuestion, TitleIntro, CodeDisplay, TextGlitch, CinematicSciFi, etc.)
   videos/<VideoName>/               # Per-video: index.tsx, script.json, manifest.json, styles.ts, music.ts
 
 .agents/skills/video/               # Powers /script (6 phases) and /video (3 phases)
@@ -141,7 +140,7 @@ public/thumbnails/<VideoName>/      # AI-generated thumbnails (requires Replicat
 - Always `extrapolateRight: 'clamp'` on interpolations
 - `<AbsoluteFill>` + flexbox for layout, fonts via `@remotion/google-fonts`
 - `<TransitionSeries>` for scenes within sections, `<Series>` for chaining sections
-- Import shared scenes from `src/shared/scenes/`, extended from `src/shared/scenes/extended/`
+- Import all shared scenes from `src/shared/scenes/` (flat directory, no extended/ subdirectory)
 - Script-first pipeline: narration drives scene durations (155 WPM long-form, 170 WPM short-form)
 - `/video` outputs `manifest.json` + `transcript.json` (pre-populated from script.json)
 - Voiceover via `VoiceoverLayer`, music via `BreathingMusicLayer`

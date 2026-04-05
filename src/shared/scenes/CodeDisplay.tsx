@@ -6,10 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { CodeBlock } from "../components/CodeBlock";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { Card } from "../components/Card";
 import { useLayoutMode } from "../formats";
 
 type Annotation = {
@@ -127,19 +127,19 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
 
               if (layout === "annotated") {
                 return (
-                  <ColorBorderCard
+                  <Card variant="border"
                     key={i}
                     color={effectiveAccent}
                     delay={annDelay}
-                    variant="compact"
+                    size="sm"
                     fontFamily={fontFamily}
                   >
                     <div
                       style={{
                         fontFamily,
-                        fontSize: 20,
+                        fontSize: Math.round(20 * fontScale),
                         color: colors.muted,
-                        lineHeight: 1.4,
+                        lineHeight: TYPOGRAPHY.lineHeights.normal,
                       }}
                     >
                       <span style={{ color: effectiveAccent, fontWeight: 700 }}>
@@ -147,7 +147,7 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
                       </span>{" "}
                       {ann.text}
                     </div>
-                  </ColorBorderCard>
+                  </Card>
                 );
               }
 
@@ -158,11 +158,11 @@ export const CodeDisplay: React.FC<CodeDisplayProps> = ({
                     opacity: annOpacity,
                     transform: `translateX(${annX}px)`,
                     fontFamily,
-                    fontSize: 20,
+                    fontSize: Math.round(20 * fontScale),
                     color: colors.muted,
                     paddingLeft: 12,
                     borderLeft: `2px solid ${effectiveAccent}44`,
-                    lineHeight: 1.4,
+                    lineHeight: TYPOGRAPHY.lineHeights.normal,
                   }}
                 >
                   <span style={{ color: effectiveAccent, fontWeight: 700 }}>

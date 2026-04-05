@@ -6,11 +6,12 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { SectionBadge } from "../components/SectionBadge";
-import { NeonText } from "../components/NeonText";
+import { TextEffect } from "../components/TextEffect";
 import { entrances } from "../animations";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type SectionTitleEntrance = "fadeUp" | "slideLeft" | "scaleBlur" | "neon";
 
@@ -39,6 +40,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const titleP = spring({
     frame: frame - 8,
@@ -54,7 +56,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
 
   if (entrance === "neon") {
     titleContent = (
-      <NeonText text={title} color={colors.accent} fontSize={56} fontFamily={fontFamily} />
+      <TextEffect effect="neon" text={title} color={colors.accent} fontSize={Math.round(56 * fontScale)} fontFamily={fontFamily} />
     );
   } else if (entrance === "slideLeft") {
     const s = entrances.fadeLeft(clampedP);
@@ -83,11 +85,11 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
         style={{
           ...titleStyle,
           fontFamily,
-          fontSize: 56,
+          fontSize: Math.round(56 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
-          lineHeight: 1.15,
+          lineHeight: TYPOGRAPHY.lineHeights.tight,
           marginTop: 8,
         }}
       >
@@ -112,7 +114,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
         style={{
           justifyContent: "center",
           alignItems: "center",
-          padding: 80,
+          padding: contentPadding,
           gap: 24,
         }}
       >
@@ -123,7 +125,7 @@ export const SectionTitle: React.FC<SectionTitleProps> = ({
             style={{
               opacity: subOpacity,
               fontFamily,
-              fontSize: 26,
+              fontSize: Math.round(26 * fontScale),
               color: colors.muted,
               textAlign: "center",
             }}

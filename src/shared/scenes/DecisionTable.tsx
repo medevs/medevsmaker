@@ -6,10 +6,11 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { Card } from "../components/Card";
 import { PillBadge } from "../components/PillBadge";
+import { useLayoutMode } from "../formats";
 
 type DecisionRow = {
   icon?: string;
@@ -35,6 +36,7 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({
     frame,
@@ -49,7 +51,7 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
     <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        padding: 80,
+        padding: contentPadding,
         gap: 32,
       }}
     >
@@ -57,7 +59,7 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
         style={{
           opacity: headOpacity,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
@@ -82,11 +84,11 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
             i * SCENE_DEFAULTS.staggerDelaySlow;
 
           return (
-            <ColorBorderCard
+            <Card variant="border"
               key={i}
               color={row.answerColor || sectionColor}
               delay={rowDelay}
-              variant="compact"
+              size="sm"
               fontFamily={fontFamily}
             >
               <div
@@ -106,14 +108,14 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
                   }}
                 >
                   {row.icon && (
-                    <span style={{ fontSize: 22 }}>{row.icon}</span>
+                    <span style={{ fontSize: Math.round(22 * fontScale) }}>{row.icon}</span>
                   )}
                   <span
                     style={{
                       fontFamily,
-                      fontSize: 24,
+                      fontSize: Math.round(24 * fontScale),
                       color: colors.text,
-                      lineHeight: 1.4,
+                      lineHeight: TYPOGRAPHY.lineHeights.normal,
                     }}
                   >
                     {row.question}
@@ -125,7 +127,7 @@ export const DecisionTable: React.FC<DecisionTableProps> = ({
                   delay={rowDelay + 8}
                 />
               </div>
-            </ColorBorderCard>
+            </Card>
           );
         })}
       </div>

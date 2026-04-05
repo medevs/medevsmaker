@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
+import { Card } from "../components/Card";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type ArchNode = {
   label: string;
@@ -35,7 +36,8 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
   fontFamily = "Inter",
 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width, height } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({
     frame,
@@ -59,9 +61,9 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
     extrapolateRight: "clamp",
   });
 
-  // Layout: center at 960,540 (adjusted for heading), satellites in a circle
-  const cx = 960;
-  const cy = 560;
+  // Layout: center dynamically based on video dimensions
+  const cx = width / 2;
+  const cy = Math.round(height * 0.52);
   const radius = 300;
   const centerColor = center.color || sectionColor;
 
@@ -77,7 +79,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
           right: 80,
           opacity: headOpacity,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
@@ -92,8 +94,8 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
           position: "absolute",
           top: 0,
           left: 0,
-          width: 1920,
-          height: 1080,
+          width,
+          height,
           pointerEvents: "none",
         }}
       >
@@ -142,7 +144,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
           transform: `scale(${centerScale})`,
         }}
       >
-        <ColorBorderCard
+        <Card variant="border"
           color={centerColor}
           glow
           fontFamily={fontFamily}
@@ -157,12 +159,12 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
             }}
           >
             {center.icon && (
-              <span style={{ fontSize: 28 }}>{center.icon}</span>
+              <span style={{ fontSize: Math.round(28 * fontScale) }}>{center.icon}</span>
             )}
             <span
               style={{
                 fontFamily,
-                fontSize: 22,
+                fontSize: Math.round(22 * fontScale),
                 fontWeight: 700,
                 color: colors.text,
               }}
@@ -173,7 +175,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
               <span
                 style={{
                   fontFamily,
-                  fontSize: 20,
+                  fontSize: Math.round(20 * fontScale),
                   color: colors.muted,
                 }}
               >
@@ -181,7 +183,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
               </span>
             )}
           </div>
-        </ColorBorderCard>
+        </Card>
       </div>
 
       {/* Satellite nodes */}
@@ -220,9 +222,9 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
               transform: `scale(${satScale})`,
             }}
           >
-            <ColorBorderCard
+            <Card variant="border"
               color={satColor}
-              variant="compact"
+              size="sm"
               fontFamily={fontFamily}
             >
               <div
@@ -235,12 +237,12 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
                 }}
               >
                 {sat.icon && (
-                  <span style={{ fontSize: 22 }}>{sat.icon}</span>
+                  <span style={{ fontSize: Math.round(22 * fontScale) }}>{sat.icon}</span>
                 )}
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 20,
+                    fontSize: Math.round(20 * fontScale),
                     fontWeight: 600,
                     color: colors.text,
                   }}
@@ -251,7 +253,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
                   <span
                     style={{
                       fontFamily,
-                      fontSize: 20,
+                      fontSize: Math.round(20 * fontScale),
                       color: colors.muted,
                     }}
                   >
@@ -259,7 +261,7 @@ export const ArchitectureDiagram: React.FC<ArchitectureDiagramProps> = ({
                   </span>
                 )}
               </div>
-            </ColorBorderCard>
+            </Card>
           </div>
         );
       })}

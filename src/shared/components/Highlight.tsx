@@ -1,5 +1,5 @@
 import React from "react";
-import { BRAND } from "../styles";
+import { BRAND, baseTokens } from "../styles";
 import { loadFont } from "@remotion/google-fonts/Inter";
 
 const { fontFamily } = loadFont();
@@ -25,7 +25,7 @@ export const Highlight: React.FC<HighlightProps> = ({
       width,
       height,
       border: `2px solid ${color}`,
-      borderRadius: 8,
+      borderRadius: baseTokens.borderRadius.sm,
       opacity: progress,
       transform: `scale(${progress})`,
       boxShadow: `0 0 20px ${color}40`,
@@ -38,7 +38,7 @@ export const Highlight: React.FC<HighlightProps> = ({
           top: -30,
           left: 0,
           fontFamily,
-          fontSize: 20,
+          fontSize: baseTokens.fontSizes.xs,
           color,
           fontWeight: 600,
           whiteSpace: "nowrap",

@@ -6,7 +6,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
 import { useLayoutMode } from "../formats";
 import { SceneBackground } from "../components/SceneBackground";
 
@@ -132,7 +132,7 @@ export const SwipeReveal: React.FC<SwipeRevealProps> = ({
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
-          lineHeight: 1.2,
+          lineHeight: TYPOGRAPHY.lineHeights.tight,
           maxWidth: isVertical ? 900 : 1200,
           padding: "0 40px",
         }}
@@ -151,7 +151,7 @@ export const SwipeReveal: React.FC<SwipeRevealProps> = ({
           fontWeight: 800,
           color: colors.accent,
           textAlign: "center",
-          lineHeight: 1.2,
+          lineHeight: TYPOGRAPHY.lineHeights.tight,
           maxWidth: isVertical ? 900 : 1200,
           padding: "0 40px",
           textShadow: SHADOWS.glow(colors.accent),
@@ -168,7 +168,7 @@ export const SwipeReveal: React.FC<SwipeRevealProps> = ({
             bottom: isVertical ? 400 : 100,
             opacity: interpolate(frame % 60, [0, 30, 60], [0.3, 0.6, 0.3]),
             fontFamily,
-            fontSize: 20,
+            fontSize: Math.round(20 * fontScale),
             color: colors.muted,
             textTransform: "uppercase",
             letterSpacing: 2,

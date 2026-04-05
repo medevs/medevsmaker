@@ -10,6 +10,8 @@ export const baseTokens = {
     lg: 48,
     xl: 64,
     xxl: 80,
+    display: 100,
+    hero: 140,
   },
   spacing: {
     xs: 8,
@@ -194,6 +196,57 @@ export const GLASS = {
  * Scene background alternation — creates visual rhythm by alternating
  * dark/light backgrounds on odd/even scene indices.
  */
+/**
+ * Typography tokens — line heights for consistent text rhythm.
+ */
+export const TYPOGRAPHY = {
+  lineHeights: {
+    tight: 1.2,    // Headings, hero text
+    normal: 1.4,   // Body text, bullets
+    relaxed: 1.6,  // Long-form, quotes, code
+  },
+} as const;
+
+/**
+ * Container width constraints — for consistent content sizing.
+ */
+export const CONTAINERS = {
+  widths: {
+    sm: 600,       // Single-column cards, quotes
+    md: 800,       // Medium content blocks
+    lg: 1000,      // Standard content area
+    xl: 1200,      // Wide layouts
+    full: 1600,    // Near full-frame
+  },
+} as const;
+
+/**
+ * Scene tier presets — define sizing rules per scene role.
+ * Used by the code-generator to pick tier-appropriate defaults.
+ */
+export const SCENE_TIERS = {
+  hero: {
+    titleSize: { min: 64, default: 80, max: 140 },
+    bodySize: { min: 24, default: 28, max: 36 },
+    minFillPercent: 60,
+  },
+  content: {
+    titleSize: { min: 36, default: 48, max: 64 },
+    bodySize: { min: 20, default: 24, max: 32 },
+    minFillPercent: 70,
+  },
+  detail: {
+    titleSize: { min: 24, default: 36, max: 48 },
+    bodySize: { min: 16, default: 20, max: 24 },
+    minFillPercent: 80,
+  },
+  accent: {
+    titleSize: { min: 36, default: 48, max: 80 },
+    bodySize: { min: 20, default: 24, max: 32 },
+    minFillPercent: 50,
+  },
+} as const;
+
 export const SCENE_ALTERNATION = {
   dark: BRAND.bg,
   light: "#0d0d0d",

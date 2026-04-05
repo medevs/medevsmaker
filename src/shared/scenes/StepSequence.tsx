@@ -6,10 +6,11 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { SectionBadge } from "../components/SectionBadge";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { Card } from "../components/Card";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type Step = {
   title: string;
@@ -44,6 +45,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
   const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
@@ -53,7 +55,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
     <SceneBackground bg={colors.bg}>
       <AbsoluteFill
         style={{
-          padding: 80,
+          padding: contentPadding,
           gap: 28,
         }}
       >
@@ -62,7 +64,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
           opacity: headOpacity,
           transform: `translateY(${headY}px)`,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           marginBottom: 8,
@@ -96,11 +98,11 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
 
           if (variant === "card") {
             return (
-              <ColorBorderCard
+              <Card variant="border"
                 key={i}
                 color={effectiveAccent}
                 delay={stepDelay}
-                variant="compact"
+                size="sm"
                 icon={step.icon}
                 fontFamily={fontFamily}
               >
@@ -116,7 +118,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
                     <div
                       style={{
                         fontFamily,
-                        fontSize: 28,
+                        fontSize: Math.round(28 * fontScale),
                         fontWeight: 700,
                         color: colors.text,
                       }}
@@ -127,9 +129,9 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
                       <div
                         style={{
                           fontFamily,
-                          fontSize: 20,
+                          fontSize: Math.round(20 * fontScale),
                           color: colors.muted,
-                          lineHeight: 1.4,
+                          lineHeight: TYPOGRAPHY.lineHeights.normal,
                         }}
                       >
                         {step.description}
@@ -137,7 +139,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
                     )}
                   </div>
                 </div>
-              </ColorBorderCard>
+              </Card>
             );
           }
 
@@ -163,7 +165,7 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
                 <div
                   style={{
                     fontFamily,
-                    fontSize: 30,
+                    fontSize: Math.round(30 * fontScale),
                     fontWeight: 700,
                     color: colors.text,
                   }}
@@ -174,9 +176,9 @@ export const StepSequence: React.FC<StepSequenceProps> = ({
                   <div
                     style={{
                       fontFamily,
-                      fontSize: 22,
+                      fontSize: Math.round(22 * fontScale),
                       color: colors.muted,
-                      lineHeight: 1.4,
+                      lineHeight: TYPOGRAPHY.lineHeights.normal,
                     }}
                   >
                     {step.description}

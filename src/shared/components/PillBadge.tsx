@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { MONO, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, MONO, SCENE_DEFAULTS } from "../styles";
 
 type PillBadgeVariant = "filled" | "outline";
 
@@ -22,7 +22,7 @@ export const PillBadge: React.FC<PillBadgeProps> = ({
   color,
   variant = "filled",
   delay = 0,
-  fontSize = 20,
+  fontSize = baseTokens.fontSizes.xs,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -55,8 +55,8 @@ export const PillBadge: React.FC<PillBadgeProps> = ({
         color: isFilled ? color : color,
         backgroundColor: isFilled ? `${color}22` : "transparent",
         border: `1px solid ${color}66`,
-        borderRadius: 8,
-        padding: "5px 14px",
+        borderRadius: baseTokens.borderRadius.sm,
+        padding: `5px ${baseTokens.spacing.sm}px`,
         whiteSpace: "nowrap",
       }}
     >

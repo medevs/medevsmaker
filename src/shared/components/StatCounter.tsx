@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS, baseTokens } from "../styles";
 import { DramaticCounter } from "./DramaticCounter";
 
 type StatCounterProps = {
@@ -30,8 +30,8 @@ export const StatCounter: React.FC<StatCounterProps> = ({
   label,
   delay = 0,
   color = BRAND.cyan,
-  fontSize = 120,
-  labelFontSize = 28,
+  fontSize = baseTokens.fontSizes.display,
+  labelFontSize = baseTokens.fontSizes.md,
   fontFamily = "Inter",
   glow = false,
   gradientText = false,
@@ -120,7 +120,7 @@ export const StatCounter: React.FC<StatCounterProps> = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 8,
+        gap: baseTokens.spacing.xs,
       }}
     >
       <div style={numberStyle}>

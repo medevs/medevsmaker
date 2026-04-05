@@ -264,10 +264,10 @@ export const DataChart: React.FC<DataChartProps> = ({
             <path d={trackD} fill="none" stroke={`${gaugeColor}20`} strokeWidth={strokeW} strokeLinecap="round" />
             <path d={trackD} fill="none" stroke={gaugeColor} strokeWidth={strokeW} strokeLinecap="round" strokeDasharray={`${fillDash} ${fillGap}`} style={{ filter: `drop-shadow(${SHADOWS.glow(gaugeColor)})` }} />
           </svg>
-          <div style={{ marginTop: -120, fontFamily, fontSize: 96, fontWeight: 900, color: gaugeColor, textAlign: "center", textShadow: SHADOWS.glow(gaugeColor) }}>
+          <div style={{ marginTop: -120, fontFamily, fontSize: Math.round(96 * fontScale), fontWeight: 900, color: gaugeColor, textAlign: "center", textShadow: SHADOWS.glow(gaugeColor) }}>
             {prefix}{displayValue.toLocaleString()}{suffix}
           </div>
-          <div style={{ fontFamily, fontSize: 28, fontWeight: 600, color: colors.muted, textAlign: "center", marginTop: 8 }}>
+          <div style={{ fontFamily, fontSize: Math.round(28 * fontScale), fontWeight: 600, color: colors.muted, textAlign: "center", marginTop: 8 }}>
             {item.label}
           </div>
         </div>

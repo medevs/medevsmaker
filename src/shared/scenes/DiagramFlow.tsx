@@ -7,10 +7,11 @@ import {
   interpolate,
 } from "remotion";
 import { evolvePath } from "@remotion/paths";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { DiagramBox } from "../components/DiagramBox";
 import { DiagramArrow } from "../components/DiagramArrow";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type FlowNode = {
   label: string;
@@ -49,7 +50,8 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
 }) => {
   const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, width, height } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const titleP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const titleOpacity = interpolate(titleP, [0, 1], [0, 1]);
@@ -62,8 +64,8 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
   const gap = isHorizontal ? 120 : 80;
   const totalW = nodes.length * boxW + (nodes.length - 1) * gap;
   const totalH = nodes.length * boxH + (nodes.length - 1) * gap;
-  const startX = isHorizontal ? (1920 - totalW) / 2 : (1920 - boxW) / 2;
-  const startY = isHorizontal ? 500 : (1080 - totalH) / 2 + 60;
+  const startX = isHorizontal ? (width - totalW) / 2 : (width - boxW) / 2;
+  const startY = isHorizontal ? Math.round(height * 0.46) : (height - totalH) / 2 + 60;
 
   const nodePositions = nodes.map((_, i) => ({
     x: isHorizontal ? startX + i * (boxW + gap) : startX,
@@ -81,7 +83,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
     const pipeW = 260;
     const pipeGap = 60;
     const totalPipeW = nodes.length * pipeW + (nodes.length - 1) * pipeGap;
-    const pipeStartX = (1920 - totalPipeW) / 2;
+    const pipeStartX = (width - totalPipeW) / 2;
     const pipeY = 460;
 
     return (
@@ -96,7 +98,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
               opacity: titleOpacity,
               transform: `translateY(${titleY}px)`,
               fontFamily,
-              fontSize: 48,
+              fontSize: Math.round(48 * fontScale),
               fontWeight: 800,
               color: colors.text,
             }}
@@ -140,7 +142,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
                     padding: "24px 20px",
                     backgroundColor: `${nodeColor}12`,
                     border: `3px solid ${nodeColor}44`,
-                    borderRadius: 14,
+                    borderRadius: baseTokens.borderRadius.lg,
                     textAlign: "center",
                     display: "flex",
                     flexDirection: "column",
@@ -150,7 +152,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
                   <span
                     style={{
                       fontFamily,
-                      fontSize: 22,
+                      fontSize: Math.round(22 * fontScale),
                       fontWeight: 700,
                       color: colors.text,
                     }}
@@ -161,7 +163,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
                     <span
                       style={{
                         fontFamily,
-                        fontSize: 20,
+                        fontSize: Math.round(20 * fontScale),
                         color: colors.text + "99",
                       }}
                     >
@@ -176,7 +178,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
                       width: pipeGap,
                       textAlign: "center",
                       fontFamily,
-                      fontSize: 28,
+                      fontSize: Math.round(28 * fontScale),
                       fontWeight: 700,
                       color: effectiveAccent + "88",
                     }}
@@ -206,7 +208,7 @@ export const DiagramFlow: React.FC<DiagramFlowProps> = ({
           opacity: titleOpacity,
           transform: `translateY(${titleY}px)`,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
         }}

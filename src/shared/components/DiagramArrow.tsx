@@ -6,7 +6,7 @@ import {
   interpolate,
 } from "remotion";
 import { evolvePath } from "@remotion/paths";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, baseTokens } from "../styles";
 
 type DiagramArrowProps = {
   from: { x: number; y: number };
@@ -168,7 +168,7 @@ export const DiagramArrow: React.FC<DiagramArrowProps> = ({
           textAnchor="middle"
           fill={BRAND.textMuted}
           fontFamily={fontFamily}
-          fontSize={20}
+          fontSize={baseTokens.fontSizes.xs}
           opacity={labelOpacity}
         >
           {label}

@@ -6,10 +6,11 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { glowPulse, pulse } from "../animations";
 import { ParticleField } from "../components/ParticleField";
+import { useLayoutMode } from "../formats";
 
 type EndScreenProps = {
   channel?: string;
@@ -37,6 +38,7 @@ export const EndScreen: React.FC<EndScreenProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   // Channel name entrance — bouncy
   const nameP = spring({
@@ -91,7 +93,7 @@ export const EndScreen: React.FC<EndScreenProps> = ({
       style={{
         justifyContent: "center",
         alignItems: "center",
-        padding: 80,
+        padding: contentPadding,
         gap: 24,
       }}
     >
@@ -109,7 +111,7 @@ export const EndScreen: React.FC<EndScreenProps> = ({
         style={{
           transform: `scale(${nameScale})`,
           fontFamily,
-          fontSize: 72,
+          fontSize: Math.round(72 * fontScale),
           fontWeight: 800,
           letterSpacing: -1,
           background: GRADIENTS.textGradient(BRAND.indigo, BRAND.violet),
@@ -138,10 +140,10 @@ export const EndScreen: React.FC<EndScreenProps> = ({
           opacity: ctaOpacity,
           transform: `translateY(${ctaY}px)`,
           padding: "16px 48px",
-          borderRadius: 14,
+          borderRadius: baseTokens.borderRadius.lg,
           backgroundColor: colors.accent,
           fontFamily,
-          fontSize: 28,
+          fontSize: Math.round(28 * fontScale),
           fontWeight: 700,
           color: "#ffffff",
           boxShadow: ctaGlow,
@@ -155,7 +157,7 @@ export const EndScreen: React.FC<EndScreenProps> = ({
         style={{
           opacity: tagOpacity,
           fontFamily,
-          fontSize: 22,
+          fontSize: Math.round(22 * fontScale),
           color: colors.muted,
         }}
       >
@@ -199,7 +201,7 @@ export const EndScreen: React.FC<EndScreenProps> = ({
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 20,
+                    fontSize: Math.round(20 * fontScale),
                     color: colors.muted,
                     textTransform: "uppercase",
                     letterSpacing: 1,
@@ -210,7 +212,7 @@ export const EndScreen: React.FC<EndScreenProps> = ({
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 20,
+                    fontSize: Math.round(20 * fontScale),
                     fontWeight: 600,
                     color: colors.text,
                   }}

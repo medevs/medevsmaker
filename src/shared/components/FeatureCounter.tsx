@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, MONO, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, MONO, SCENE_DEFAULTS } from "../styles";
 
 type FeatureCounterVariant = "counter" | "breadcrumb";
 
@@ -48,18 +48,18 @@ export const FeatureCounter: React.FC<FeatureCounterProps> = ({
         opacity,
         display: "flex",
         alignItems: "center",
-        gap: 10,
+        gap: baseTokens.spacing.xs,
         backgroundColor: "rgba(15, 15, 26, 0.85)",
-        borderRadius: 8,
-        padding: "8px 16px",
+        borderRadius: baseTokens.borderRadius.sm,
+        padding: `${baseTokens.spacing.xs}px ${baseTokens.spacing.sm}px`,
       }}
     >
       {variant === "breadcrumb" ? (
         <>
           <div
             style={{
-              width: 10,
-              height: 10,
+              width: baseTokens.spacing.xs + 2,
+              height: baseTokens.spacing.xs + 2,
               borderRadius: "50%",
               backgroundColor: color,
             }}
@@ -67,7 +67,7 @@ export const FeatureCounter: React.FC<FeatureCounterProps> = ({
           <span
             style={{
               fontFamily: MONO.fontFamily,
-              fontSize: 20,
+              fontSize: baseTokens.fontSizes.xs,
               fontWeight: 700,
               letterSpacing: MONO.letterSpacing,
               textTransform: MONO.textTransform,
@@ -81,7 +81,7 @@ export const FeatureCounter: React.FC<FeatureCounterProps> = ({
         <span
           style={{
             fontFamily: MONO.fontFamily,
-            fontSize: 20,
+            fontSize: baseTokens.fontSizes.xs,
             fontWeight: 700,
             letterSpacing: MONO.letterSpacing,
             textTransform: MONO.textTransform,

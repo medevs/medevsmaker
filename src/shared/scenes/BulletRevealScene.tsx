@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { BulletReveal } from "../components/BulletReveal";
+import { useLayoutMode } from "../formats";
 
 type BulletRevealSceneProps = {
   heading: string;
@@ -32,6 +33,7 @@ export const BulletRevealScene: React.FC<BulletRevealSceneProps> = ({
   const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
@@ -42,7 +44,7 @@ export const BulletRevealScene: React.FC<BulletRevealSceneProps> = ({
     <AbsoluteFill
       style={{
         justifyContent: "center",
-        padding: 80,
+        padding: contentPadding,
         gap: 32,
       }}
     >
@@ -51,7 +53,7 @@ export const BulletRevealScene: React.FC<BulletRevealSceneProps> = ({
           opacity: headOpacity,
           transform: `translateY(${headY}px)`,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
         }}
@@ -89,14 +91,14 @@ export const BulletRevealScene: React.FC<BulletRevealSceneProps> = ({
                   alignItems: "center",
                   gap: 16,
                   padding: "12px 20px",
-                  borderRadius: 12,
+                  borderRadius: baseTokens.borderRadius.md,
                   boxShadow: itemOpacity > 0 ? SHADOWS.glow(effectiveAccent) : "none",
                 }}
               >
                 <span
                   style={{
                     color: effectiveAccent,
-                    fontSize: 24,
+                    fontSize: Math.round(24 * fontScale),
                     fontWeight: 700,
                     flexShrink: 0,
                   }}
@@ -106,9 +108,9 @@ export const BulletRevealScene: React.FC<BulletRevealSceneProps> = ({
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 28,
+                    fontSize: Math.round(28 * fontScale),
                     color: colors.text,
-                    lineHeight: 1.4,
+                    lineHeight: TYPOGRAPHY.lineHeights.normal,
                   }}
                 >
                   {text}

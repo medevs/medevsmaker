@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
 
 type SectionBadgeProps = {
   number: number;
@@ -45,7 +45,7 @@ export const SectionBadge: React.FC<SectionBadgeProps> = ({
         transform: `scale(${scale})`,
         width: size,
         height: size,
-        borderRadius: 14,
+        borderRadius: baseTokens.borderRadius.lg,
         backgroundColor: gradient ? undefined : color,
         background: gradient
           ? GRADIENTS.textGradient(color, BRAND.violet)

@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill, Img } from "remotion";
-import { BRAND } from "../styles";
+import { baseTokens, BRAND, TYPOGRAPHY } from "../styles";
+import { useLayoutMode } from "../formats";
 
 type TextPosition = "bottom-left" | "bottom-right" | "center" | "top-left";
 
@@ -49,11 +50,13 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
   accentColor = BRAND.indigo,
   channelBadge = true,
 }) => {
+  const { fontScale } = useLayoutMode();
+
   const textStyle: React.CSSProperties = {
     position: "absolute",
     ...positionStyles[textPosition],
     fontFamily: "Inter, sans-serif",
-    fontSize: 120,
+    fontSize: Math.round(120 * fontScale),
     fontWeight: 900,
     lineHeight: 1.1,
     color: textColor,
@@ -117,7 +120,7 @@ export const Thumbnail: React.FC<ThumbnailProps> = ({
             top: 40,
             right: 40,
             fontFamily: "Inter, sans-serif",
-            fontSize: 28,
+            fontSize: Math.round(28 * fontScale),
             fontWeight: 700,
             color: BRAND.textMuted,
             letterSpacing: 2,

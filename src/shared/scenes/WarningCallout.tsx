@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
-import { AccentBox } from "../components/AccentBox";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
+import { Card } from "../components/Card";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type WarningCalloutProps = {
   heading: string;
@@ -29,6 +30,7 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const headOpacity = interpolate(headP, [0, 1], [0, 1]);
@@ -46,7 +48,7 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
         style={{
           justifyContent: "center",
           alignItems: "center",
-          padding: 100,
+          padding: contentPadding,
           gap: 32,
         }}
       >
@@ -55,7 +57,7 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
           opacity: headOpacity,
           transform: `translateY(${headY}px) scale(${pulseScale})`,
           fontFamily,
-          fontSize: 44,
+          fontSize: Math.round(44 * fontScale),
           fontWeight: 800,
           color: severity === "danger" ? BRAND.red : BRAND.amber,
           textAlign: "center",
@@ -64,13 +66,14 @@ export const WarningCallout: React.FC<WarningCalloutProps> = ({
         {heading}
       </div>
       <div style={{ maxWidth: 1000, width: "100%" }}>
-        <AccentBox
-          body={body}
-          variant={severity}
+        <Card
+          variant="accent"
+          semanticType={severity}
           delay={12}
           fontFamily={fontFamily}
-          fontSize={28}
-        />
+        >
+          {body}
+        </Card>
       </div>
     </AbsoluteFill>
     </SceneBackground>

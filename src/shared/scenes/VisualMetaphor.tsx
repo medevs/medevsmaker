@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { pulse } from "../animations";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type IconEffect = "pop" | "rotate" | "bounce";
 
@@ -38,6 +39,7 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const iconP = spring({
     frame,
@@ -88,14 +90,14 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
         style={{
           justifyContent: "center",
           alignItems: "center",
-          padding: 100,
+          padding: contentPadding,
           gap: 24,
         }}
       >
       <div
         style={{
           transform: iconTransform,
-          fontSize: 96,
+          fontSize: Math.round(96 * fontScale),
           lineHeight: 1,
         }}
       >
@@ -106,11 +108,11 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
           opacity: headOpacity,
           transform: `translateY(${headY}px)`,
           fontFamily,
-          fontSize: 52,
+          fontSize: Math.round(52 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
-          lineHeight: 1.2,
+          lineHeight: TYPOGRAPHY.lineHeights.tight,
         }}
       >
         {heading}
@@ -119,11 +121,11 @@ export const VisualMetaphor: React.FC<VisualMetaphorProps> = ({
         style={{
           opacity: analogyOpacity,
           fontFamily,
-          fontSize: 28,
+          fontSize: Math.round(28 * fontScale),
           color: colors.muted,
           textAlign: "center",
           maxWidth: 900,
-          lineHeight: 1.5,
+          lineHeight: TYPOGRAPHY.lineHeights.normal,
         }}
       >
         {analogy}

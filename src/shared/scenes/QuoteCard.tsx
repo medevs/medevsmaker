@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, GLASS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, GLASS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
-import { GlassCard } from "../components/GlassCard";
+import { Card } from "../components/Card";
+import { useLayoutMode } from "../formats";
 
 type QuoteCardProps = {
   quote: string;
@@ -29,6 +30,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const quoteMarkP = spring({
     frame,
@@ -60,7 +62,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: 120,
+        padding: contentPadding,
       }}
     >
       {/* Large decorative quote mark */}
@@ -69,7 +71,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
           position: "absolute",
           top: 120,
           left: 140,
-          fontSize: 280,
+          fontSize: Math.round(280 * fontScale),
           fontFamily: "Georgia, serif",
           color: sectionColor,
           opacity: quoteMarkOpacity,
@@ -82,29 +84,29 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
 
       <div style={{ maxWidth: 1200, width: "100%", zIndex: 1 }}>
         {cardStyle === "glass" ? (
-          <GlassCard color={sectionColor} delay={6} glow padding="48px 56px">
+          <Card variant="glass" color={sectionColor} delay={6} glow>
             <div
               style={{
                 fontFamily,
-                fontSize: 40,
+                fontSize: Math.round(40 * fontScale),
                 fontWeight: 600,
                 color: colors.text,
-                lineHeight: 1.5,
+                lineHeight: TYPOGRAPHY.lineHeights.normal,
                 fontStyle: "italic",
               }}
             >
               {quote}
             </div>
-          </GlassCard>
+          </Card>
         ) : (
           <div
             style={{
               opacity: cardP,
               fontFamily,
-              fontSize: 40,
+              fontSize: Math.round(40 * fontScale),
               fontWeight: 600,
               color: colors.text,
-              lineHeight: 1.5,
+              lineHeight: TYPOGRAPHY.lineHeights.normal,
               fontStyle: "italic",
               borderLeft: `4px solid ${sectionColor}`,
               paddingLeft: 32,
@@ -122,7 +124,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
               }),
               transform: `translateY(${interpolate(attrP, [0, 1], [15, 0], { extrapolateRight: "clamp" })}px)`,
               fontFamily,
-              fontSize: 24,
+              fontSize: Math.round(24 * fontScale),
               fontWeight: 500,
               color: colors.muted,
               marginTop: 24,

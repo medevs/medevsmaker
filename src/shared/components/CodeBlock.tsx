@@ -6,7 +6,7 @@ import {
   interpolate,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/JetBrainsMono";
-import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, baseTokens, TYPOGRAPHY } from "../styles";
 import { glowPulse } from "../animations";
 
 const { fontFamily: codeFont } = loadFont("normal", {
@@ -27,7 +27,7 @@ type CodeBlockProps = {
 export const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
   delay = 0,
-  fontSize = 22,
+  fontSize = baseTokens.fontSizes.xs,
   typewriter = true,
   highlightLines = [],
   showLineNumbers = false,
@@ -83,8 +83,8 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
         opacity,
         transform: `translateY(${y}px)`,
         backgroundColor: BRAND.codeBg,
-        borderRadius: 16,
-        padding: "28px 36px",
+        borderRadius: baseTokens.borderRadius.lg,
+        padding: `${baseTokens.spacing.md}px ${baseTokens.spacing.lg}px`,
         border: `1px solid ${BRAND.border}`,
         width: "100%",
         boxSizing: "border-box",
@@ -129,7 +129,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
                 fontSize,
                 color: BRAND.cyan,
                 margin: 0,
-                lineHeight: 1.7,
+                lineHeight: TYPOGRAPHY.lineHeights.relaxed,
                 whiteSpace: "pre",
               }}
             >

@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
+import { Card } from "../components/Card";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type TerminalItem = {
   text: string;
@@ -37,6 +38,7 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({
     frame,
@@ -54,7 +56,7 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
     <SceneBackground bg={colors.bg}>
       <AbsoluteFill
         style={{
-          padding: 80,
+          padding: contentPadding,
           gap: 28,
         }}
       >
@@ -63,7 +65,7 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
           opacity: headOpacity,
           transform: `translateY(${headY}px)`,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
         }}
@@ -71,10 +73,10 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
         {heading}
       </div>
 
-      <ColorBorderCard
+      <Card variant="border"
         color={sectionColor}
         delay={10}
-        variant="wide"
+        size="lg"
         fontFamily={fontFamily}
       >
         <div
@@ -159,11 +161,11 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
                   alignItems: "center",
                   gap: 12,
                   fontFamily: itemFont,
-                  fontSize: 24,
-                  lineHeight: 1.5,
+                  fontSize: Math.round(24 * fontScale),
+                  lineHeight: TYPOGRAPHY.lineHeights.relaxed,
                 }}
               >
-                <span style={{ fontSize: 20 }}>
+                <span style={{ fontSize: Math.round(20 * fontScale) }}>
                   {itemIcon}
                 </span>
                 {renderText()}
@@ -171,7 +173,7 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
             );
           })}
         </div>
-      </ColorBorderCard>
+      </Card>
 
       {summary && (
         <div
@@ -191,7 +193,7 @@ export const ProgressiveTerminal: React.FC<ProgressiveTerminalProps> = ({
               { extrapolateRight: "clamp" }
             ),
             fontFamily,
-            fontSize: 22,
+            fontSize: Math.round(22 * fontScale),
             color: colors.muted,
             fontStyle: "italic",
           }}

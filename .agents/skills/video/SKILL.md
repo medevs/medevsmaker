@@ -59,11 +59,12 @@ Full rules: [rules/hook-selection.md](rules/hook-selection.md)
 
 **Goal**: Convert the production brief into a concrete scene plan. **No durations** — durations come from narration in Phase 7.
 
-Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (complete 65-scene catalog, flat — no hierarchy, no tiers).
+Full rules: [rules/educational-scenes.md](rules/educational-scenes.md) (complete scene catalog, flat — no hierarchy, no tiers).
 
-All 65 scenes are first-class choices. Pick based on what the content needs:
-- **Atmospheric/cinematic scenes** (CinematicSciFi, ThemeCyberpunk, ThemeHolographic, BackgroundBokeh) for openers and section transitions
-- **Visual effect scenes** (TextGlitch, TextKinetic, ParticleLightning, LiquidFluidWave, EffectMatrix) for emphasis moments
+All scenes are first-class choices. Pick based on what the content needs:
+- **Atmospheric/cinematic scenes** (CinematicSciFi, ThemeCyberpunk, ThemeHolographic, Background with variant) for openers and section transitions
+- **Visual effect scenes** (TextGlitch, TextKinetic) for emphasis moments
+- **Background variants** (floatingBokeh, sineWaves, geometricShapes, fluidWave, lightning, helix, hexGrid, matrixRain) for atmospheric layers
 - **Data scenes** (DataGauge, DataRanking, LayoutGiantNumber, RollerCountdown) alongside StatHighlight and DataChart
 - **Demo scenes** (DemoAddressBar, DemoTextInput, DemoScroll, DemoZoomFocus) for tutorial/UX content
 - **Never 2+ text-heavy scenes in a row** — insert a visual scene between them
@@ -262,20 +263,19 @@ Architecture details: [rules/long-form-architecture.md](rules/long-form-architec
 
 All video types use shared building-block components from `src/shared/`:
 
-**Components** (`src/shared/components/`): AnimatedText, Background, CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, AccentBox, ProgressBar, Watermark, ParticleField, GridPattern, VoiceoverLayer, ColorBorderCard, PillBadge, SectionTracker, FeatureCounter, FileTree, GradientText, GlassCard, TextEffect, CaptionOverlay
+**Components** (`src/shared/components/`): Background (17 variants), Card (variant="accent"|"border"|"glass"), CodeBlock, DiagramBox, DiagramArrow, StatCounter, BulletReveal, SectionBadge, ProgressBar, Watermark, ParticleField, GridPattern, VoiceoverLayer, PillBadge, SectionTracker, FeatureCounter, FileTree, GradientText, TextEffect, CaptionOverlay
 
-**Scene Templates** (`src/shared/scenes/`):
-- *Educational scenes* (flat `src/shared/scenes/SceneName`): HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, Outro, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram, QuoteCard, AnimatedDiagram, MetricDashboard, ProcessAnimation, SplitCodeComparison (35 scenes)
-- *Extended scenes* (`src/shared/scenes/extended/SceneName`): 30 scenes for visual enhancement — backgrounds, text effects, cinematic opens, data visualizations, UI demos, transitions. All documented in [rules/educational-scenes.md](rules/educational-scenes.md).
+**Scene Templates** (`src/shared/scenes/` — flat directory, all scenes):
+HookQuestion, TitleIntro, SectionTitle, ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StatHighlight, BulletRevealScene, VisualMetaphor, KeyTakeaway, SummaryRecap, EndScreen, WarningCallout, StepSequence, ColdOpen, BeforeAfter, TimelineScene, DataChart, FeatureIntro, ProgressiveTerminal, DecisionTable, ThreeColumnCompare, FileTreeScene, KeyRuleCard, ArchitectureDiagram, QuoteCard, MetricDashboard, FullScreenText, SwipeReveal, CinematicSciFi, CinematicDocumentary, ThemeCyberpunk, ThemeHolographic, ThemeRetro, TextGlitch, TextKinetic, DataGauge, DataRanking, LayoutFrameInFrame, LayoutGiantNumber, ListFullscreenSequence, LogoMaskReveal, LogoStroke, RollerCountdown, DemoAddressBar, DemoScroll, DemoTextInput, DemoZoomFocus, UILoading. All documented in [rules/educational-scenes.md](rules/educational-scenes.md).
 
-Import format for extended scenes:
+Import format (all scenes use the same flat path):
 ```tsx
-import { TextGlitch } from "../../../shared/scenes/extended/TextGlitch";
-import { BackgroundBokeh } from "../../../shared/scenes/extended/BackgroundBokeh";
-import { CinematicSciFi } from "../../../shared/scenes/extended/CinematicSciFi";
+import { TextGlitch } from "../../../shared/scenes/TextGlitch";
+import { CinematicSciFi } from "../../../shared/scenes/CinematicSciFi";
+import { DataGauge } from "../../../shared/scenes/DataGauge";
 ```
 
-**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow/slideAndFade/dropBounce/zoomBlur, pulse, glowPulse, float, shimmer, breathe), transitions.ts (TRANSITIONS presets incl. flip, shortFade + OVERLAYS for light leaks), styles.ts (SHADOWS incl. deepGlow, GRADIENTS incl. aurora, SECTION_THEMES, CARD, GLASS, MONO, SCENE_ALTERNATION, spring configs incl. springSilky), formats.ts (FORMAT_PRESETS, SAFE_ZONES, useLayoutMode hook for responsive scenes)
+**Visual Utilities** (`src/shared/`): animations.ts (EASINGS, entrances incl. fadeUpSlow/fadeLeftSlow/slideAndFade/dropBounce/zoomBlur, pulse, glowPulse, float, shimmer, breathe), transitions.ts (TRANSITIONS presets incl. flip, shortFade + OVERLAYS for light leaks + flashOverlay() utility), styles.ts (SHADOWS incl. deepGlow, GRADIENTS incl. aurora, SECTION_THEMES, CARD, MONO, SCENE_ALTERNATION, spring configs incl. springSilky, TYPOGRAPHY lineHeights, CONTAINERS widths, SCENE_TIERS hero/content/detail/accent, baseTokens.fontSizes display/hero), formats.ts (FORMAT_PRESETS, SAFE_ZONES, useLayoutMode hook for responsive scenes)
 
 Import these instead of re-implementing. See [rules/educational-scenes.md](rules/educational-scenes.md) for full prop documentation.
 
@@ -498,21 +498,21 @@ Use `<AbsoluteFill>` + flexbox for layout (not manual `position: absolute`) beca
 
 ### Component architecture
 - Keep files under 150 lines — extract sub-components to stay readable
-- Import shared scenes from `src/shared/scenes/` rather than re-implementing — consistency across videos matters more than customization
+- Import shared scenes from `src/shared/scenes/` (flat directory, all scenes) rather than re-implementing — consistency across videos matters more than customization
 - Use `frame - delayFrames` for staggered springs inside Sequences (not the `delay` param, which counts from composition start)
 
 ### Visual consistency
-- `EndScreen` over basic `Outro` — gradient text + glow CTA looks polished
+- `EndScreen` for all video endings — gradient text + glow CTA looks polished
 - `<Watermark position="top-right">` — avoids ProgressBar overlap at bottom
 - `<Background variant="aurora">` for opening sections, `"noiseField"` for technical sections, `"solidWithOrbs"` for data-heavy sections
 - `<Background overlay="lightLeak">` for cinematic polish (use sparingly)
-- Use `GlassCard` for key insight scenes (QuoteCard, KeyRuleCard) — frosted glass with `backdropFilter`
+- Use `Card variant="glass"` for key insight scenes (QuoteCard, KeyRuleCard) — frosted glass with `backdropFilter`
 - Use `TextEffect` for hook variety: `"scramble"` on ColdOpen, `"neon"` on StatHighlight, `"glitch"` on WarningCallout
 - Per-section color via `SECTION_THEMES.get(sectionIndex)` → `sectionColor` prop
 - Vary transitions: import presets from `src/shared/transitions.ts` — use `flip` for dramatic changes, light leak overlays for major section breaks (1-2 per video max)
 - `DataChart` variants: `"bars"` (default), `"pie"`/`"donut"` for proportions, `"line"` for trends, `"gauge"` for single metrics
 - `DiagramArrow curved` prop for organic-feeling flow diagrams
-- Scene constraints: see `educational-scenes.md` for the full 65-scene catalog and sequencing rules
+- Scene constraints: see `educational-scenes.md` for the full scene catalog and sequencing rules
 
 ### Rich Props Usage (IMPORTANT)
 - **StatHighlight**: ALWAYS set `emphasis: 'glow'` or `'gradient'` and `mode: 'splitFlap'` or `'slot'` — never use bare defaults
@@ -525,7 +525,7 @@ Use `<AbsoluteFill>` + flexbox for layout (not manual `position: absolute`) beca
 
 ### Visual Layering (IMPORTANT)
 - Layer Background component with dynamic variants behind every section — no section should have a plain flat background
-- Add ParticleField or BackgroundBokeh behind text-heavy scenes to compensate for visual simplicity
+- Add ParticleField or `Background variant="floatingBokeh"` behind text-heavy scenes to compensate for visual simplicity
 - Use CinematicOverlay (filmGrain, scanlines, vignette) on themed/cinematic sections
 - Use PerspectiveGrid for retro/tech-themed sections
 - Combine extended scenes as atmospheric backgrounds with educational scenes as content overlays
@@ -550,7 +550,7 @@ Import pattern: `import { AnimatedText } from "../../../shared/components/bits/A
 - [rules/hook-selection.md](rules/hook-selection.md) — Phase 3: youtube hook frameworks, variant selection
 - [rules/video-types.md](rules/video-types.md) — 3 active video types (news, explainer, tutorial) with defaults, scenes, rules, palettes
 - [rules/audience-profile.md](rules/audience-profile.md) — Target audience, tone rules, retention engineering
-- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete 64-scene catalog (A-Z), selection rules, visual variety guidance
+- [rules/educational-scenes.md](rules/educational-scenes.md) — Complete scene catalog (A-Z), selection rules, visual variety guidance, Background variant catalog
 - [rules/narration-writing.md](rules/narration-writing.md) — Narration writing, source attribution, retention patterns
 - [rules/long-form-architecture.md](rules/long-form-architecture.md) — Section-based architecture for explainer/tutorial videos
 - [rules/duration-calculation.md](rules/duration-calculation.md) — Duration calculation from narration

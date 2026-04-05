@@ -6,10 +6,11 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, MONO, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, MONO, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { GradientText } from "../components/GradientText";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { Card } from "../components/Card";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type KeyRuleCardProps = {
   preLabel?: string;
@@ -34,6 +35,7 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({
     frame,
@@ -51,11 +53,11 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
         <div
           style={{
             fontFamily,
-            fontSize: 48,
+            fontSize: Math.round(48 * fontScale),
             fontWeight: 800,
             color: colors.text,
             textAlign: "center",
-            lineHeight: 1.3,
+            lineHeight: TYPOGRAPHY.lineHeights.normal,
           }}
         >
           {statement}
@@ -69,11 +71,11 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
         <div
           style={{
             fontFamily,
-            fontSize: 48,
+            fontSize: Math.round(48 * fontScale),
             fontWeight: 800,
             color: colors.text,
             textAlign: "center",
-            lineHeight: 1.3,
+            lineHeight: TYPOGRAPHY.lineHeights.normal,
           }}
         >
           {statement}
@@ -88,11 +90,11 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
       <div
         style={{
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
-          lineHeight: 1.3,
+          lineHeight: TYPOGRAPHY.lineHeights.normal,
         }}
       >
         {before}
@@ -100,7 +102,7 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
           text={highlightWord}
           from={sectionColor}
           to={BRAND.violet}
-          fontSize={48}
+          fontSize={Math.round(48 * fontScale)}
           fontWeight={800}
           fontFamily={fontFamily}
           delay={SCENE_DEFAULTS.elementEntry}
@@ -117,7 +119,7 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
         style={{
           justifyContent: "center",
           alignItems: "center",
-          padding: "100px 160px",
+          padding: contentPadding,
           gap: 28,
         }}
       >
@@ -126,7 +128,7 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
           style={{
             opacity: headOpacity,
             fontFamily: MONO.fontFamily,
-            fontSize: 20,
+            fontSize: Math.round(20 * fontScale),
             fontWeight: 700,
             letterSpacing: MONO.letterSpacing,
             textTransform: MONO.textTransform,
@@ -153,11 +155,11 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
               { extrapolateRight: "clamp" }
             ),
             fontFamily,
-            fontSize: 24,
+            fontSize: Math.round(24 * fontScale),
             color: colors.muted,
             textAlign: "center",
             maxWidth: 800,
-            lineHeight: 1.5,
+            lineHeight: TYPOGRAPHY.lineHeights.normal,
           }}
         >
           {subtitle}
@@ -176,14 +178,14 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
         >
           {cards.map((card, i) => (
             <div key={i} style={{ flex: 1 }}>
-              <ColorBorderCard
+              <Card variant="border"
                 color={sectionColor}
                 delay={
                   SCENE_DEFAULTS.elementEntrySlow +
                   10 +
                   i * SCENE_DEFAULTS.staggerDelaySlow
                 }
-                variant="compact"
+                size="sm"
                 fontFamily={fontFamily}
               >
                 <div
@@ -192,16 +194,16 @@ export const KeyRuleCard: React.FC<KeyRuleCardProps> = ({
                     alignItems: "center",
                     gap: 10,
                     fontFamily,
-                    fontSize: 20,
+                    fontSize: Math.round(20 * fontScale),
                     color: colors.text,
                   }}
                 >
                   {card.icon && (
-                    <span style={{ fontSize: 20 }}>{card.icon}</span>
+                    <span style={{ fontSize: Math.round(20 * fontScale) }}>{card.icon}</span>
                   )}
                   {card.text}
                 </div>
-              </ColorBorderCard>
+              </Card>
             </div>
           ))}
         </div>

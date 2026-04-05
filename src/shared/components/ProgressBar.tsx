@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
 
 type ProgressBarProps = {
   totalSections: number;
@@ -50,7 +50,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         opacity,
         display: "flex",
         alignItems: "center",
-        gap: isPill ? 8 : 12,
+        gap: isPill ? baseTokens.spacing.xs : baseTokens.spacing.xs + 4,
       }}
     >
       {Array.from({ length: totalSections }, (_, i) => {
@@ -72,8 +72,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
             style={{
               flex: isPill ? undefined : 1,
               width: isPill ? (isCurrent ? 40 : 12) : undefined,
-              height: isPill ? 12 : 6,
-              borderRadius: isPill ? 6 : 3,
+              height: isPill ? baseTokens.borderRadius.md : 6,
+              borderRadius: isPill ? baseTokens.borderRadius.sm : 3,
               backgroundColor: isActive ? activeColor : inactiveColor,
               transform: `scaleX(${scale})`,
               transformOrigin: "left center",
@@ -92,7 +92,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
                   left: "50%",
                   transform: "translateX(-50%)",
                   fontFamily,
-                  fontSize: 20,
+                  fontSize: baseTokens.fontSizes.xs,
                   color: BRAND.textMuted,
                   whiteSpace: "nowrap",
                 }}

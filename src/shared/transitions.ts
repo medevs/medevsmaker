@@ -1,3 +1,4 @@
+import { interpolate } from "remotion";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
 import { wipe } from "@remotion/transitions/wipe";
@@ -96,3 +97,27 @@ export const OVERLAYS = {
 } as const;
 
 export type OverlayName = keyof typeof OVERLAYS;
+
+/**
+ * Full-screen flash overlay utility.
+ * Returns { opacity, background } style for a frame-based flash effect.
+ * Use as a Sequence overlaid on transition boundaries.
+ */
+export const flashOverlay = (
+  frame: number,
+  startFrame: number,
+  color: string = "#ffffff",
+  durationFrames: number = 10,
+): { opacity: number; background: string } => {
+  const mid = startFrame + durationFrames / 2;
+  const intensity =
+    frame >= startFrame && frame < startFrame + durationFrames
+      ? interpolate(
+          frame,
+          [startFrame, mid, startFrame + durationFrames],
+          [0, 1, 0],
+          { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+        )
+      : 0;
+  return { opacity: intensity, background: color };
+};

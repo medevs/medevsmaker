@@ -12,7 +12,7 @@ import {
   type TikTokPage,
   type TikTokToken,
 } from "@remotion/captions";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS } from "../styles";
 import { useLayoutMode } from "../formats";
 
 type CaptionStyle = "minimal" | "bold" | "karaoke" | "pop" | "highlight";
@@ -91,8 +91,8 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
           bottom: isBold ? undefined : bottom,
           maxWidth: isVertical ? 900 : (isMinimal ? 900 : 1100),
           textAlign: "center",
-          padding: "12px 24px",
-          borderRadius: 12,
+          padding: `${baseTokens.borderRadius.md}px ${baseTokens.spacing.md}px`,
+          borderRadius: baseTokens.borderRadius.md,
           backgroundColor: isMinimal ? "rgba(0, 0, 0, 0.6)" : "transparent",
         }}
       >
@@ -105,7 +105,7 @@ export const CaptionOverlay: React.FC<CaptionOverlayProps> = ({
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "center",
-            gap: "0 8px",
+            gap: `0 ${baseTokens.spacing.xs}px`,
           }}
         >
           {currentPage.tokens.map((token, i) => {

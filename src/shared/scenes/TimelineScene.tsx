@@ -6,7 +6,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { baseTokens, BRAND, GLASS, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { useLayoutMode } from "../formats";
 import { shimmer } from "../animations";
@@ -235,7 +235,7 @@ const HorizontalTimeline: React.FC<{
                     alignItems: "center",
                     justifyContent: "center",
                     fontFamily,
-                    fontSize: 20,
+                    fontSize: Math.round(20 * fontScale),
                     fontWeight: 800,
                     color: colors.accent,
                     flexShrink: 0,
@@ -263,7 +263,7 @@ const HorizontalTimeline: React.FC<{
                     fontSize: Math.round(22 * fontScale),
                     fontWeight: 400,
                     color: colors.muted,
-                    lineHeight: 1.5,
+                    lineHeight: TYPOGRAPHY.lineHeights.relaxed,
                   }}
                 >
                   {node.description}
@@ -513,7 +513,7 @@ const VerticalTimeline: React.FC<{
                       fontSize: Math.round(22 * fontScale),
                       fontWeight: 400,
                       color: colors.muted,
-                      lineHeight: 1.4,
+                      lineHeight: TYPOGRAPHY.lineHeights.normal,
                     }}
                   >
                     {node.description}

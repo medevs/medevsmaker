@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS, baseTokens } from "../styles";
 import { glowPulse } from "../animations";
 
 type DiagramBoxProps = {
@@ -60,7 +60,7 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
         transform: `scale(${scale})`,
         width,
         height,
-        borderRadius: 16,
+        borderRadius: baseTokens.borderRadius.lg,
         backgroundColor: gradient
           ? undefined
           : `${color}18`,
@@ -72,7 +72,7 @@ export const DiagramBox: React.FC<DiagramBoxProps> = ({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        gap: 8,
+        gap: baseTokens.spacing.xs,
         boxShadow,
       }}
     >

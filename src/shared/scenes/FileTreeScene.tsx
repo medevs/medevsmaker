@@ -6,10 +6,11 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { FileTree, FileTreeItem } from "../components/FileTree";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { Card } from "../components/Card";
+import { useLayoutMode } from "../formats";
 
 type FileTreeSceneProps = {
   heading: string;
@@ -30,6 +31,7 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({
     frame,
@@ -47,7 +49,7 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
     <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        padding: 80,
+        padding: contentPadding,
         gap: 32,
       }}
     >
@@ -56,7 +58,7 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
           opacity: headOpacity,
           transform: `translateY(${headY}px)`,
           fontFamily,
-          fontSize: 48,
+          fontSize: Math.round(48 * fontScale),
           fontWeight: 800,
           color: colors.text,
         }}
@@ -82,7 +84,7 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
 
         {annotation && (
           <div style={{ flex: 1, paddingTop: 16 }}>
-            <ColorBorderCard
+            <Card variant="border"
               color={sectionColor}
               delay={
                 SCENE_DEFAULTS.elementEntry +
@@ -93,14 +95,14 @@ export const FileTreeScene: React.FC<FileTreeSceneProps> = ({
               <div
                 style={{
                   fontFamily,
-                  fontSize: 22,
+                  fontSize: Math.round(22 * fontScale),
                   color: colors.muted,
-                  lineHeight: 1.5,
+                  lineHeight: TYPOGRAPHY.lineHeights.relaxed,
                 }}
               >
                 {annotation}
               </div>
-            </ColorBorderCard>
+            </Card>
           </div>
         )}
       </div>

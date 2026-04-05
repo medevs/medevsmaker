@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, GRADIENTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, GRADIENTS, TYPOGRAPHY } from "../styles";
 import { entrances } from "../animations";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type TitleEntrance = "fadeUp" | "scaleRotate" | "splitReveal";
 
@@ -34,6 +35,7 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const titleP = spring({ frame, fps, config: SCENE_DEFAULTS.springSmooth });
   const clampedP = interpolate(titleP, [0, 1], [0, 1], {
@@ -78,7 +80,7 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
         style={{
           justifyContent: "center",
           alignItems: "center",
-          padding: 80,
+          padding: contentPadding,
           gap: 32,
         }}
       >
@@ -86,11 +88,11 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
         style={{
           ...titleStyle,
           fontFamily,
-          fontSize: 64,
+          fontSize: Math.round(64 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
-          lineHeight: 1.15,
+          lineHeight: TYPOGRAPHY.lineHeights.tight,
         }}
       >
         {title}
@@ -128,7 +130,7 @@ export const TitleIntro: React.FC<TitleIntroProps> = ({
               style={{
                 opacity: objOpacity,
                 fontFamily,
-                fontSize: 26,
+                fontSize: Math.round(26 * fontScale),
                 color: colors.muted,
                 textAlign: "center",
               }}

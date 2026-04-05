@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, MONO, SCENE_DEFAULTS } from "../styles";
+import { BRAND, MONO, SCENE_DEFAULTS, baseTokens, TYPOGRAPHY } from "../styles";
 
 export type FileTreeItem = {
   name: string;
@@ -41,7 +41,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 6,
+        gap: baseTokens.spacing.xs,
         fontFamily: fontFamily || MONO.fontFamily,
       }}
     >
@@ -59,7 +59,7 @@ export const FileTree: React.FC<FileTreeProps> = ({
           extrapolateRight: "clamp",
         });
 
-        const indentPx = item.indent * 28;
+        const indentPx = item.indent * baseTokens.spacing.md;
         const icon = item.type === "folder" ? FOLDER_ICON : FILE_ICON;
         const itemColor = item.highlight
           ? item.color || sectionColor
@@ -75,17 +75,17 @@ export const FileTree: React.FC<FileTreeProps> = ({
               alignItems: "center",
               gap: 10,
               paddingLeft: indentPx,
-              fontSize: 20,
-              lineHeight: 1.6,
+              fontSize: baseTokens.fontSizes.xs,
+              lineHeight: TYPOGRAPHY.lineHeights.relaxed,
             }}
           >
             {/* Tree lines */}
             {item.indent > 0 && (
-              <span style={{ color: BRAND.border, fontSize: 20 }}>
+              <span style={{ color: BRAND.border, fontSize: baseTokens.fontSizes.xs }}>
                 {"│ ".repeat(item.indent - 1)}├─
               </span>
             )}
-            <span style={{ fontSize: 20 }}>{icon}</span>
+            <span style={{ fontSize: baseTokens.fontSizes.xs }}>{icon}</span>
             <span
               style={{
                 color: itemColor,

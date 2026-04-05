@@ -6,11 +6,12 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { entrances } from "../animations";
 import { GradientText } from "../components/GradientText";
 import { ParticleField } from "../components/ParticleField";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type ItemEntrance = "left" | "scale" | "fade";
 
@@ -43,6 +44,7 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
   const effectiveAccent = sectionColor || colors.accent;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const highlightText = (text: string): React.ReactNode => {
     if (!highlightTerms?.length) return text;
@@ -73,7 +75,7 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
       <AbsoluteFill
         style={{
           justifyContent: "center",
-          padding: 80,
+          padding: contentPadding,
           gap: 28,
         }}
       >
@@ -85,7 +87,7 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
           opacity: headOpacity,
           transform: `translateY(${headY}px)`,
           fontFamily,
-          fontSize: 52,
+          fontSize: Math.round(52 * fontScale),
           fontWeight: 800,
           color: colors.text,
           marginBottom: 8,
@@ -135,13 +137,13 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
               style={{
                 width: 36,
                 height: 36,
-                borderRadius: 10,
+                borderRadius: baseTokens.borderRadius.sm,
                 backgroundColor: effectiveAccent,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontFamily,
-                fontSize: 20,
+                fontSize: Math.round(20 * fontScale),
                 fontWeight: 700,
                 color: "#ffffff",
                 flexShrink: 0,
@@ -152,9 +154,9 @@ export const SummaryRecap: React.FC<SummaryRecapProps> = ({
             <span
               style={{
                 fontFamily,
-                fontSize: 30,
+                fontSize: Math.round(30 * fontScale),
                 color: colors.text,
-                lineHeight: 1.3,
+                lineHeight: TYPOGRAPHY.lineHeights.normal,
               }}
             >
               {highlightText(item)}

@@ -6,7 +6,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { StatCounter } from "../components/StatCounter";
 import { useLayoutMode } from "../formats";
@@ -156,7 +156,7 @@ export const StatHighlight: React.FC<StatHighlightProps> = ({
                 fontWeight: 500,
                 color: colors.muted,
                 textAlign: "center",
-                lineHeight: 1.5,
+                lineHeight: TYPOGRAPHY.lineHeights.normal,
               }}
             >
               {context}

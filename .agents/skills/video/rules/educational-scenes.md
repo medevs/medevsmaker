@@ -1,16 +1,16 @@
 ---
 name: scene-catalog
-description: "Complete catalog of all 64 reusable scenes — flat, no hierarchy"
+description: "Complete catalog of all reusable scenes — flat, no hierarchy"
 ---
 
-# Scene Catalog (64 Scenes)
+# Scene Catalog
 
 All scenes are first-class choices. No tiers, no hierarchy. Choose based on what the content needs visually and educationally.
 
 ## Selection Rules
 
 ### Visual Variety (MANDATORY)
-- **Never use 2+ text-heavy scenes in a row** (text-heavy: ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout, SplitCodeComparison, ProgressiveTerminal)
+- **Never use 2+ text-heavy scenes in a row** (text-heavy: ConceptExplain, BulletRevealScene, CodeDisplay, WarningCallout, ProgressiveTerminal)
 - **Every section needs at least one visually rich scene** with animation, particles, diagrams, or dynamic visuals
 - **Prefer scenes with movement** over static text layouts
 - **Use the full catalog** — if you find yourself reaching for the same scene a 3rd time, pick a different one
@@ -18,7 +18,7 @@ All scenes are first-class choices. No tiers, no hierarchy. Choose based on what
 
 ### Visual Balance
 - Target **60%+ visual-heavy scenes** across the video
-- Visual-heavy includes ALL of: AnimatedDiagram, ArchitectureDiagram, BackgroundBokeh, BackgroundGeometric, BackgroundWaves, BeforeAfter, CinematicDocumentary, CinematicSciFi, ColdOpen, ComparisonSplit, DataChart, DataGauge, DataRanking, DemoAddressBar, DemoScroll, DemoTextInput, DemoZoomFocus, DiagramFlow, EffectChromaticAberration, EffectMatrix, LayoutFrameInFrame, LayoutGiantNumber, LiquidFluidWave, LogoMaskReveal, LogoStroke, MetricDashboard, ParticleLightning, ProcessAnimation, QuoteCard, RollerCountdown, ShapeHelix, ShapeHexGrid, StatHighlight, StepSequence, SwipeReveal, TextGlitch, TextKinetic, ThemeCyberpunk, ThemeHolographic, ThemeRetro, TimelineScene, TransitionFlash, VisualMetaphor
+- Visual-heavy includes ALL of: ArchitectureDiagram, BeforeAfter, CinematicDocumentary, CinematicSciFi, ColdOpen, ComparisonSplit, DataChart, DataGauge, DataRanking, DemoAddressBar, DemoScroll, DemoTextInput, DemoZoomFocus, DiagramFlow, LayoutFrameInFrame, LayoutGiantNumber, LogoMaskReveal, LogoStroke, MetricDashboard, QuoteCard, RollerCountdown, StatHighlight, StepSequence, SwipeReveal, TextGlitch, TextKinetic, ThemeCyberpunk, ThemeHolographic, ThemeRetro, TimelineScene, VisualMetaphor, Background (all visual variants: floatingBokeh, sineWaves, geometricShapes, fluidWave, lightning, helix, hexGrid, matrixRain)
 
 ### Scene Preference Guidance
 
@@ -36,17 +36,17 @@ When you find yourself repeating a scene type, use this table:
 | HookQuestion | ColdOpen | Dramatic statement instead of question |
 | HookQuestion | CinematicSciFi | AI/future tech topic with HUD aesthetic |
 | HookQuestion | ThemeCyberpunk | Dystopian/hacker/dark tech opener |
-| SectionTitle | TransitionFlash | High-impact moment between sections |
+| SectionTitle | flashOverlay() | High-impact moment between sections (use transitions.ts utility) |
 | SectionTitle | ThemeHolographic | Shimmering section break |
-| CodeDisplay | EffectMatrix | Code-rain aesthetic for hacker topics |
+| CodeDisplay | Background variant="matrixRain" | Code-rain aesthetic for hacker topics |
 | CodeDisplay | DemoTextInput | Interactive code input visualization |
 | KeyTakeaway | KeyRuleCard | Gradient-emphasis key insight |
 | ComparisonSplit | ThreeColumnCompare | Comparing 3+ things |
 | DiagramFlow | ArchitectureDiagram | Hub-spoke/radial relationships |
-| DiagramFlow | ProcessAnimation | Animated item moving through stages |
-| Any text scene 3rd time | ParticleLightning | Energy/power/electricity emphasis |
-| Any text scene 3rd time | LiquidFluidWave | Flowing/organic transition moment |
-| Any text scene 3rd time | ShapeHelix | Scientific/DNA/spiral visual |
+| DiagramFlow | DiagramFlow variant="pipeline" | Animated item moving through stages |
+| Any text scene 3rd time | Background variant="lightning" | Energy/power/electricity emphasis |
+| Any text scene 3rd time | Background variant="fluidWave" | Flowing/organic transition moment |
+| Any text scene 3rd time | Background variant="helix" | Scientific/DNA/spiral visual |
 
 ## Universal Props (all scenes)
 
@@ -54,34 +54,15 @@ Every scene accepts these props:
 - `sectionColor?: string` — Per-section accent color (from SECTION_THEMES rotation)
 - `colors?: { bg: string; text: string; accent: string; muted: string }` — Override default colors
 - `fontFamily?: string` — Override heading font
-
-Extended scenes (in `src/shared/scenes/extended/`) also accept:
 - `startDelay?: number` — Frames to delay animation start (default 0)
+
+All scenes use `useLayoutMode()` for responsive sizing, `fontScale` multiplier on all text, `contentPadding` instead of hardcoded padding, and token-based `borderRadius` and `lineHeight`.
 
 > **Note**: Duration ranges listed below are **minimum animation times**. Actual scene durations are computed from narration word counts (see `duration-calculation.md`). Write narration naturally; the duration will follow.
 
 ---
 
 ## All Scenes (A-Z)
-
-### AnimatedDiagram
-**Location**: `src/shared/scenes/AnimatedDiagram.tsx`
-**Purpose**: Curved bezier connections between positioned nodes with optional data-flow particles
-**Duration**: 8s minimum (curved bezier draw-on + node stagger)
-**Layout**: Title top, nodes positioned by x/y coordinates with curved SVG connections
-**Animation**: Title fade-up → nodes scale-in staggered → curved bezier connections draw on → optional particles flow along paths
-**Props**:
-- `title: string` — diagram heading
-- `nodes: { id: string; label: string; sublabel?: string; color?: string; icon?: string; x: number; y: number }[]` — positioned nodes (x/y in pixels)
-- `connections: { from: string; to: string; label?: string; curved?: boolean }[]` — connections by node id
-- `curvedConnections?: boolean` — enable curved bezier lines (default false)
-- `sectionColor?: string`
-- `colors?: { bg: string; text: string; muted: string }`
-- `fontFamily?: string`
-**When to use**: Complex system diagrams where node positioning matters, data flow visualization, non-linear relationships
-**Narration example**: "Trace the data path from user input through the system — follow the arrows"
-
----
 
 ### ArchitectureDiagram
 **Location**: `src/shared/scenes/ArchitectureDiagram.tsx`
@@ -101,46 +82,35 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 
 ---
 
-### BackgroundBokeh
-**Location**: `src/shared/scenes/extended/BackgroundBokeh.tsx`
-**Purpose**: Floating bokeh light orbs with depth blur for atmospheric backgrounds
-**Duration**: 3-4s typical
-**Layout**: Full-screen particle field with depth-blurred circles
-**Animation**: 20 bokeh orbs float and pulse with randomized motion, depth blur creates layered feel
+### Background (Component — 17 Variants)
+**Location**: `src/shared/components/Background.tsx`
+**Purpose**: Atmospheric background layer used behind scenes. Use as a layer, not a standalone scene.
 **Props**:
-- `startDelay?: number` — frames to delay animation start
-- `colors?: string[]` — custom bokeh colors (default: indigo, violet, cyan, amber)
-**When to use**: Creative/design topics, soft atmospheric mood, gentle intro backgrounds, overlay behind other content
-**Narration example**: "Set a contemplative tone before diving into the explanation"
+- `variant: string` — one of: gradient, radialGradient, meshGradient, aurora, noiseField, meshAnimated, solidWithOrbs, perspectiveGrid, bokeh, floatingBokeh, sineWaves, geometricShapes, fluidWave, lightning, helix, hexGrid, matrixRain
+- `overlay?: string` — optional overlay (particles, lightLeak, filmGrain, etc.)
+- `colors?: { bg: string; accent: string }`
 
----
+**Variant quick reference** (former standalone scenes now absorbed):
+| Variant | Former Scene | When to use |
+|---------|-------------|-------------|
+| `floatingBokeh` | BackgroundBokeh | Creative/design, soft atmospheric mood |
+| `sineWaves` | BackgroundWaves | Sound/audio topics, data flow, fluid content |
+| `geometricShapes` | BackgroundGeometric | Tech/engineering, architecture, mathematical |
+| `fluidWave` | LiquidFluidWave | Physics/wave topics, flowing transitions |
+| `lightning` | ParticleLightning | Power/energy, electricity, dramatic emphasis |
+| `helix` | ShapeHelix | Biology/DNA, structural/scientific, spiral concepts |
+| `hexGrid` | ShapeHexGrid | Network/mesh, data structures, distributed systems |
+| `matrixRain` | EffectMatrix | Hacking/security, code-rain aesthetic, encryption |
+| `aurora` | — | Opening sections, cinematic feel |
+| `noiseField` | — | Technical sections |
+| `solidWithOrbs` | — | Data-heavy sections |
+| `perspectiveGrid` | — | Retro/tech-themed sections |
 
-### BackgroundGeometric
-**Location**: `src/shared/scenes/extended/BackgroundGeometric.tsx`
-**Purpose**: Animated geometric shapes (triangles, squares, circles) on dark background with centered text
-**Duration**: 3-4s typical
-**Layout**: Full-screen dark background with 20 rotating/floating geometric shapes, text centered
-**Animation**: Shapes rotate and float with randomized speeds, text fades in
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — centered display text (default: "GEOMETRIC")
-**When to use**: Tech/engineering topics, architecture discussions, mathematical/structural content
-**Narration example**: "Introduce a technical concept with visual gravitas"
-
----
-
-### BackgroundWaves
-**Location**: `src/shared/scenes/extended/BackgroundWaves.tsx`
-**Purpose**: Flowing sine-wave lines animation with text overlay
-**Duration**: 3-4s typical
-**Layout**: Full-screen dark background with layered wave SVG paths, text centered
-**Animation**: Multiple sine-wave layers animate horizontally with different frequencies and colors
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — centered display text (default: "WAVES")
-- `colors?: string[]` — custom wave colors (default: indigo, violet, cyan)
-**When to use**: Sound/audio topics, data flow visualization, gentle/fluid content, wave-related explanations
-**Narration example**: "Smooth transition into a flowing concept like data streams or audio processing"
+**Usage**: Layer behind content scenes, not as standalone scenes.
+```tsx
+<Background variant="floatingBokeh" />
+<Background variant="matrixRain" overlay="filmGrain" />
+```
 
 ---
 
@@ -182,7 +152,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### CinematicDocumentary
-**Location**: `src/shared/scenes/extended/CinematicDocumentary.tsx`
+**Location**: `src/shared/scenes/CinematicDocumentary.tsx`
 **Purpose**: Ken Burns-style documentary opening with sober tone, letterbox bars, and location stamp
 **Duration**: 4-6s typical
 **Layout**: Full-screen with expanding horizontal line, centered title/subtitle, location stamp bottom-right
@@ -198,7 +168,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### CinematicSciFi
-**Location**: `src/shared/scenes/extended/CinematicSciFi.tsx`
+**Location**: `src/shared/scenes/CinematicSciFi.tsx`
 **Purpose**: Sci-fi HUD/hologram style with perspective grid, scanning line, and HUD frame corners
 **Duration**: 4-6s typical
 **Layout**: Dark background with perspective grid floor, HUD corner brackets, centered title with status text
@@ -308,7 +278,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### DataGauge
-**Location**: `src/shared/scenes/extended/DataGauge.tsx`
+**Location**: `src/shared/scenes/DataGauge.tsx`
 **Purpose**: Radial gauge meter (speedometer style) with animated needle and gradient arc
 **Duration**: 4-6s typical
 **Layout**: Centered gauge with arc from green→amber→red, needle points to value, value + label below
@@ -324,7 +294,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### DataRanking
-**Location**: `src/shared/scenes/extended/DataRanking.tsx`
+**Location**: `src/shared/scenes/DataRanking.tsx`
 **Purpose**: Animated ranking list with numbered entries and score bars
 **Duration**: 4-6s typical
 **Layout**: Title top, ranked items stacked vertically with position numbers and animated score bars
@@ -356,7 +326,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### DemoAddressBar
-**Location**: `src/shared/scenes/extended/DemoAddressBar.tsx`
+**Location**: `src/shared/scenes/DemoAddressBar.tsx`
 **Purpose**: Browser address bar with typing animation simulating URL entry
 **Duration**: 4-6s typical
 **Layout**: Centered browser chrome mockup with address bar, page title below
@@ -371,7 +341,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### DemoScroll
-**Location**: `src/shared/scenes/extended/DemoScroll.tsx`
+**Location**: `src/shared/scenes/DemoScroll.tsx`
 **Purpose**: Scroll behavior animation showing content scrolling within a viewport
 **Duration**: 4-6s typical
 **Layout**: Centered viewport container with scrollable content items
@@ -385,7 +355,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### DemoTextInput
-**Location**: `src/shared/scenes/extended/DemoTextInput.tsx`
+**Location**: `src/shared/scenes/DemoTextInput.tsx`
 **Purpose**: Form text input with cursor and typing animation
 **Duration**: 4-6s typical
 **Layout**: Centered form card with label, input field, and typing cursor
@@ -401,7 +371,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### DemoZoomFocus
-**Location**: `src/shared/scenes/extended/DemoZoomFocus.tsx`
+**Location**: `src/shared/scenes/DemoZoomFocus.tsx`
 **Purpose**: Zoom-in focus on a specific UI element with highlight overlay
 **Duration**: 4-6s typical
 **Layout**: Full dashboard mockup that zooms into a specific metric card with highlight box
@@ -434,34 +404,6 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 
 ---
 
-### EffectChromaticAberration
-**Location**: `src/shared/scenes/extended/EffectChromaticAberration.tsx`
-**Purpose**: RGB channel separation glitch effect on large text
-**Duration**: 3-4s typical
-**Layout**: Centered large text with three offset color layers (red, green, blue)
-**Animation**: Text fades in → RGB channels oscillate apart creating aberration effect
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — display text (default: "CHROMATIC")
-**When to use**: Glitch/error topics, digital artifacts, broken/corrupted data themes, visual emphasis moments
-**Narration example**: "Something went wrong — use the glitch to emphasize a failure or corruption"
-
----
-
-### EffectMatrix
-**Location**: `src/shared/scenes/extended/EffectMatrix.tsx`
-**Purpose**: Green falling code rain (Matrix style) with centered text overlay
-**Duration**: 3-4s typical
-**Layout**: Full-screen dark background with 30 columns of falling green characters, text centered
-**Animation**: Character columns fall at different speeds → text appears over the rain
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — centered display text (default: "THE MATRIX")
-**When to use**: Hacking/security topics, code-rain aesthetic, digital world metaphors, encryption themes
-**Narration example**: "Set the hacker mood — this is about what happens behind the scenes in code"
-
----
-
 ### EndScreen
 **Location**: `src/shared/scenes/EndScreen.tsx`
 **Purpose**: Polished end card with gradient text, animated CTA button with glow, and social links
@@ -476,7 +418,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 - `showParticles?: boolean` — enable particle background
 - `colors?: { bg: string; text: string; accent: string; muted: string }`
 - `fontFamily?: string`
-**When to use**: Always the last scene. Preferred over Outro for polished end cards.
+**When to use**: Always the last scene. The standard end card for all videos.
 **Narration example**: "Conversational CTA — one sentence that feels natural, not salesy"
 
 ---
@@ -593,7 +535,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### LayoutFrameInFrame
-**Location**: `src/shared/scenes/extended/LayoutFrameInFrame.tsx`
+**Location**: `src/shared/scenes/LayoutFrameInFrame.tsx`
 **Purpose**: Nested frame composition — frames within frames creating a recursive visual
 **Duration**: 3-4s typical
 **Layout**: Centered nested rectangles with title and subtitle positioned between frames
@@ -608,7 +550,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### LayoutGiantNumber
-**Location**: `src/shared/scenes/extended/LayoutGiantNumber.tsx`
+**Location**: `src/shared/scenes/LayoutGiantNumber.tsx`
 **Purpose**: Oversized number as a design element filling the right side, with text info on left
 **Duration**: 4-6s typical
 **Layout**: Giant number (500px font) overflows right edge, label + description on left side
@@ -623,23 +565,8 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 
 ---
 
-### LiquidFluidWave
-**Location**: `src/shared/scenes/extended/LiquidFluidWave.tsx`
-**Purpose**: Fluid wave distortion with 7 layered wave paths and splash particles
-**Duration**: 4-6s typical
-**Layout**: Dark gradient background with layered SVG wave paths rising from bottom, text at top 20%, splash particles
-**Animation**: Wave layers spring in staggered (3f apart) → splash particles float and pulse → text scales in
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — display text above waves (default: "WAVE")
-- `colors?: string[]` — up to 3 custom wave colors (default: indigo, violet, cyan)
-**When to use**: Physics/wave topics, flowing/organic transitions, water/fluid metaphors, dramatic visual breather
-**Narration example**: "Take a breath — use the flowing visual to transition into a new concept"
-
----
-
 ### ListFullscreenSequence
-**Location**: `src/shared/scenes/extended/ListFullscreenSequence.tsx`
+**Location**: `src/shared/scenes/ListFullscreenSequence.tsx`
 **Purpose**: Full-screen sequential item reveals — one item fills the entire screen at a time
 **Duration**: 4-8s (scales with item count)
 **Layout**: Each item takes the full screen one at a time with large centered text and color background
@@ -654,7 +581,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### LogoMaskReveal
-**Location**: `src/shared/scenes/extended/LogoMaskReveal.tsx`
+**Location**: `src/shared/scenes/LogoMaskReveal.tsx`
 **Purpose**: Masked wipe reveal of text/brand with horizontal mask sweep
 **Duration**: 3-4s typical
 **Layout**: Centered text with horizontal mask that sweeps to reveal, optional subtitle below
@@ -669,7 +596,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### LogoStroke
-**Location**: `src/shared/scenes/extended/LogoStroke.tsx`
+**Location**: `src/shared/scenes/LogoStroke.tsx`
 **Purpose**: SVG stroke-draw reveal — text outline draws on then fills in
 **Duration**: 3-4s typical
 **Layout**: Centered text with SVG stroke animation, subtitle below
@@ -697,55 +624,6 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 - `fontFamily?: string`
 **When to use**: Multiple related stats, performance dashboards, before/after metric sets, KPI overviews
 **Narration example**: "Call out the headline metric, then connect the others to tell a story"
-
----
-
-### Outro
-**Location**: `src/shared/scenes/Outro.tsx`
-**Purpose**: Basic channel branding + CTA. **Deprecated** — use EndScreen instead.
-**Duration**: 4-6s
-**Layout**: Centered — logo top, CTA button middle, tagline bottom
-**Animation**: Logo pop-in (snappy) → CTA button fade-up → tagline fade
-**Props**:
-- `channel?: string` — channel name
-- `cta?: string` — call-to-action text
-- `tagline?: string` — channel tagline
-- `colors?: { bg: string; text: string; accent: string; muted: string }`
-- `fontFamily?: string`
-**When to use**: Legacy only. Use EndScreen for all new videos.
-**Narration example**: "Brief sign-off — keep it short, no generic 'thanks for watching'"
-
----
-
-### ParticleLightning
-**Location**: `src/shared/scenes/extended/ParticleLightning.tsx`
-**Purpose**: Electric lightning bolts striking across the screen with flash intensity
-**Duration**: 3-4s typical
-**Layout**: Full-screen dark background with procedurally generated lightning paths, optional text centered
-**Animation**: Lightning bolts fire every 40 frames with 5-frame flash bursts, random paths from top
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — centered display text
-**When to use**: Power/energy topics, electricity metaphors, dramatic emphasis, "lightning round" moments
-**Narration example**: "Hit them with energy — this is the electrifying part of the explanation"
-
----
-
-### ProcessAnimation
-**Location**: `src/shared/scenes/ProcessAnimation.tsx`
-**Purpose**: Items animate through horizontal stages showing a process pipeline
-**Duration**: 8s minimum (stage stagger + item animation)
-**Layout**: Title top, stages arranged horizontally with connecting arrows, items move through stages
-**Animation**: Title fade → stages stagger in → arrows draw → items animate left to right through stages
-**Props**:
-- `title: string` — process title
-- `stages: { label: string; color?: string; icon?: string }[]` — process stages
-- `items?: { label: string; icon?: string }[]` — items that animate through the stages
-- `sectionColor?: string`
-- `colors?: { bg: string; text: string; muted: string }`
-- `fontFamily?: string`
-**When to use**: Manufacturing/build pipelines, data transformation chains, CI/CD, request processing
-**Narration example**: "Follow the item as it moves through each stage — build understanding sequentially"
 
 ---
 
@@ -786,7 +664,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### RollerCountdown
-**Location**: `src/shared/scenes/extended/RollerCountdown.tsx`
+**Location**: `src/shared/scenes/RollerCountdown.tsx`
 **Purpose**: Large number countdown with 3-phase state machine (counting, reveal, final word)
 **Duration**: 4-6s typical
 **Layout**: Centered large number that counts down, then reveals a final word
@@ -816,54 +694,6 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 - `fontFamily?: string`
 **When to use**: Start of every section (3-7 per video). Brief transition connecting previous section to what's next.
 **Narration example**: "Brief transition — connect previous section to what's coming next"
-
----
-
-### ShapeHelix
-**Location**: `src/shared/scenes/extended/ShapeHelix.tsx`
-**Purpose**: DNA-style double helix rotation with 3D perspective
-**Duration**: 3-4s typical
-**Layout**: Centered rotating double helix with connected node pairs, text below
-**Animation**: Helix rotates continuously with nodes oscillating in 3D space
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — display text (default: "HELIX")
-- `color?: string` — helix color (default: BRAND.indigo)
-**When to use**: Biology/DNA topics, structural/scientific content, spiral/recursive concepts
-**Narration example**: "Connect the helix visual to the concept of intertwined or evolving ideas"
-
----
-
-### ShapeHexGrid
-**Location**: `src/shared/scenes/extended/ShapeHexGrid.tsx`
-**Purpose**: Animated hexagonal grid with random highlight pulses
-**Duration**: 3-4s typical
-**Layout**: Full-screen hexagonal grid pattern with some cells highlighted, text centered
-**Animation**: Hexagons appear → random cells pulse with highlight color → text fades in
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `text?: string` — centered display text (default: "HEXAGONAL")
-- `highlightColor?: string` — pulse highlight color (default: BRAND.indigo)
-**When to use**: Network/mesh topics, data structures, distributed systems, honeycomb patterns
-**Narration example**: "Use the grid to represent interconnected nodes or distributed systems"
-
----
-
-### SplitCodeComparison
-**Location**: `src/shared/scenes/SplitCodeComparison.tsx`
-**Purpose**: Side-by-side code comparison with VS divider (before/after code)
-**Duration**: 8s minimum (two code panels + VS divider)
-**Layout**: Optional heading top, two code panels side by side with VS divider
-**Animation**: Heading fade → left panel slides in → VS divider appears → right panel slides in
-**Props**:
-- `heading?: string` — comparison title
-- `left: { title: string; code: string; language?: string; highlightLines?: number[] }` — left code panel
-- `right: { title: string; code: string; language?: string; highlightLines?: number[] }` — right code panel
-- `sectionColor?: string`
-- `colors?: { bg: string; text: string; muted: string }`
-- `fontFamily?: string`
-**When to use**: Before/after code refactoring, comparing two implementations, showing migration changes
-**Narration example**: "Point out the key differences between the two versions — don't describe every line"
 
 ---
 
@@ -943,7 +773,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### TextGlitch
-**Location**: `src/shared/scenes/extended/TextGlitch.tsx`
+**Location**: `src/shared/scenes/TextGlitch.tsx`
 **Purpose**: RGB channel glitch effect with scanlines and noise bars on large text
 **Duration**: 3-4s typical
 **Layout**: Centered large text (140px) with red/cyan channel separation layers, scanline overlay, random noise bars
@@ -957,7 +787,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### TextKinetic
-**Location**: `src/shared/scenes/extended/TextKinetic.tsx`
+**Location**: `src/shared/scenes/TextKinetic.tsx`
 **Purpose**: Kinetic typography — characters animate individually with staggered springs
 **Duration**: 3-5s typical
 **Layout**: Centered large text with each character animating independently
@@ -972,7 +802,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### ThemeCyberpunk
-**Location**: `src/shared/scenes/extended/ThemeCyberpunk.tsx`
+**Location**: `src/shared/scenes/ThemeCyberpunk.tsx`
 **Purpose**: Neon grid cyberpunk aesthetic with glowing title and subtitle
 **Duration**: 3-4s typical
 **Layout**: Dark background with neon grid lines, large glowing title centered, subtitle below
@@ -987,7 +817,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### ThemeHolographic
-**Location**: `src/shared/scenes/extended/ThemeHolographic.tsx`
+**Location**: `src/shared/scenes/ThemeHolographic.tsx`
 **Purpose**: Holographic foil shimmer effect on text with rainbow gradient animation
 **Duration**: 3-4s typical
 **Layout**: Centered text with animated holographic/rainbow gradient overlay
@@ -1001,7 +831,7 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 ---
 
 ### ThemeRetro
-**Location**: `src/shared/scenes/extended/ThemeRetro.tsx`
+**Location**: `src/shared/scenes/ThemeRetro.tsx`
 **Purpose**: 70s-80s CRT retro visual style with scanlines and warm color palette
 **Duration**: 3-4s typical
 **Layout**: Warm-toned background with CRT scanline overlay, retro-styled text centered, subtitle below
@@ -1068,23 +898,8 @@ Extended scenes (in `src/shared/scenes/extended/`) also accept:
 
 ---
 
-### TransitionFlash
-**Location**: `src/shared/scenes/extended/TransitionFlash.tsx`
-**Purpose**: White flash burst transition between two states with text
-**Duration**: 3-4s typical
-**Layout**: Three phases: before text → white flash → after state
-**Animation**: Phase 1 shows text → bright flash fills screen → phase 2 reveals new state
-**Props**:
-- `startDelay?: number` — frames to delay animation start
-- `flashColor?: string` — flash color (default: white)
-- `text?: string` — text shown before flash (default: "BEFORE")
-**When to use**: High-impact moment between sections, dramatic reveals, "everything changes" transitions
-**Narration example**: "Use the flash as a dramatic beat — the moment everything shifts"
-
----
-
 ### UILoading
-**Location**: `src/shared/scenes/extended/UILoading.tsx`
+**Location**: `src/shared/scenes/UILoading.tsx`
 **Purpose**: Loading spinner, skeleton screens, and animated dots showing loading states
 **Duration**: 3-4s typical
 **Layout**: Centered loading animation with text label, multiple loading variants displayed

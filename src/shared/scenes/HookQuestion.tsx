@@ -6,9 +6,10 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { entrances } from "../animations";
+import { useLayoutMode } from "../formats";
 
 type HookEntrance = "scale" | "blur" | "fadeUp";
 
@@ -29,6 +30,7 @@ export const HookQuestion: React.FC<HookQuestionProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const questionP = spring({
     frame,
@@ -79,18 +81,18 @@ export const HookQuestion: React.FC<HookQuestionProps> = ({
       style={{
         justifyContent: "center",
         alignItems: "center",
-        padding: 100,
+        padding: contentPadding,
       }}
     >
       <div
         style={{
           ...questionStyle,
           fontFamily,
-          fontSize: 72,
+          fontSize: Math.round(72 * fontScale),
           fontWeight: 800,
           color: colors.text,
           textAlign: "center",
-          lineHeight: 1.15,
+          lineHeight: TYPOGRAPHY.lineHeights.tight,
         }}
       >
         {question}
@@ -100,7 +102,7 @@ export const HookQuestion: React.FC<HookQuestionProps> = ({
           style={{
             opacity: stOpacity,
             fontFamily,
-            fontSize: 30,
+            fontSize: Math.round(30 * fontScale),
             color: colors.accent,
             textAlign: "center",
             marginTop: 24,

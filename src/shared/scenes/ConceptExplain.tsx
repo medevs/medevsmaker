@@ -6,7 +6,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { baseTokens, BRAND, GLASS, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { entrances, EASINGS, shimmer } from "../animations";
 import { useLayoutMode } from "../formats";
@@ -141,7 +141,7 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 36,
+                fontSize: Math.round(36 * fontScale),
                 flexShrink: 0,
                 boxShadow: SHADOWS.glow(effectiveAccent),
               }}
@@ -155,7 +155,7 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
               fontSize: Math.round(52 * fontScale),
               fontWeight: 800,
               color: colors.text,
-              lineHeight: 1.15,
+              lineHeight: TYPOGRAPHY.lineHeights.tight,
               letterSpacing: -0.5,
             }}
           >
@@ -183,7 +183,7 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
               fontSize: Math.round(30 * fontScale),
               fontWeight: 500,
               color: colors.text,
-              lineHeight: 1.6,
+              lineHeight: TYPOGRAPHY.lineHeights.relaxed,
             }}
           >
             {body}
@@ -224,7 +224,7 @@ export const ConceptExplain: React.FC<ConceptExplainProps> = ({
                 fontWeight: 500,
                 color: effectiveAccent,
                 fontStyle: "italic",
-                lineHeight: 1.5,
+                lineHeight: TYPOGRAPHY.lineHeights.relaxed,
               }}
             >
               {analogy}

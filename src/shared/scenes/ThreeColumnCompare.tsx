@@ -6,8 +6,8 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
+import { Card } from "../components/Card";
 import { useLayoutMode } from "../formats";
 import { SceneBackground } from "../components/SceneBackground";
 
@@ -78,7 +78,7 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
       >
         {columns.map((col, colIdx) => (
           <div key={colIdx} style={{ flex: 1, display: "flex" }}>
-            <ColorBorderCard
+            <Card variant="border"
               color={col.color}
               delay={SCENE_DEFAULTS.elementEntry + colIdx * 10}
               fontFamily={fontFamily}
@@ -92,12 +92,12 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
                 }}
               >
                 {col.icon && (
-                  <span style={{ fontSize: 24 }}>{col.icon}</span>
+                  <span style={{ fontSize: Math.round(24 * fontScale) }}>{col.icon}</span>
                 )}
                 <span
                   style={{
                     fontFamily,
-                    fontSize: 26,
+                    fontSize: Math.round(26 * fontScale),
                     fontWeight: 700,
                     color: col.color,
                   }}
@@ -138,9 +138,9 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
                         alignItems: "center",
                         gap: 10,
                         fontFamily,
-                        fontSize: 22,
+                        fontSize: Math.round(22 * fontScale),
                         color: colors.text,
-                        lineHeight: 1.4,
+                        lineHeight: TYPOGRAPHY.lineHeights.normal,
                       }}
                     >
                       <div
@@ -157,7 +157,7 @@ export const ThreeColumnCompare: React.FC<ThreeColumnCompareProps> = ({
                   );
                 })}
               </div>
-            </ColorBorderCard>
+            </Card>
           </div>
         ))}
       </div>

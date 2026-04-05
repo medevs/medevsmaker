@@ -1,6 +1,6 @@
 import React from "react";
 import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, SHADOWS, baseTokens } from "../styles";
 
 type DramaticCounterProps = {
   target: number;
@@ -216,7 +216,7 @@ const SplitFlapCounter: React.FC<{
         gap: 6,
         background: "rgba(0, 0, 0, 0.6)",
         padding: `${Math.round(cardH * 0.28)}px ${Math.round(cardW * 0.6)}px`,
-        borderRadius: 8,
+        borderRadius: baseTokens.borderRadius.sm,
       }}
     >
       {chars.map((char, charIdx) => {
@@ -230,7 +230,7 @@ const SplitFlapCounter: React.FC<{
               width: cardW,
               height: cardH,
               background: "#1f2937",
-              borderRadius: 4,
+              borderRadius: baseTokens.borderRadius.sm,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -365,7 +365,7 @@ export const DramaticCounter: React.FC<DramaticCounterProps> = ({
   mode = "spring",
   color = BRAND.cyan,
   delay = 0,
-  fontSize = 120,
+  fontSize = baseTokens.fontSizes.display,
   fontFamily = "Inter",
 }) => {
   const frame = useCurrentFrame();
@@ -417,7 +417,7 @@ export const DramaticCounter: React.FC<DramaticCounterProps> = ({
           opacity: labelOpacity,
           transform: `translateY(${labelY}px)`,
           fontFamily,
-          fontSize: 28,
+          fontSize: baseTokens.fontSizes.md,
           color: BRAND.textMuted,
           letterSpacing: 1,
         }}

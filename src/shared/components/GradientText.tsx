@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, GRADIENTS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { BRAND, GRADIENTS, SCENE_DEFAULTS, SHADOWS, baseTokens, TYPOGRAPHY } from "../styles";
 
 type GradientTextEntrance = "fade" | "fadeUp" | "scale";
 
@@ -25,7 +25,7 @@ export const GradientText: React.FC<GradientTextProps> = ({
   text,
   from = BRAND.indigo,
   to = BRAND.violet,
-  fontSize = 64,
+  fontSize = baseTokens.fontSizes.xl,
   fontWeight = 800,
   fontFamily = "Inter",
   delay = 0,
@@ -66,7 +66,7 @@ export const GradientText: React.FC<GradientTextProps> = ({
         fontFamily,
         fontSize,
         fontWeight,
-        lineHeight: 1.2,
+        lineHeight: TYPOGRAPHY.lineHeights.tight,
         background: GRADIENTS.textGradient(from, to),
         backgroundClip: "text",
         WebkitBackgroundClip: "text",

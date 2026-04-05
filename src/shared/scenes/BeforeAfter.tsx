@@ -6,7 +6,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, GLASS, SCENE_DEFAULTS, SHADOWS } from "../styles";
+import { baseTokens, BRAND, GLASS, SCENE_DEFAULTS, SHADOWS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
 import { useLayoutMode } from "../formats";
 import { shimmer } from "../animations";
@@ -180,7 +180,7 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
                   alignItems: "center",
                   justifyContent: "center",
                   fontFamily,
-                  fontSize: 20,
+                  fontSize: Math.round(20 * fontScale),
                   fontWeight: 700,
                   color: panelColor,
                   flexShrink: 0,
@@ -195,7 +195,7 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
                   fontSize: Math.round(24 * fontScale),
                   fontWeight: 500,
                   color: colors.text,
-                  lineHeight: 1.5,
+                  lineHeight: TYPOGRAPHY.lineHeights.relaxed,
                 }}
               >
                 {item}
@@ -232,7 +232,7 @@ export const BeforeAfter: React.FC<BeforeAfterProps> = ({
       <div
         style={{
           fontFamily,
-          fontSize: 28,
+          fontSize: Math.round(28 * fontScale),
           fontWeight: 800,
           color: colors.muted,
           padding: "8px 0",

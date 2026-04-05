@@ -6,7 +6,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS, CARD } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS, CARD, TYPOGRAPHY } from "../styles";
 import { useLayoutMode } from "../formats";
 import { SceneBackground } from "../components/SceneBackground";
 
@@ -134,10 +134,10 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
               <div
                 style={{
                   fontFamily,
-                  fontSize: 64,
+                  fontSize: Math.round(64 * fontScale),
                   fontWeight: 900,
                   color: metricColor,
-                  lineHeight: 1.1,
+                  lineHeight: TYPOGRAPHY.lineHeights.tight,
                   textShadow: SHADOWS.glow(metricColor),
                 }}
               >
@@ -190,7 +190,7 @@ export const MetricDashboard: React.FC<MetricDashboardProps> = ({
               <div
                 style={{
                   fontFamily,
-                  fontSize: 22,
+                  fontSize: Math.round(22 * fontScale),
                   fontWeight: 600,
                   color: colors.muted,
                 }}

@@ -6,12 +6,13 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, SHADOWS, GRADIENTS, TYPOGRAPHY } from "../styles";
 import { entrances, glowPulse } from "../animations";
 import { ParticleField } from "../components/ParticleField";
-import { NeonText } from "../components/NeonText";
+import { TextEffect } from "../components/TextEffect";
 import { CinematicOverlay } from "../components/CinematicOverlay";
 import { SceneBackground } from "../components/SceneBackground";
+import { useLayoutMode } from "../formats";
 
 type ColdOpenEntrance = "glow" | "gradient" | "typewriter" | "neon" | "cinematic";
 
@@ -34,6 +35,7 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const mainP = spring({
     frame,
@@ -70,7 +72,7 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
           style={{
             justifyContent: "center",
             alignItems: "center",
-            padding: 100,
+            padding: contentPadding,
           }}
         >
           {showParticles && (
@@ -79,11 +81,11 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
           <div
             style={{
               fontFamily,
-              fontSize: 80,
+              fontSize: Math.round(80 * fontScale),
               fontWeight: 800,
               color: colors.text,
               textAlign: "center",
-              lineHeight: 1.15,
+              lineHeight: TYPOGRAPHY.lineHeights.tight,
               textShadow: SHADOWS.glow(colors.accent),
             }}
           >
@@ -102,7 +104,7 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
               style={{
                 opacity: subOpacity,
                 fontFamily,
-                fontSize: 28,
+                fontSize: Math.round(28 * fontScale),
                 color: colors.accent,
                 textAlign: "center",
                 marginTop: 24,
@@ -123,19 +125,19 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
           style={{
             justifyContent: "center",
             alignItems: "center",
-            padding: 100,
+            padding: contentPadding,
           }}
         >
           {showParticles && (
             <ParticleField count={15} color={colors.accent} opacity={0.08} />
           )}
-          <NeonText text={statement} color={colors.accent} fontSize={80} fontFamily={fontFamily} flickerIntensity="heavy" />
+          <TextEffect effect="neon" text={statement} color={colors.accent} fontSize={Math.round(80 * fontScale)} fontFamily={fontFamily} flickerIntensity="heavy" />
           {subtext && (
             <div
               style={{
                 opacity: subOpacity,
                 fontFamily,
-                fontSize: 28,
+                fontSize: Math.round(28 * fontScale),
                 color: colors.accent,
                 textAlign: "center",
                 marginTop: 24,
@@ -165,7 +167,7 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
           style={{
             justifyContent: "center",
             alignItems: "center",
-            padding: 100,
+            padding: contentPadding,
           }}
         >
           {showParticles && (
@@ -177,10 +179,10 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
           style={{
             ...mainStyle,
             fontFamily,
-            fontSize: 80,
+            fontSize: Math.round(80 * fontScale),
             fontWeight: 800,
             textAlign: "center",
-            lineHeight: 1.15,
+            lineHeight: TYPOGRAPHY.lineHeights.tight,
           }}
         >
           {statement}
@@ -190,7 +192,7 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
             style={{
               opacity: subOpacity,
               fontFamily,
-              fontSize: 28,
+              fontSize: Math.round(28 * fontScale),
               color: colors.accent,
               textAlign: "center",
               marginTop: 24,
@@ -234,7 +236,7 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
         style={{
           justifyContent: "center",
           alignItems: "center",
-          padding: 100,
+          padding: contentPadding,
         }}
       >
         {showParticles && (
@@ -244,10 +246,10 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
           style={{
             ...mainStyle,
             fontFamily,
-            fontSize: 80,
+            fontSize: Math.round(80 * fontScale),
             fontWeight: 800,
             textAlign: "center",
-            lineHeight: 1.15,
+            lineHeight: TYPOGRAPHY.lineHeights.tight,
           }}
         >
           {statement}
@@ -257,7 +259,7 @@ export const ColdOpen: React.FC<ColdOpenProps> = ({
             style={{
               opacity: subOpacity,
               fontFamily,
-              fontSize: 28,
+              fontSize: Math.round(28 * fontScale),
               color: colors.accent,
               textAlign: "center",
               marginTop: 24,

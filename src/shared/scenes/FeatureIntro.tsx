@@ -6,11 +6,12 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, SCENE_DEFAULTS, TYPOGRAPHY } from "../styles";
 import { SceneBackground } from "../components/SceneBackground";
-import { ColorBorderCard } from "../components/ColorBorderCard";
+import { Card } from "../components/Card";
 import { PillBadge } from "../components/PillBadge";
 import { FeatureCounter } from "../components/FeatureCounter";
+import { useLayoutMode } from "../formats";
 
 type FeatureIntroProps = {
   heading: string;
@@ -37,6 +38,7 @@ export const FeatureIntro: React.FC<FeatureIntroProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const { contentPadding, fontScale } = useLayoutMode();
 
   const headP = spring({
     frame,
@@ -54,7 +56,7 @@ export const FeatureIntro: React.FC<FeatureIntroProps> = ({
     <SceneBackground bg={colors.bg}>
     <AbsoluteFill
       style={{
-        padding: "80px 100px",
+        padding: contentPadding,
       }}
     >
       {breadcrumb && (
@@ -83,16 +85,16 @@ export const FeatureIntro: React.FC<FeatureIntroProps> = ({
             opacity: headOpacity,
             transform: `translateY(${headY}px)`,
             fontFamily,
-            fontSize: 52,
+            fontSize: Math.round(52 * fontScale),
             fontWeight: 800,
             color: colors.text,
-            lineHeight: 1.2,
+            lineHeight: TYPOGRAPHY.lineHeights.tight,
           }}
         >
           {heading}
         </div>
 
-        <ColorBorderCard
+        <Card variant="border"
           color={sectionColor}
           title={badge ? undefined : undefined}
           badge={badge}
@@ -103,14 +105,14 @@ export const FeatureIntro: React.FC<FeatureIntroProps> = ({
           <div
             style={{
               fontFamily,
-              fontSize: 26,
+              fontSize: Math.round(26 * fontScale),
               color: colors.text,
-              lineHeight: 1.5,
+              lineHeight: TYPOGRAPHY.lineHeights.relaxed,
             }}
           >
             {definition}
           </div>
-        </ColorBorderCard>
+        </Card>
 
         {pills && pills.length > 0 && (
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>

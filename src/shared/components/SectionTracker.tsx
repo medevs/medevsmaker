@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, MONO, SCENE_DEFAULTS } from "../styles";
+import { baseTokens, BRAND, MONO, SCENE_DEFAULTS } from "../styles";
 
 type TrackerSection = {
   name: string;
@@ -48,18 +48,18 @@ export const SectionTracker: React.FC<SectionTrackerProps> = ({
         opacity,
         display: "flex",
         flexDirection: "column",
-        gap: 10,
+        gap: baseTokens.spacing.xs,
         backgroundColor: "rgba(15, 15, 26, 0.85)",
         borderLeft: `3px solid ${current.color}`,
-        borderRadius: 10,
-        padding: "14px 20px",
+        borderRadius: baseTokens.borderRadius.md,
+        padding: `${baseTokens.spacing.sm}px ${baseTokens.spacing.md}px`,
         minWidth: 180,
       }}
     >
       <div
         style={{
           fontFamily: MONO.fontFamily,
-          fontSize: 20,
+          fontSize: baseTokens.fontSizes.xs,
           fontWeight: 700,
           letterSpacing: MONO.letterSpacing,
           textTransform: MONO.textTransform,
@@ -71,7 +71,7 @@ export const SectionTracker: React.FC<SectionTrackerProps> = ({
       <div
         style={{
           fontFamily: "Inter",
-          fontSize: 20,
+          fontSize: baseTokens.fontSizes.xs,
           fontWeight: 700,
           color: BRAND.text,
           lineHeight: 1.3,

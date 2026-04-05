@@ -5,6 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
+import { baseTokens } from "../styles";
 
 type WatermarkPosition =
   | "top-left"
@@ -22,17 +23,17 @@ type WatermarkProps = {
 };
 
 const POSITION_STYLES: Record<WatermarkPosition, React.CSSProperties> = {
-  "top-left": { top: 24, left: 32 },
-  "top-right": { top: 24, right: 32 },
-  "bottom-left": { bottom: 24, left: 32 },
-  "bottom-right": { bottom: 24, right: 32 },
+  "top-left": { top: baseTokens.spacing.md, left: baseTokens.spacing.lg },
+  "top-right": { top: baseTokens.spacing.md, right: baseTokens.spacing.lg },
+  "bottom-left": { bottom: baseTokens.spacing.md, left: baseTokens.spacing.lg },
+  "bottom-right": { bottom: baseTokens.spacing.md, right: baseTokens.spacing.lg },
 };
 
 export const Watermark: React.FC<WatermarkProps> = ({
   text = "medevsmaker",
   position = "top-right",
   opacity = 0.35,
-  fontSize = 20,
+  fontSize = baseTokens.fontSizes.xs,
   fontFamily = "Inter",
   delay = 0,
 }) => {

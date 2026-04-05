@@ -5,7 +5,7 @@ import {
   spring,
   interpolate,
 } from "remotion";
-import { BRAND, SCENE_DEFAULTS } from "../styles";
+import { BRAND, SCENE_DEFAULTS, baseTokens, TYPOGRAPHY } from "../styles";
 import { entrances } from "../animations";
 
 type BulletItem = {
@@ -47,7 +47,7 @@ export const BulletReveal: React.FC<BulletRevealProps> = ({
   const { fps } = useVideoConfig();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: baseTokens.spacing.md }}>
       {items.map((item, i) => {
         const itemDelay = delay + i * stagger;
         const progress = spring({
@@ -98,7 +98,7 @@ export const BulletReveal: React.FC<BulletRevealProps> = ({
                 fontSize: fontSize - 4,
                 color: bulletColor,
                 fontWeight: 700,
-                minWidth: 28,
+                minWidth: baseTokens.spacing.md,
                 flexShrink: 0,
               }}
             >
@@ -109,7 +109,7 @@ export const BulletReveal: React.FC<BulletRevealProps> = ({
                 fontFamily,
                 fontSize,
                 color: BRAND.text,
-                lineHeight: 1.4,
+                lineHeight: TYPOGRAPHY.lineHeights.normal,
               }}
             >
               {item.text}
