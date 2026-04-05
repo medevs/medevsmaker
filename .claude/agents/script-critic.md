@@ -123,6 +123,36 @@ Evaluate retention engineering across the script:
 
 **Output**: Note which sections lack forward hooks. Flag if 60% re-hook is missing.
 
+### 9. Visual System Compliance
+
+Check that the scene plan leverages the full visual system:
+
+**Tier Coverage**:
+- Does every scene have a `tier` field (hero/content/detail/accent)?
+- Is the tier distribution balanced? (target: ~15% hero, ~50% content, ~15% detail, ~20% accent)
+- Are hero-tier scenes limited to openings, closings, and dramatic moments (not overused)?
+
+**Background Variant Variety**:
+- Count distinct `backgroundVariant` values. Flag if fewer than 4 unique variants in a full video.
+- Flag if the same variant is used on 3+ consecutive scenes.
+- Flag if only aurora/noiseField/solidWithOrbs/meshAnimated are used (the "default 4" problem — there are 17 variants available).
+
+**Overlay Variety**:
+- Count distinct `overlay` values. Flag if only `vignette` is used throughout.
+- Flag if the same overlay appears on more than 2 consecutive sections.
+
+**Component Usage**:
+- Does at least one hero-tier scene reference GradientText or TextEffect in its `visualDirection`?
+- Do key-insight scenes (KeyRuleCard, QuoteCard) reference Card component usage?
+- Are entrance animations varied across sections (not all `fadeUp`)?
+
+**Rating**:
+- **Complete**: 4+ background variants, 2+ overlay types, tier assignments present, component hints in visualDirection
+- **Partial**: Some variety but gaps (e.g., only 3 variants, overlays not varied, tiers mostly present)
+- **Missing**: No tier assignments, default-4 backgrounds only, vignette-only overlays, no component hints
+
+**Output**: List specific gaps with counts and suggestions.
+
 ## Output Format
 
 ```markdown
@@ -134,6 +164,7 @@ Evaluate retention engineering across the script:
 - **Visual ratio**: X% visual-heavy (target: 60%+)
 - **Source attribution**: Complete / Partial / Missing
 - **Retention patterns**: Strong / Partial / Missing
+- **Visual system**: Complete / Partial / Missing
 
 ## Issues
 
@@ -164,10 +195,17 @@ Evaluate retention engineering across the script:
 - Sections missing forward hooks: [list]
 - 60% re-hook: present/missing
 - Open loops in TitleIntro: present/missing
+
+### [VISUAL] Visual System Compliance: Complete/Partial/Missing
+- Tier assignments: present/missing (distribution: N% hero, N% content, N% detail, N% accent)
+- Background variety: N unique variants (target: 4+). Flag if default-4 only.
+- Overlay variety: N unique overlays (target: 2+). Flag if vignette-only.
+- Component hints: GradientText/TextEffect/Card referenced in visualDirection: yes/no
+- Entrance variety: varied/repetitive
 ```
 
 ## Scoring Guide
 
-- **Good**: 0-3 minor issues, no claims problems, strong hook, good visual ratio, sources complete/partial, retention strong/partial
-- **Needs Work**: 4-8 issues, or 1+ claims problem, or weak hook, or missing sources
-- **Major Issues**: 9+ issues, or multiple claims problems, or missing structure, or missing sources + missing retention
+- **Good**: 0-3 minor issues, no claims problems, strong hook, good visual ratio, sources complete/partial, retention strong/partial, visual system complete/partial
+- **Needs Work**: 4-8 issues, or 1+ claims problem, or weak hook, or missing sources, or missing visual system compliance
+- **Major Issues**: 9+ issues, or multiple claims problems, or missing structure, or missing sources + missing retention, or missing visual system + missing tier assignments

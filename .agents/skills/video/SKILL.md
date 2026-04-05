@@ -77,8 +77,16 @@ For **explainer/tutorial** (3-10 min): section-based, 3-8 scenes per section.
 Scene plan format:
 ```
 ### Section N: [Title] (N scenes)
-| # | Scene Type | Content Summary | Visual Direction |
+| # | Scene Type | Tier | Content Summary | BG Variant | Overlay | Visual Direction |
 ```
+
+**Tier assignment**: Every scene MUST have a tier (hero/content/detail/accent). See educational-scenes.md § Scene Tier Classifications for the full mapping. Target distribution: ~15% hero, ~50% content, ~15% detail, ~20% accent.
+
+**Background variant selection**: Match variant to section mood using educational-scenes.md § Background Variant Mood Mapping. Use at least 5 unique variants per video. Never repeat the same variant on consecutive scenes.
+
+**Overlay selection**: Vary across sections using educational-scenes.md § Overlay Selection Guide. Opening: vignette or particles. Technical: grid or none. Closing: radialGlow or lightLeak. Max 1-2 lightLeak per video.
+
+**Component hints in Visual Direction**: Note when hero-tier scenes should use GradientText for headings, when accent scenes should use Card variant="glass" for key insights, and when TextEffect should be used for dramatic reveals. See educational-scenes.md § Component Pairing Guide.
 
 ### PHASE 5: NARRATION WRITING
 
@@ -120,15 +128,18 @@ The critic checks: unattributed claims, hook strength, pacing, missing visuals, 
       "sectionIndex": 1,
       "title": "Introduction + DNS",
       "sectionTone": "curious, building intrigue",
-      "sectionColor": "#818CF8",
+      "sectionColor": "#c8956c",
       "humorScene": 5,
       "scenes": [
         {
           "sceneIndex": 1,
           "sceneType": "HookQuestion",
+          "tier": "hero",
+          "backgroundVariant": "aurora",
+          "overlay": "vignette",
           "narration": "Every time you click a link, an invisible chain reaction fires off across the entire planet, and it all happens before you even blink.",
           "narratorTone": "mysterious, playful",
-          "visualDirection": "Big question on dark background with particle field",
+          "visualDirection": "Big question on dark background with particle field. Use GradientText for the question text.",
           "onScreenText": ["What actually happens when you click a link?"],
           "props": {
             "question": "What actually happens when you click a link?",

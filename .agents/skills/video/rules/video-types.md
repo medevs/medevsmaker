@@ -70,19 +70,11 @@ EndScreen
 - **Humor** — 1 light beat per 2-3 items: dev reactions, absurd implications
 - **Use shared scene components** — import from `src/shared/scenes/`
 
-### Palette: medevsmaker-news
-```
-primary:    #6366f1 (indigo)
-secondary:  #8b5cf6 (violet)
-accent:     #06b6d4 (cyan)
-background: #0f0f1a
-bgLight:    #1a1a2e
-text:       #f8fafc
-textMuted:  #94a3b8
-amber:      #f59e0b (highlights)
-green:      #10b981 (positive news)
-red:        #ef4444 (warnings, concerns)
-```
+### Palette
+All video types use the shared BRAND palette from `src/shared/styles.ts`. Import `BRAND` directly — never hardcode hex values. Section colors: `SECTION_THEMES.get(sectionIndex)` cycles through the amber brand palette.
+
+### Tier Distribution
+~20% hero (openers per news item), ~50% content, ~10% detail, ~20% accent
 
 ---
 
@@ -170,14 +162,16 @@ See [audience-profile.md](audience-profile.md) for full audience definition and 
 Each section in an explainer video gets its own accent color from `SECTION_THEMES`:
 
 ```
-Section 1: indigo (#6366f1)
-Section 2: cyan (#06b6d4)
-Section 3: amber (#f59e0b)
+Section 0: amber (#c8956c)
+Section 1: amberBrand (#c07830)
+Section 2: amberLight (#ddb896)
+Section 3: amberDark (#a87040)
 Section 4: green (#10b981)
-Section 5: violet (#8b5cf6)
-Section 6: red (#ef4444)
-(cycles back for 7+ sections)
+Section 5: red (#ef4444)
+(cycles back for 6+ sections)
 ```
+
+Use `SECTION_THEMES.get(sectionIndex)` — never hardcode these values.
 
 Pass `sectionColor` prop to all scenes and components within a section. This creates visual coherence within sections and contrast between them. The section color is used for:
 - ColorBorderCard left borders
@@ -205,24 +199,16 @@ Default animation style for polished explainer videos:
 - **Scale**: Cards enter at 0.97→1.0 scale, not 0.8→1.0 — barely perceptible but polished
 
 ### Scene Catalog
-See [educational-scenes.md](educational-scenes.md) for all 27 reusable scene types with props, durations, and usage rules.
+See [educational-scenes.md](educational-scenes.md) for all 50 reusable scenes with props, tier classifications, and component pairing guide.
 
 ### Architecture
 See [long-form-architecture.md](long-form-architecture.md) for the section-based file structure and code patterns.
 
-### Palette: medevsmaker-explainer
-```
-primary:    #6366f1 (indigo)
-secondary:  #8b5cf6 (violet)
-accent:     #06b6d4 (cyan)
-background: #0f0f1a
-bgLight:    #1a1a2e
-text:       #f8fafc
-textMuted:  #94a3b8
-amber:      #f59e0b (warnings, highlights)
-green:      #10b981 (success, good examples)
-red:        #ef4444 (danger, bad examples)
-```
+### Palette
+All video types use the shared BRAND palette from `src/shared/styles.ts`. Import `BRAND` directly — never hardcode hex values. Section colors: `SECTION_THEMES.get(sectionIndex)` cycles through the amber brand palette.
+
+### Tier Distribution
+~10% hero (hook + 1-2 dramatic moments), ~55% content, ~15% detail, ~20% accent
 
 ---
 
@@ -286,17 +272,13 @@ TitleIntro
 
 ### Per-Section Color Theming
 
-Same as explainer — use `SECTION_THEMES` for section-based tutorials.
+Same as explainer — use `SECTION_THEMES.get(sectionIndex)` for section-based tutorials.
 
-### Palette: clean-technical
-```
-primary:    #3b82f6 (blue)
-secondary:  #1e293b (slate)
-accent:     #22d3ee (cyan)
-background: #0a0a0f
-text:       #e2e8f0
-code-bg:    #1e1e2e
-```
+### Palette
+All video types use the shared BRAND palette from `src/shared/styles.ts`. Import `BRAND` directly — never hardcode hex values.
+
+### Tier Distribution
+~10% hero (hook only), ~60% content, ~15% detail, ~15% accent
 
 ---
 
@@ -351,16 +333,14 @@ KeyTakeaway or FullScreenText
 - **Safe zones**: 160px top, 350px bottom, 60px sides (platform UI overlays)
 - **No music by default** — each track costs 50% revenue share
 
-### Palette: medevsmaker-short
-```
-primary:    #6366f1 (indigo)
-secondary:  #8b5cf6 (violet)
-accent:     #06b6d4 (cyan)
-background: #0f0f1a
-bgLight:    #1a1a2e
-text:       #f8fafc
-textMuted:  #94a3b8
-```
+### Palette
+All video types use the shared BRAND palette from `src/shared/styles.ts`. Import `BRAND` directly — never hardcode hex values.
+
+### Tier Distribution
+~30% hero (hook + punchline), ~40% content, ~0% detail, ~30% accent
+
+### Responsive Layout
+All scenes MUST use `useLayoutMode()` for portrait-safe padding and font scaling. The hook returns `fontScale: 1.3` and `contentPadding` respecting safe zones (160px top, 350px bottom, 60px sides).
 
 Full rules: [short-form.md](short-form.md)
 

@@ -14,7 +14,7 @@ All scenes are first-class choices. No tiers, no hierarchy. Choose based on what
 - **Every section needs at least one visually rich scene** with animation, particles, diagrams, or dynamic visuals
 - **Prefer scenes with movement** over static text layouts
 - **Use the full catalog** — if you find yourself reaching for the same scene a 3rd time, pick a different one
-- **Don't default to the same 13 scenes** — there are 64 available, use the variety
+- **Don't default to the same 13 scenes** — there are 50 available, use the variety
 
 ### Visual Balance
 - Target **60%+ visual-heavy scenes** across the video
@@ -62,6 +62,90 @@ All scenes use `useLayoutMode()` for responsive sizing, `fontScale` multiplier o
 
 ---
 
+## Scene Tier Classifications
+
+Every scene belongs to a visual tier that determines font sizing and fill behavior. Import `SCENE_TIERS` from `src/shared/styles.ts`. Apply `fontScale` from `useLayoutMode()` as a multiplier on all sizes.
+
+| Tier | Title Size | Body Size | Min Fill | Scenes |
+|------|-----------|-----------|----------|--------|
+| **hero** | 80px default (64-140) | 28px (24-36) | 60% | HookQuestion, ColdOpen, FullScreenText, TextGlitch, TextKinetic, LogoMaskReveal, LogoStroke, RollerCountdown, CinematicSciFi, CinematicDocumentary, ThemeCyberpunk, ThemeHolographic, ThemeRetro |
+| **content** | 48px default (36-64) | 24px (20-32) | 70% | ConceptExplain, DiagramFlow, CodeDisplay, ComparisonSplit, StepSequence, BulletRevealScene, FeatureIntro, TimelineScene, ArchitectureDiagram, FileTreeScene, DecisionTable, ThreeColumnCompare, ProgressiveTerminal, BeforeAfter, DemoAddressBar, DemoScroll, DemoTextInput, DemoZoomFocus |
+| **detail** | 36px default (24-48) | 20px (16-24) | 80% | DataChart, DataGauge, DataRanking, MetricDashboard, WarningCallout, UILoading |
+| **accent** | 48px default (36-80) | 24px (20-32) | 50% | SectionTitle, TitleIntro, KeyTakeaway, KeyRuleCard, QuoteCard, StatHighlight, LayoutGiantNumber, LayoutFrameInFrame, ListFullscreenSequence, SummaryRecap, EndScreen, VisualMetaphor, SwipeReveal |
+
+In `/script` Phase 4, assign a `tier` field to every scene in script.json. In code generation, use `SCENE_TIERS[tier]` for sizing decisions.
+
+---
+
+## Background Variant Mood Mapping
+
+Select Background variants based on section content and mood — don't just cycle through the same 4. Use at least 5 unique variants per video. Never repeat the same variant on consecutive scenes.
+
+| Variant | Mood/Content | Best Paired With | Suggested Overlay |
+|---------|-------------|------------------|-------------------|
+| `aurora` | Opening, cinematic, wonder | HookQuestion, ColdOpen, TitleIntro | vignette, particles |
+| `noiseField` | Technical, analytical | CodeDisplay, DiagramFlow, ArchitectureDiagram | grid, none |
+| `solidWithOrbs` | Data-heavy, corporate | DataChart, MetricDashboard, StatHighlight | none, radialGlow |
+| `perspectiveGrid` | Retro, engineering | ThemeRetro, StepSequence | grid, none |
+| `meshAnimated` | Flowing, organic | SectionTitle, KeyTakeaway, VisualMetaphor | vignette |
+| `meshGradient` | Warm, premium | FeatureIntro, QuoteCard, EndScreen | radialGlow |
+| `gradient` | Neutral, minimal | ConceptExplain, BulletRevealScene | none |
+| `radialGradient` | Focused, centered | StatHighlight, FullScreenText | radialGlow |
+| `bokeh` | Soft, dreamy | QuoteCard, VisualMetaphor | vignette |
+| `floatingBokeh` | Creative, design | FeatureIntro, KeyRuleCard | vignette, particles |
+| `sineWaves` | Audio, data flow | TimelineScene, ConceptExplain (flow topics) | none |
+| `geometricShapes` | Architecture, math | ArchitectureDiagram, DiagramFlow | grid |
+| `fluidWave` | Physics, organic transitions | BeforeAfter, SectionTitle | vignette |
+| `lightning` | Power, dramatic | WarningCallout, ColdOpen (danger topics) | vignette, lightLeak |
+| `helix` | Biology, DNA, scientific | ConceptExplain (science), DataChart | none |
+| `hexGrid` | Networks, distributed | DiagramFlow (network), ArchitectureDiagram | grid |
+| `matrixRain` | Hacking, security | CodeDisplay (security), CinematicSciFi | none, particles |
+
+---
+
+## Overlay Selection Guide
+
+Vary overlays across sections — never use `vignette` on every section. Use at least 2 different overlay types per video. Never use the same overlay on more than 2 consecutive sections.
+
+| Overlay | Mood | Use For |
+|---------|------|---------|
+| `none` | Clean, modern | Data-heavy sections, diagrams |
+| `vignette` | Cinematic, focused | Opening/closing sections, hero moments |
+| `radialGlow` | Warm, premium | Feature intros, key takeaways |
+| `grid` | Technical, structured | Code sections, architecture |
+| `particles` | Dynamic, energetic | Hook sections, transitions |
+| `lightLeak` | Cinematic polish | Major section breaks (max 1-2 per video) |
+
+---
+
+## Component Pairing Guide
+
+Use these shared components to enhance visual richness. Include component hints in script.json `visualDirection` when planning scenes.
+
+### Card (`src/shared/components/Card.tsx`)
+Use for custom content blocks within scenes that need semantic framing:
+- `variant="glass"` + `glow` — Key insights, important conclusions (pair with KeyRuleCard, QuoteCard scenes)
+- `variant="accent"` + `semanticType="warning"` — Callouts within code explanations
+- `variant="accent"` + `semanticType="info"` — Definition cards, context blocks
+- `variant="border"` + `color={sectionColor}` — Standard bordered content
+- Always pass `color={sectionColor}` for theme consistency
+
+### TextEffect (`src/shared/components/TextEffect.tsx`)
+Use for dynamic text reveals and emphasis:
+- `effect="typewriter"` — Terminal/code contexts, progressive reveals
+- `effect="scramble"` — ColdOpen dramatic reveals, hacker/encryption topics
+- `effect="glitch"` — Error states, WarningCallout emphasis, cyberpunk themes
+- `effect="neon"` + `flickerIntensity="medium"` — Hero stat numbers, ThemeCyberpunk titles
+
+### GradientText (`src/shared/components/GradientText.tsx`)
+Use for hero-tier headings and highlighted keywords:
+- `from={BRAND.amber} to={BRAND.amberLight}` + `entrance="fadeUp"` + `glow` — Standard hero heading
+- `from={sectionColor} to={BRAND.text}` — Section-themed headers
+- Prefer GradientText over plain text for HookQuestion, ColdOpen, FullScreenText main text
+- Use `entrance="scale"` for dramatic moments, `"fadeUp"` for standard
+
+---
+
 ## All Scenes (A-Z)
 
 ### ArchitectureDiagram
@@ -90,21 +174,7 @@ All scenes use `useLayoutMode()` for responsive sizing, `fontScale` multiplier o
 - `overlay?: string` — optional overlay (particles, lightLeak, filmGrain, etc.)
 - `colors?: { bg: string; accent: string }`
 
-**Variant quick reference** (former standalone scenes now absorbed):
-| Variant | Former Scene | When to use |
-|---------|-------------|-------------|
-| `floatingBokeh` | BackgroundBokeh | Creative/design, soft atmospheric mood |
-| `sineWaves` | BackgroundWaves | Sound/audio topics, data flow, fluid content |
-| `geometricShapes` | BackgroundGeometric | Tech/engineering, architecture, mathematical |
-| `fluidWave` | LiquidFluidWave | Physics/wave topics, flowing transitions |
-| `lightning` | ParticleLightning | Power/energy, electricity, dramatic emphasis |
-| `helix` | ShapeHelix | Biology/DNA, structural/scientific, spiral concepts |
-| `hexGrid` | ShapeHexGrid | Network/mesh, data structures, distributed systems |
-| `matrixRain` | EffectMatrix | Hacking/security, code-rain aesthetic, encryption |
-| `aurora` | — | Opening sections, cinematic feel |
-| `noiseField` | — | Technical sections |
-| `solidWithOrbs` | — | Data-heavy sections |
-| `perspectiveGrid` | — | Retro/tech-themed sections |
+**Variant and overlay selection**: See the **Background Variant Mood Mapping** and **Overlay Selection Guide** sections above for content-based selection guidance.
 
 **Usage**: Layer behind content scenes, not as standalone scenes.
 ```tsx

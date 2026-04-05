@@ -36,8 +36,8 @@ export const Section3: React.FC = () => {
         timing={linearTiming({ durationInFrames: TIMING.sceneSlide })}
       />
 
-      {/* Scene 11: StepSequence — 16.0s = 480f */}
-      <TransitionSeries.Sequence durationInFrames={480}>
+      {/* Scene 11: StepSequence — 17.1s = 512f */}
+      <TransitionSeries.Sequence durationInFrames={512}>
         <StepSequence
           heading="Create Your Vault"
           steps={[
@@ -127,5 +127,5 @@ export const Section3: React.FC = () => {
   );
 };
 
-// 90 + 480 + 630 + 585 + 570 + 330 = 2685f - (20 + 15 + 18 + 15 + 15) = 2602f
-export const SECTION_3_DURATION_FRAMES = 2602;
+// 90 + 512 + 630 + 585 + 570 + 330 = 2717f - (20 + 15 + 18 + 15 + 15) = 2634f
+export const SECTION_3_DURATION_FRAMES = 2634;
